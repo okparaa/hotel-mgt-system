@@ -1,0 +1,87 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Account {
+    id                 String    @id @default(cuid())
+    userId             String
+    providerType       String
+    providerId         String
+    providerAccountId  String
+    refreshToken       String?
+    accessToken        String?
+    accessTokenExpires DateTime?
+    createdAt          DateTime  @default(now())
+    updatedAt          DateTime  @updatedAt
+    user               User      @relation(fields: [userId], references: [id])
+
+    @@unique([providerId, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    expires      DateTime
+    sessionToken String   @unique
+    accessToken  String   @unique
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    user         User     @relation(fields: [userId], references: [id])
+    userId       String
+}
+
+model User {
+    id             String    @id @default(cuid())
+    name           String?
+    surname        String    @db.VarChar(60)
+    firstname      String    @db.VarChar(60)
+    lastname       String    @db.VarChar(60)
+    phone          String    @unique @db.VarChar(100)
+    email          String    @unique @db.VarChar(255)
+    username       String    @unique
+    photo_url      String?   @db.VarChar(255)
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+    active         Boolean?  @default(false)
+    address        String    @db.VarChar(255)
+    hashedPassword String
+    dept           Dept?     @relation(fields: [deptId], references: [id])
+    deptId         String?   @db.VarChar(255)
+    emailVerified  DateTime?
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
+    roles          Roles[]
+}
+
+model VerificationRequest {
+    id         String   @id @default(cuid())
+    identifier String
+    token      String   @unique
+    expires    DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@unique([identifier, token])
+}
+
+model Dept {
+    id        String   @id @default(cuid())
+    name      String   @db.VarChar(255)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User[]
+}
+
+model Roles {
+    id        String   @id @default(cuid())
+    name      String   @db.VarChar(40)
+    createAt  DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+}
