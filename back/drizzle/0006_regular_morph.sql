@@ -1,0 +1,1 @@
+ALTER TABLE "rooms" RENAME COLUMN "room_status" TO "status";

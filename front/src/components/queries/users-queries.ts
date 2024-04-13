@@ -1,0 +1,138 @@
+import { gql } from "../../__generated__";
+
+export const GET_USERS = gql(`
+  query Users {
+    users {
+        id
+        surname
+        firstname
+        lastname
+        phone
+        address
+        active
+        salary
+        username
+        photoUrl
+        createdAt
+        routeSlugs
+        route {
+            id
+            section
+            name
+            slug
+        }
+        deductions{
+            id
+            amount
+        }
+    }
+  }
+`);
+
+export const GET_USER = gql(`
+  query User($id: ID!) {
+    user(id: $id) {
+        id
+        surname
+        firstname
+        lastname
+        phone
+        address
+        active
+        salary
+        username
+        photoUrl
+        createdAt
+        routeSlugs
+        route {
+            id
+            name
+            section
+            slug
+        }
+        deductions{
+            id
+            amount
+        }
+    }
+  }
+`);
+
+export const CREATE_USER = gql(`
+  mutation NewUser($user: NewUserInput!) {
+    newUser(user: $user) {
+      id
+      surname
+      token
+      firstname
+      lastname
+      phone
+      address
+      active
+      username
+      photoUrl
+      createdAt
+      updatedAt
+      routeSlugs
+    }
+  }
+`);
+export const SALARY = gql(`
+  mutation Salary($id: ID!, $salary: String) {
+    salary(id: $id, salary: $salary) {
+      id
+      salary
+      routeSlugs
+    }
+  }
+`);
+
+export const ACCESS_KODE = gql(`
+  query Verified($kode: String!) {
+    verified(kode: $kode) {
+        id
+        surname
+        firstname
+        lastname
+        phone
+        address
+        active
+        token
+        username
+        photoUrl
+        createdAt
+        message
+        routeSlugs
+        route {
+            id
+            name
+            section
+            slug
+        }
+      }
+    }
+`);
+
+export const EDIT_USER_SLUGS = gql(`
+  mutation EUserSlugs($user: UserSlugInput!) @serialize(key: ["mutation"]) {
+    eUserSlugs(user: $user) {
+      id
+      routeSlugs
+    }
+  }
+`);
+
+export const ASSIGN_ROUTE = gql(`
+  mutation AssignRoute($user: UserInput!) {
+    assignRoute(user: $user) {
+        id
+        routeSlugs
+        route {
+            id
+            name
+            section
+            slug
+        }
+      }
+    }
+`);
