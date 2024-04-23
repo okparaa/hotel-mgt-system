@@ -37,18 +37,18 @@ export const registerUser = async (parent: any, args: any, ctx: Context) => {
 
   const userName = await usernameExists(args.user.username, ctx);
 
-  if (phoneUser.id && userName.id) {
+  if (phoneUser && userName && phoneUser.id && userName.id) {
     throwError("phone exists", ErrorTypes.ALREADY_EXISTS, [
       ["phone", `phone already used`],
       ["username", `username already used`],
     ]);
   }
-  if (phoneUser.id) {
+  if (phoneUser && phoneUser.id) {
     throwError("phone exists", ErrorTypes.ALREADY_EXISTS, [
       ["phone", `phone already used`],
     ]);
   }
-  if (userName.id) {
+  if (userName && userName.id) {
     throwError("username exists", ErrorTypes.ALREADY_EXISTS, [
       ["username", `username already used`],
     ]);

@@ -6,8 +6,15 @@ type AccordionProps = {
   children: ReactNode;
   active?: boolean | undefined;
   msg?: string;
+  className: string;
 };
-export const Accordion = ({ title, children, active, msg }: AccordionProps) => {
+export const Accordion = ({
+  title,
+  children,
+  className,
+  active,
+  msg,
+}: AccordionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -15,18 +22,14 @@ export const Accordion = ({ title, children, active, msg }: AccordionProps) => {
   };
 
   return (
-    <div className={`mb-2 rounded-md bg-slate-100`}>
+    <div className={className}>
       <button
         className="w-full py-1 px-6 text-left flex justify-between items-center"
         onClick={() => toggleAccordion()}
       >
         <div className={`flex w-full ${isOpen ? "border-b-2" : ""}`}>
           <div className={`font-semibold flex-1`}>{title}:</div>
-          {active && (
-            <div className="flex-1">
-              <CheckCheck />
-            </div>
-          )}
+          {active && <CheckCheck className="mr-1" />}
           {msg && (
             <div className="flex-1 text-center border-2 font-semibold">
               {ucwords(msg)}

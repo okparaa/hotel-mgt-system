@@ -1,7 +1,6 @@
-import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import Working from "../../lib/working";
-import { EDIT_USER_SLUGS } from "../queries/users-queries";
+import { useEditUserSlugsMutation } from "../aio-urql";
 
 type UserToggleSwitchProps = {
   id: string;
@@ -16,16 +15,8 @@ export const UserToggleSwitch = ({
   status,
 }: UserToggleSwitchProps) => {
   const [isChecked, setIsChecked] = useState(status);
-  const [mutation, { loading }] = useMutation(EDIT_USER_SLUGS, {
-    update: (cache, { data: { eUserSlugs } }: any) => {
-      cache.modify({
-        id: cache.identify(eUserSlugs),
-        fields: {
-          routeSlugs: () => eUserSlugs.routeSlugs,
-        },
-      });
-    },
-  });
+  const [{ fetching }, mutation] = useEditUserSlugsMutation();
+
   const toggleSwitch = () => {
     setIsChecked(!isChecked);
   };
@@ -59,11 +50,9 @@ export const UserToggleSwitch = ({
               }, "");
           }
           await mutation({
-            variables: {
-              user: {
-                id: user?.id,
-                routeSlugs: sxns,
-              },
+            user: {
+              id: user?.id,
+              routeSlugs: sxns,
             },
           });
           toggleSwitch();
@@ -71,7 +60,7 @@ export const UserToggleSwitch = ({
       />
       <label htmlFor={id} className="cursor-pointer flex">
         <span className="-mt-[1px]">
-          <Working loading={loading} />
+          <Working loading={fetching} />
         </span>
         <div className="relative p-[3px]">
           <div

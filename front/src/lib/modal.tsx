@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import Working from "./working";
-import { gql, useQuery } from "@apollo/client";
+import { useChest } from "../state-mgr/app-chest";
 
 type ModalProps = {
   children?: React.ReactNode;
@@ -10,14 +10,12 @@ type ModalProps = {
   onClose: () => void;
   loading: boolean;
 };
-const STORE = gql`
-  query Store {
-    store @client
-  }
-`;
+
 const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
-  const { data } = useQuery(STORE);
+  const {
+    data: { store },
+  } = useChest();
 
   useEffect(() => {
     const modalElement = modalRef.current;
@@ -49,10 +47,10 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
       onKeyDown={handleKeyDown}
     >
       <div className="text-xl text-center">{children}</div>
-      {data.store.name && (
+      {store.name && (
         <>
-          <span className="text-lg font-semibold">{data.store.name}</span> will
-          be deleted
+          <span className="text-lg font-semibold">{store.name}</span> will be
+          deleted
         </>
       )}
       <div className="text-center">
@@ -61,7 +59,7 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
             if (typeof action === "function") {
               try {
                 await action({
-                  variables: { id: data.store.id },
+                  id: store.id,
                 });
                 handleCloseModal();
               } catch (error) {

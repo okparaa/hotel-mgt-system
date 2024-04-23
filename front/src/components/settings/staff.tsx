@@ -1,32 +1,22 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_USERS, SALARY } from "../queries/users-queries";
-import { SEARCH } from "../queries/locals";
 import { TStaffBody } from "./partials/t-staff-body";
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
-import Loading from "../../lib/loading";
+import { useChest } from "../../state-mgr/app-chest";
+import { useSalaryMutation, useUsersQuery } from "../aio-urql";
+import QueryResult from "../../lib/query-result";
 
 const Staff = () => {
   const {
     data: { search },
-  } = useQuery(SEARCH);
+  } = useChest();
 
-  const [salary] = useMutation(SALARY, {
-    update: (cache, { data }) => {
-      cache.updateQuery({ query: GET_USERS }, ({ users }: any) => ({
-        users: users.map((user: any) => {
-          if (user.id === data?.salary?.id)
-            return { ...user, salary: data?.salary?.salary };
-          return user;
-        }),
-      }));
-    },
-  });
+  const [{}, salary] = useSalaryMutation();
 
-  const { data, loading } = useQuery(GET_USERS);
-  if (loading || !data) return <Loading />;
+  const [usersRes] = useUsersQuery();
 
-  const { users } = data;
+  if (usersRes.error || usersRes.fetching) {
+    return <QueryResult result={usersRes} />;
+  }
 
   const tHead = (
     <tr>
@@ -38,8 +28,8 @@ const Staff = () => {
     </tr>
   );
 
-  const searchUsers = users?.filter((user: any) => {
-    const str = Object.values(user).join(" ").toLowerCase();
+  const searchUsers = usersRes.data?.users?.filter((user) => {
+    const str = (user && Object.values(user).join(" ").toLowerCase()) || "";
     const searche = search || "";
     return str.includes(searche.toLowerCase());
   });
@@ -53,7 +43,7 @@ const Staff = () => {
           Searche={<Search hasBtn={false} />}
           tHead={tHead}
           tBody={tBody}
-          loading={loading}
+          fetching={usersRes.fetching}
         />
       </div>
     </>

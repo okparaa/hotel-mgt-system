@@ -8,7 +8,7 @@ export const typeDef = /* GraphQL */ `
     id: ID!
     refreshToken: String
     auth: String
-    ver: String
+    vfy: String
     iat: String
     exp: String
     accessToken: String

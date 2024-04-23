@@ -1,6 +1,5 @@
 import { useEffect } from "preact/hooks";
 import { lazy, Suspense } from "preact/compat";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 const Home = lazy(() => import("./components/home"));
 const Wip = lazy(() => import("./components/wip"));
 const Login = lazy(() => import("./components/users/login"));
@@ -23,14 +22,17 @@ const StaffMgr = lazy(() => import("./components/settings/staff-mgr"));
 const RouteMgr = lazy(() => import("./components/settings/route-mgr"));
 const Sections = lazy(() => import("./components/settings/sections"));
 const Ruotes = lazy(() => import("./components/settings/routes"));
+const DashRooms = lazy(() => import("./components/dash/dash-rooms"));
 import { SwInit } from "./sw-init";
 import Footer from "./lib/footer";
 import Fallback from "./lib/fallback";
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 const App = () => {
   useEffect(() => {
     SwInit.init();
   }, []);
+
+  // useQuery(GET_ROUTES);
 
   return (
     <BrowserRouter>
@@ -70,12 +72,16 @@ const App = () => {
           <Route path="/aio/settings/sections" element={<Sections />} />
           <Route path="/aio/settings/staff" element={<Staff />} />
           <Route path="/aio/settings/routes" element={<Ruotes />} />
-          <Route path="/aio/settings/pro-mgr/:userId" element={<StaffMgr />} />
+          <Route
+            path="/aio/settings/staff-mgr/:userId"
+            element={<StaffMgr />}
+          />
           <Route
             path="/aio/settings/route-mgr/:routeId"
             element={<RouteMgr />}
           />
           <Route path="/aio/settings/rooms" element={<Rooms />} />
+          <Route path="/aio/dash/rooms" element={<DashRooms />} />
           <Route path="/aio/orders" element={<OrdersIndex />} />
           <Route path="/aio/stats" element={<StatsIndex />} />
           <Route path="/aio/stats/items" element={<ItemsStats />} />

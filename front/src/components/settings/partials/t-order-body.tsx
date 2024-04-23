@@ -1,15 +1,18 @@
 import { Trash2 } from "lucide-react";
 import { addInput, toCommas, toReal } from "../../../lib/utils";
-import { orderItems } from "../../../lib/client";
-import { useReactiveVar } from "@apollo/client";
 import { Fragment } from "react";
+import { useChest } from "../../../state-mgr/app-chest";
 
 type TOrderBodyProps = {
   pickedItems?: any;
 };
 
 export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
-  const order = useReactiveVar(orderItems);
+  const {
+    data: { order_items: order },
+    updateChest,
+  } = useChest();
+
   return (
     <Fragment>
       {pickedItems?.map((item: any) => (
@@ -41,13 +44,16 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                     0
                   );
 
-                  orderItems({
-                    cash: order.cash,
-                    pos: order.pos,
-                    txfa: order.txfa,
-                    hash: order.hash,
-                    total,
-                    items: updatedItems,
+                  updateChest({
+                    type: "order_items",
+                    data: {
+                      cash: order.cash,
+                      pos: order.pos,
+                      txfa: order.txfa,
+                      hash: order.hash,
+                      total,
+                      items: updatedItems,
+                    },
                   });
                 })
               }
@@ -79,13 +85,16 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                     },
                     0
                   );
-                  orderItems({
-                    cash: order.cash,
-                    pos: order.pos,
-                    txfa: order.txfa,
-                    hash: order.hash,
-                    total,
-                    items: updatedItems,
+                  updateChest({
+                    type: "order_items",
+                    data: {
+                      cash: order.cash,
+                      pos: order.pos,
+                      txfa: order.txfa,
+                      hash: order.hash,
+                      total,
+                      items: updatedItems,
+                    },
                   });
                 })
               }
@@ -104,13 +113,16 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                 const total = updatedItems.reduce((acc: number, item: any) => {
                   return acc + Number(item.priceSold) * Number(item.qtySold);
                 }, 0);
-                orderItems({
-                  cash: order.cash,
-                  pos: order.pos,
-                  txfa: order.txfa,
-                  hash: order.hash,
-                  total,
-                  items: updatedItems,
+                updateChest({
+                  type: "order_items",
+                  data: {
+                    cash: order.cash,
+                    pos: order.pos,
+                    txfa: order.txfa,
+                    hash: order.hash,
+                    total,
+                    items: updatedItems,
+                  },
                 });
               }}
             >

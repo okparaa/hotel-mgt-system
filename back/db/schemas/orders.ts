@@ -27,7 +27,7 @@ export const orders = pgTable("orders", {
   status: orderStatusEnum("order_status").default("pending"),
   amountSold: decimal("amount_sold").default("0").$type<number>(),
   userId: varchar("user_id", { length: 128 }).references(() => users.id),
-  deptId: varchar("dept_id", { length: 128 }).references(() => routes.id),
+  routeId: varchar("dept_id", { length: 128 }).references(() => routes.id),
 });
 
 export const ordersRelation = relations(orders, ({ one, many }) => ({

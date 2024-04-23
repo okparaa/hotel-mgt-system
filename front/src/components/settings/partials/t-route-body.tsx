@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { store as routeStore } from "../../../lib/client";
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
+import { useChest } from "../../../state-mgr/app-chest";
 
 type TSectionBodyProps = {
   searchRoutes?: any[];
@@ -14,6 +14,7 @@ export const TRouteBody = ({
   editRoute,
   deleteRoute,
 }: TSectionBodyProps) => {
+  const { updateChest } = useChest();
   return (
     <Fragment>
       {searchRoutes?.map((route: any) => (
@@ -33,7 +34,7 @@ export const TRouteBody = ({
             <span
               className="icon-span"
               onClick={() => {
-                routeStore({ neu: false });
+                updateChest({ type: "store", data: { neu: false } });
                 editRoute(route);
               }}
             >

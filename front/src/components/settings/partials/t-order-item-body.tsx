@@ -1,9 +1,7 @@
-import { useQuery, useReactiveVar } from "@apollo/client";
 import { CheckCircle } from "lucide-react";
-import { orderItems } from "../../../lib/client";
-import { SESSION } from "../../queries/locals";
 import { getKey, toCommas } from "../../../lib/utils";
 import { Fragment, useRef } from "react";
+import { useChest } from "../../../state-mgr/app-chest";
 
 type TItemBodyProps = {
   searchItems?: any[];
@@ -11,10 +9,10 @@ type TItemBodyProps = {
 
 export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
   const {
-    data: { session },
-  } = useQuery(SESSION);
+    data: { session, order_items: order },
+    updateChest,
+  } = useChest();
 
-  const order = useReactiveVar(orderItems);
   const hashRef = useRef("");
   if (order.items.length === 0) {
     hashRef.current = getKey() + getKey() + getKey() + getKey();
@@ -37,7 +35,7 @@ export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
                 if (order.items.some((it: any) => it.itemId === item.id)) {
                   return;
                 }
-                const orda = {
+                const curr_order = {
                   itemId: item.id,
                   userId: session.id,
                   name: item.name,
@@ -49,13 +47,16 @@ export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
 
                 const total = Number(order.total) + Number(item.price);
 
-                orderItems({
-                  hash: hashRef.current,
-                  total,
-                  cash: order.cash,
-                  pos: order.pos,
-                  txfa: order.txfa,
-                  items: [...order.items, orda],
+                updateChest({
+                  type: "order_items",
+                  data: {
+                    hash: hashRef.current,
+                    total,
+                    cash: order.cash,
+                    pos: order.pos,
+                    txfa: order.txfa,
+                    items: [...order.items, curr_order],
+                  },
                 });
               }}
             >

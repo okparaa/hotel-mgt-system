@@ -7,10 +7,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { UseFormReset, UseFormSetError, useForm } from "react-hook-form";
+
 import Working from "./working";
 import { getValidPattern } from "./utils";
 import autosize from "autosize";
+import { UseFormSetError, UseFormReset, useForm } from "react-hook-form";
 
 export type FormRef = {
   setError: UseFormSetError<any>;
@@ -143,7 +144,7 @@ export function Select({ register, name, options, ...rest }: any) {
       }${rest.size ? " " + rest.size : ""}`}
     >
       <span className="-mt-2">
-        <Working loading={rest.loading} />
+        <Working loading={rest.fetching} />
       </span>
       <select
         {...register(name, { required: rest.req_msg })}

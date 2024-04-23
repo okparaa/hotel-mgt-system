@@ -2,10 +2,7 @@ import { MailIcon, PhoneIcon } from "lucide-react";
 import { Image } from "../lib/image";
 import Navbar from "../lib/navbar";
 import wstbrka from "../images/wstbrka.jpg";
-import { useQuery } from "@apollo/client";
-import { GET_ROUTES } from "./queries/routes-queries";
 const Home = () => {
-  useQuery(GET_ROUTES);
   return (
     <div className="home">
       <div className="flex flex-col justify-center w-10/12 mx-auto">

@@ -1,15 +1,15 @@
 import { render } from "preact";
 import "./index.css";
-import { ApolloProvider } from "@apollo/client";
-import { client } from "./lib/client.ts";
 import App from "./app.tsx";
-import React from "preact/compat";
+import client from "./client.ts";
+import { Provider } from "urql";
+import AppProvider from "./state-mgr/app-chest.tsx";
 
 render(
-  <React.StrictMode>
-    <ApolloProvider client={client}>
+  <Provider value={client}>
+    <AppProvider>
       <App />
-    </ApolloProvider>
-  </React.StrictMode>,
+    </AppProvider>
+  </Provider>,
   document.getElementById("app")!
 );

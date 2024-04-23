@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { addInput, toCommas } from "../../../lib/utils";
-import { store as roomStore } from "../../../lib/client";
 import { Fragment } from "react";
+import { useChest } from "../../../state-mgr/app-chest";
 
 type TRoomBodyProps = {
   searchRooms?: any[];
@@ -18,8 +18,7 @@ export const TRoomBody = ({
   roomPrice,
   bookable,
 }: TRoomBodyProps) => {
-  console.log(bookable);
-
+  const { updateChest } = useChest();
   return (
     <Fragment>
       {searchRooms?.map((room: any) => (
@@ -36,10 +35,8 @@ export const TRoomBody = ({
               onClick={(e) =>
                 addInput(e, (value) => {
                   roomPrice({
-                    variables: {
-                      id: room.id,
-                      price: value,
-                    },
+                    id: room.id,
+                    price: value,
                   });
                 })
               }
@@ -51,7 +48,7 @@ export const TRoomBody = ({
             <span
               className="icon-span"
               onClick={() => {
-                roomStore({ neu: false });
+                updateChest({ type: "store", data: { neu: false } });
                 editRoom(room);
               }}
             >

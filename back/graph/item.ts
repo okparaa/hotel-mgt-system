@@ -8,7 +8,7 @@ import { itemColumns } from "../helpers";
 export const typeDef = /* GraphQL */ `
   type Item {
     id: ID!
-    name: String
+    name: String!
     sku: String
     type: String
     price: String

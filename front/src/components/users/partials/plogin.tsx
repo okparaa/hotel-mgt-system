@@ -1,19 +1,9 @@
-import { useMutation } from "@apollo/client";
 import { LockIcon } from "lucide-react";
-import { decodeSession, errorHandler } from "../../../lib/utils";
 import Form, { Button, FormRef, Input } from "../../../lib/forms";
-import { gql } from "../../../__generated__";
 import { useRef } from "react";
-import { uSession } from "../../../lib/client";
-
-const LOGIN = gql(`
-  mutation Signed($user: LoggedUserInput!) {
-    signed(user: $user) {
-      id
-      accessToken
-    }
-  }
-`);
+import { decodeSession, errorHandler } from "../../../lib/utils";
+import { useChest } from "../../../state-mgr/app-chest";
+import { useLoginMutation } from "../../aio-urql";
 
 const defaultValues = {
   username: "",
@@ -22,15 +12,17 @@ const defaultValues = {
 
 const Plogin = () => {
   const formRref = useRef<FormRef>(null);
-  const [signed, { data, loading }] = useMutation(LOGIN, {
-    onCompleted: ({ signed }) => {
-      localStorage.setItem("token", signed?.accessToken || "");
-      uSession(decodeSession(signed?.accessToken || ""));
-    },
-    onError: (error) => {
-      errorHandler(error, formRref.current);
-    },
-  });
+  const [{ data, fetching, error }, signed] = useLoginMutation();
+  const { updateChest } = useChest();
+  if (!error && data) {
+    const { signed } = data;
+    localStorage.setItem("token", signed?.accessToken || "");
+    const sess = decodeSession(signed?.accessToken || "");
+
+    updateChest({ data: sess, type: "session" }); //just to update app state
+  } else if (error) {
+    errorHandler(error, formRref.current);
+  }
 
   return (
     <>
@@ -41,9 +33,7 @@ const Plogin = () => {
         className="flex flex-col items-center w-10/12"
         onSubmit={(data: any) => {
           signed({
-            variables: {
-              user: data,
-            },
+            user: data,
           });
         }}
       >
@@ -65,7 +55,7 @@ const Plogin = () => {
           )}
         </div>
         <div className="btn mb-4">
-          <Button status={loading} title="Login" />
+          <Button status={fetching} title="Login" />
         </div>
       </Form>
     </>

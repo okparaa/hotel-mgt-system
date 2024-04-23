@@ -1,4 +1,4 @@
-import { gql } from "../../__generated__";
+import { gql } from "@urql/preact";
 
 export const CREATE_INVENTORY = gql(`
   mutation NewInventory($inventory: NewInventoryInput!) {

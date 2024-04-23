@@ -1,5 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
+  PgBoolean,
   boolean,
   decimal,
   integer,
@@ -30,5 +31,5 @@ export const rooms = pgTable("rooms", {
   price: decimal("price").default("0"),
   sku: serial("sku"),
   bookDate: timestamp("book_date").defaultNow(),
-  status: roomStatusEnum("status").default("nb"),
+  status: boolean("status").default(false),
 });

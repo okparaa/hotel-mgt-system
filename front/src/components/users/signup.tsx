@@ -1,20 +1,20 @@
 import { useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Avatar from "../../lib/avatar";
-import { useMutation } from "@apollo/client";
 import Form, { Button, FormRef, Input } from "../../lib/forms";
 import { errorHandler, image64ToBlob, uploadImage } from "../../lib/utils";
-import { CREATE_USER } from "../queries/users-queries";
+import { useNewUserMutation } from "../aio-urql";
 
 const SignUp = () => {
   const formRef = useRef<FormRef>(null);
   const navigate = useNavigate();
-  const [createUser, { loading }] = useMutation(CREATE_USER, {
-    onError: (error) => {
-      errorHandler(error, formRef.current);
-    },
-  });
+  const [{ data, fetching, error }, createUser] = useNewUserMutation();
 
+  if (!error && data) {
+    return <Navigate to={`/users/login`} />;
+  } else if (error) {
+    errorHandler(error, formRef.current);
+  }
   const defaultValues = {
     username: "",
     password: "",
@@ -47,7 +47,7 @@ const SignUp = () => {
           onSubmit={async (data: any) => {
             try {
               const resp = await createUser({
-                variables: { user: data },
+                user: data,
               });
               if (resp.data && resp.data.newUser && avatarUrl.current) {
                 const formData = new FormData();
@@ -125,7 +125,7 @@ const SignUp = () => {
             size="w-10/12"
           />
           <div className="btn mb-4">
-            <Button status={loading} title="Join" />
+            <Button status={fetching} title="Join" />
           </div>
         </Form>
         <div className="w-10/12">

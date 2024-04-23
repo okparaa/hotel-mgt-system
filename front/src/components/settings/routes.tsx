@@ -1,52 +1,51 @@
 import { useRef, useState } from "react";
 import { FormRef } from "../../lib/forms";
-import { useMutation, useQuery } from "@apollo/client";
-import { errorHandler, updateFxn } from "../../lib/utils";
-import { SEARCH } from "../queries/locals";
 import FormModal from "../../lib/form-modal";
 import { Table } from "../../lib/table";
-import { Search } from "../../lib/search";
-import { NewRouteMutation, Route } from "../../__generated__/graphql";
-import { store as routeStore } from "../../lib/client";
-import {
-  CREATE_ROUTE,
-  DEL_ROUTE,
-  EDIT_ROUTE,
-  GET_ROUTES,
-} from "../queries/routes-queries";
+
 import { TRouteBody } from "./partials/t-route-body";
 import RoutesForm from "../forms/route-form";
 import Pagination from "../../lib/pagination";
+import { Search } from "../../lib/search";
+import { useChest } from "../../state-mgr/app-chest";
+import {
+  useDelRouteMutation,
+  useEditRouteMutation,
+  useRoutesQuery,
+  useNewRouteMutation,
+  Route,
+} from "../aio-urql";
+import QueryResult from "../../lib/query-result";
 
 const Ruotes = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [newRoute, { loading: creating }] = useMutation<NewRouteMutation>(
-    CREATE_ROUTE,
-    {
-      onError: (error) => {
-        errorHandler(error, formRef.current);
-      },
+  const [routesRes] = useRoutesQuery();
 
-      update: (cache, { data }) => {
-        formRef.current?.reset();
-        setOpen(false);
-        cache.updateQuery({ query: GET_ROUTES }, ({ routes }: any) => ({
-          routes: [data?.newRoute, ...routes],
-        }));
-      },
-    }
-  );
+  if (routesRes.error || routesRes.fetching) {
+    return <QueryResult result={routesRes} />;
+  }
 
-  const { data: { routes } = {}, loading } = useQuery(GET_ROUTES);
+  const [routeNewRes, newRoute] = useNewRouteMutation();
+
+  const {
+    data: { search },
+    updateChest,
+  } = useChest();
 
   const deleteRoute = (route: Route) => {
-    routeStore({ name: route.name, id: route.id });
+    updateChest({ data: { name: route.name, id: route.id }, type: "store" });
     setOpenDel(true);
   };
-  const editRoute = (route: Route) => {
-    routeStore({ route });
+  const editRoute = async (route: Route) => {
+    updateChest({
+      data: {
+        id: route.id,
+        __typename: "Route",
+      },
+      type: "store",
+    });
     setOpen(true);
   };
 
@@ -62,10 +61,6 @@ const Ruotes = () => {
     </tr>
   );
 
-  const {
-    data: { search },
-  } = useQuery(SEARCH);
-
   const itemsPerPage = 10;
 
   const [startIndex, setStartIndex] = useState(0);
@@ -78,15 +73,17 @@ const Ruotes = () => {
     setEndIndex(end);
   };
   const searche = search || "";
-  const pageRoutes = routes?.slice(startIndex, endIndex);
-  const searchRoute = routes?.filter((route: any) => {
+  const pageRoutes = routesRes.data?.routes?.slice(startIndex, endIndex);
+  const searchRoute = routesRes.data?.routes?.filter((route: any) => {
     const str = Object.values(route).join(" ").toLowerCase();
     return str.includes(searche.toLowerCase());
   });
 
   const searchRoutes = !!searche ? searchRoute : pageRoutes;
 
-  const totalItems = !searche ? routes?.length || 0 : searchRoute?.length || 0;
+  const totalItems = !searche
+    ? routesRes.data?.routes?.length || 0
+    : searchRoute?.length || 0;
 
   const tBody = (
     <TRouteBody
@@ -96,25 +93,9 @@ const Ruotes = () => {
     />
   );
 
-  const [eRoute, { loading: updating }] = useMutation(EDIT_ROUTE, {
-    onError: (error) => {
-      errorHandler(error, formRef.current);
-    },
-    update: (cache, { data: eData }) => {
-      setOpen(false);
-      cache.updateQuery({ query: GET_ROUTES }, ({ routes }: any) => ({
-        routes: updateFxn(routes, eData?.eRoute),
-      }));
-    },
-  });
+  const [routeERes, eRoute] = useEditRouteMutation();
 
-  const [dRoute, { loading: deleting }] = useMutation(DEL_ROUTE, {
-    update: (cache, { data: { dRoute } }: any) => {
-      cache.updateQuery({ query: GET_ROUTES }, ({ routes }: any) => ({
-        routes: routes.filter((route: any) => route.id !== dRoute.id),
-      }));
-    },
-  });
+  const [routeDRes, dRoute] = useDelRouteMutation();
 
   const defaultValues = {
     name: "",
@@ -132,21 +113,22 @@ const Ruotes = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <RoutesForm
-          loading={creating || updating}
+          fetching={routeNewRes.fetching || routeERes.fetching}
           newRoute={newRoute}
           eRoute={eRoute}
+          closeModal={() => setOpen(false)}
           ref={formRef}
           defaultValues={defaultValues}
         />
       </FormModal>
-      {routes && (
+      {routesRes.data?.routes && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
             Searche={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
-            loading={loading}
-            deleting={deleting}
+            fetching={routesRes.fetching}
+            deleting={routeDRes.fetching}
             remove={dRoute}
             open={openDel}
             onClose={() => setOpenDel(false)}

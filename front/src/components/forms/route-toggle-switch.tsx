@@ -1,7 +1,6 @@
-import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import Working from "../../lib/working";
-import { EDIT_OTHER_SLUG } from "../queries/routes-queries";
+import { useEditOtherSlugMutation } from "../aio-urql";
 
 type RouteToggleSwitchProps = {
   id: string;
@@ -16,17 +15,8 @@ export const RouteToggleSwitch = ({
   status,
 }: RouteToggleSwitchProps) => {
   const [isChecked, setIsChecked] = useState(status);
-  const [mutation, { loading }] = useMutation(EDIT_OTHER_SLUG, {
-    update: (cache, { data: { otherSlugs } }: any) => {
-      // console.log(otherSlugs);
-      cache.modify({
-        id: cache.identify(otherSlugs),
-        fields: {
-          otherSlugs: () => otherSlugs.otherSlugs,
-        },
-      });
-    },
-  });
+  const [{ fetching: loading }, mutation] = useEditOtherSlugMutation();
+
   const toggleSwitch = () => {
     setIsChecked(!isChecked);
   };
@@ -61,11 +51,9 @@ export const RouteToggleSwitch = ({
                 }, "") || "";
           }
           await mutation({
-            variables: {
-              route: {
-                id: route.id,
-                otherSlugs: slugs,
-              },
+            route: {
+              id: route.id,
+              otherSlugs: slugs,
             },
           });
           toggleSwitch();

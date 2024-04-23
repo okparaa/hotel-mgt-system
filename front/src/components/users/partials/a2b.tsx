@@ -1,11 +1,10 @@
-import { useLazyQuery } from "@apollo/client";
 import { KeyRoundIcon } from "lucide-react";
 import Working from "../../../lib/working";
 import { useRef } from "react";
 import Form, { FormRef, Input } from "../../../lib/forms";
 import { decodeSession, errorHandler } from "../../../lib/utils";
-import { curUser, uSession } from "../../../lib/client";
-import { ACCESS_KODE } from "../../queries/users-queries";
+import { useChest } from "../../../state-mgr/app-chest";
+import { useVerifiedMutation } from "../../aio-urql";
 
 const defaultValues = {
   kode: "",
@@ -13,28 +12,30 @@ const defaultValues = {
 
 const A2b = () => {
   const formRef = useRef<FormRef>(null);
-  const [verified, { loading }] = useLazyQuery(ACCESS_KODE, {
-    onError: (error) => {
-      errorHandler(error, formRef.current);
-    },
-    onCompleted: ({ verified: user }) => {
-      const usr: any = {
-        id: user?.id,
-        sur: user?.surname,
-        fir: user?.firstname,
-        las: user?.lastname,
-        pic: user?.photoUrl,
-        usr: user?.username,
-        slg: user?.userSlug,
-        rut: user?.routeSlugs,
-      };
+  const { updateChest } = useChest();
+  const [{ data, fetching, error }, verified] = useVerifiedMutation();
+  console.log("we are here");
 
-      localStorage.setItem("token", user?.token || ""); //for apollo client
-      uSession(decodeSession(user?.token || "")); //for early update
-      localStorage.setItem("user", JSON.stringify(usr));
-      curUser(usr); //for early update
-    },
-  });
+  if (!error && data) {
+    const { verified: user } = data;
+
+    const usr: any = {
+      id: user?.id,
+      sur: user?.surname,
+      fir: user?.firstname,
+      las: user?.lastname,
+      pic: user?.photoUrl,
+      usr: user?.username,
+      slg: user?.routeSlugs,
+      rut: user?.route?.slug,
+    };
+    localStorage.setItem("token", user?.token || ""); //for apollo client
+    updateChest({ type: "session", data: decodeSession(user?.token || "") }); //for early update
+    localStorage.setItem("user", JSON.stringify(usr));
+    updateChest({ type: "user", data: usr }); //for early update
+  } else if (error) {
+    errorHandler(error, formRef.current);
+  }
 
   return (
     <div className="flex flex-col flex-1 justify-center items-center">
@@ -46,13 +47,11 @@ const A2b = () => {
         ref={formRef}
         defaultValues={defaultValues}
         className="flex flex-col items-center"
-        onSubmit={(data: any) =>
+        onSubmit={(data: any) => {
           verified({
-            variables: {
-              kode: data.kode,
-            },
-          })
-        }
+            kode: data.kode,
+          });
+        }}
       >
         <Input
           name="kode"
@@ -61,12 +60,12 @@ const A2b = () => {
         />
         <div className="btn text-center">
           <button
-            disabled={loading}
+            disabled={fetching}
             type="submit"
             className="bg-blue-200 working text-black"
           >
             verify
-            <Working loading={loading} />
+            <Working loading={fetching} />
           </button>
         </div>
       </Form>

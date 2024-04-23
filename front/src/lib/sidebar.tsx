@@ -3,9 +3,7 @@ import { ReactNode } from "react";
 import { Image } from "./image";
 import logo from "../images/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@apollo/client";
-import { CUR_USER, STORE } from "../components/queries/locals";
-import { store as Store } from "./client";
+
 import {
   BarChart3,
   Boxes,
@@ -17,21 +15,19 @@ import {
   UserCircle,
 } from "lucide-react";
 import { gConfig } from "../config";
+import { useChest } from "../state-mgr/app-chest";
 
 type SidebarProps = {
   children: ReactNode;
 };
 
 const Sidebar = ({ children }: SidebarProps) => {
-  const { data } = useQuery(CUR_USER);
   const {
-    data: { store },
-  } = useQuery(STORE);
+    data: { user, store },
+    updateChest,
+  } = useChest();
+
   const open = store.open;
-
-  if (!data) return <></>;
-
-  const { cur_user: user } = data;
 
   return (
     <aside className="h-screen fixed z-10 top-0">
@@ -45,7 +41,7 @@ const Sidebar = ({ children }: SidebarProps) => {
           <button
             className="rounded-lg p-1 bg-gray-50 hover:bg-gray-100"
             onClick={() => {
-              Store({ open: !open });
+              updateChest({ type: "store", data: { open: !open } });
             }}
           >
             {open ? <X /> : <ChevronRight />}
@@ -97,13 +93,13 @@ const SidebarItem = ({
 }: SidebarItemProps) => {
   const {
     data: { store },
-  } = useQuery(STORE);
-
+    updateChest,
+  } = useChest();
   const open = store.open;
   return (
     <li
       onClick={() => {
-        Store({ open: false });
+        updateChest({ type: "store", data: { open: false } });
         typeof action === "function" && action();
       }}
       className={`relative flex items-center bg-white ${

@@ -1,62 +1,56 @@
-import { useMutation, useQuery } from "@apollo/client";
 import { FormRef } from "../../lib/forms";
 import { useRef, useState } from "react";
-import { errorHandler, updateFxn } from "../../lib/utils";
 import FormModal from "../../lib/form-modal";
 import { Search } from "../../lib/search";
-import ItemsForm from "../forms/items-form";
-import { Item } from "../../__generated__/graphql";
-import { store as itemStore } from "../../lib/client";
-import {
-  CREATE_ITEM,
-  DEL_ITEM,
-  EDIT_ITEM,
-  GET_ITEMS,
-  ITEM_PRICE,
-} from "../queries/items-queries";
 import { Table } from "../../lib/table";
-import { SEARCH } from "../queries/locals";
 import { TItemBody } from "./partials/t-item-body";
+import {
+  Item,
+  useDItemMutation,
+  useEItemMutation,
+  useItemPriceMutation,
+  useItemsQuery,
+  useNewItemMutation,
+} from "../aio-urql";
+import QueryResult from "../../lib/query-result";
+import { useChest } from "../../state-mgr/app-chest";
+import ItemsForm from "../forms/items-form";
 
 const Items = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [newItem, { loading: creating }] = useMutation(CREATE_ITEM, {
-    onError: (error) => {
-      setOpen(false);
-      errorHandler(error, formRef.current);
-    },
+  const [result, newItem] = useNewItemMutation();
+  const { error, fetching: creatingItem } = result;
 
-    update: (cache, { data }) => {
-      formRef.current?.reset();
-      setOpen(false);
-      cache.updateQuery({ query: GET_ITEMS }, ({ items }: any) => ({
-        items: [data?.newItem, ...items],
-      }));
-    },
-  });
-  const [itemPrice] = useMutation(ITEM_PRICE, {
-    update: (cache, { data }) => {
-      cache.updateQuery({ query: GET_ITEMS }, ({ items }: any) => ({
-        items: items.map((item: any) => {
-          if (item.id === data?.itemPrice?.id)
-            return { ...item, price: data?.itemPrice?.price };
-          return item;
-        }),
-      }));
-    },
-  });
-  const { data: { items } = {}, loading } = useQuery(GET_ITEMS);
+  if (error || creatingItem) return <QueryResult result={result} />;
+
+  const [{}, itemPrice] = useItemPriceMutation();
+
+  const [itemsResult] = useItemsQuery();
+
+  const { data: dataItems, fetching: fetchingItems } = itemsResult;
+
+  const {
+    data: { search },
+    updateChest,
+  } = useChest();
 
   const deleteItem = (item: Item) => {
-    itemStore({ name: item.name, id: item.id });
+    updateChest({
+      data: { name: item.name, id: item.id },
+      type: "store",
+    });
     setOpenDel(true);
   };
   const editItem = (item: Item) => {
-    itemStore({ item });
+    updateChest({
+      data: { __typename: "Item", id: item.id },
+      type: "store",
+    });
     setOpen(true);
   };
+
   const tHead = (
     <tr>
       <th className="w-auto">Name</th>
@@ -71,12 +65,8 @@ const Items = () => {
     </tr>
   );
 
-  const {
-    data: { search },
-  } = useQuery(SEARCH);
-
-  const searchItems = items?.filter((item: any) => {
-    const str = Object.values(item).join(" ").toLowerCase();
+  const searchItems = dataItems?.items?.filter((item) => {
+    const str = (item && Object.values(item).join(" ").toLowerCase()) || "";
     const searche = search || "";
     return str.includes(searche.toLowerCase());
   });
@@ -90,25 +80,9 @@ const Items = () => {
     />
   );
 
-  const [eItem, { loading: updating }] = useMutation(EDIT_ITEM, {
-    onError: (error) => {
-      errorHandler(error, formRef.current);
-    },
-    update: (cache, { data: eData }) => {
-      setOpen(false);
-      cache.updateQuery({ query: GET_ITEMS }, ({ items }: any) => ({
-        items: updateFxn(items, eData?.eItem),
-      }));
-    },
-  });
+  const [{ fetching: updatingItem }, eItem] = useEItemMutation();
 
-  const [dItem, { loading: deleting }] = useMutation(DEL_ITEM, {
-    update: (cache, { data: { dItem } }: any) => {
-      cache.updateQuery({ query: GET_ITEMS }, ({ items }: any) => ({
-        items: items.filter((item: any) => item.id !== dItem.id),
-      }));
-    },
-  });
+  const [{ fetching: deleting }, dItem] = useDItemMutation();
 
   const defaultValues = {
     name: "",
@@ -125,20 +99,21 @@ const Items = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <ItemsForm
-          loading={creating || updating}
+          fetching={creatingItem || updatingItem}
           newItem={newItem}
           eItem={eItem}
           ref={formRef}
+          closeModal={() => setOpen(false)}
           defaultValues={defaultValues}
         />
       </FormModal>
-      {items && (
+      {dataItems?.items && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
             Searche={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
-            loading={loading}
+            fetching={fetchingItems}
             deleting={deleting}
             remove={dItem}
             open={openDel}

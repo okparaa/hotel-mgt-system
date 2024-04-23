@@ -9,7 +9,7 @@ export const typeDef = /* GraphQL */ `
     id: ID!
     price: String
     customerEmail: String
-    name: String
+    name: String!
     customerPhone: String
     qty: String
     user: User

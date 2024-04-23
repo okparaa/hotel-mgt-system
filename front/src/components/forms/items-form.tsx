@@ -2,26 +2,31 @@ import { forwardRef } from "react";
 import Form, { Button, Hidden, Input, Textarea } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import keyboard from "../../images/keyboard.jpg";
-import { STORE } from "../queries/locals";
-import { useQuery } from "@apollo/client";
+import { useChest } from "../../state-mgr/app-chest";
+import { useItemQuery } from "../aio-urql";
 
 type ItemsFormProps = {
   newItem: ({ variables }: any) => Promise<any>;
-  loading: boolean;
+  fetching: boolean;
   defaultValues: any;
   eItem: ({ variables }: any) => Promise<any>;
+  closeModal: () => void;
 };
 
 const ItemsForm = forwardRef(
-  ({ newItem, loading, defaultValues, eItem }: ItemsFormProps, ref: any) => {
+  (
+    { newItem, fetching, defaultValues, eItem, closeModal }: ItemsFormProps,
+    ref: any
+  ) => {
     const {
       data: { store },
-    } = useQuery(STORE);
+    } = useChest();
 
     const neu = store.neu;
 
-    if (store.item && store.item.__typename === "Item") {
-      defaultValues = store.item;
+    if (store.id && store.__typename === "Item") {
+      const [itemRes] = useItemQuery({ variables: { id: store.id } });
+      defaultValues = itemRes.data?.item;
     }
 
     return (
@@ -33,30 +38,28 @@ const ItemsForm = forwardRef(
             defaultValues={defaultValues}
             onSubmit={async (data: any) => {
               try {
-                if (store.item && store.item.__typename === "Item") {
+                if (store.id && store.__typename === "Item") {
                   await eItem({
-                    variables: {
-                      item: {
-                        id: data.id,
-                        name: data.name,
-                        type: data.type,
-                        price: data.price,
-                        sku: data.sku,
-                        description: data.description,
-                      },
+                    item: {
+                      id: data.id,
+                      name: data.name,
+                      type: data.type,
+                      price: data.price,
+                      sku: data.sku,
+                      description: data.description,
                     },
                   });
+                  closeModal();
                 } else {
                   await newItem({
-                    variables: {
-                      item: {
-                        name: data.name,
-                        type: data.type,
-                        price: data.price,
-                        description: data.description,
-                      },
+                    item: {
+                      name: data.name,
+                      type: data.type,
+                      price: data.price,
+                      description: data.description,
                     },
                   });
+                  closeModal();
                 }
               } catch (error) {
                 // console.log(error);
@@ -83,7 +86,7 @@ const ItemsForm = forwardRef(
               placeholder="Place it's used"
             />
             <div className="btn">
-              <Button title="Save" status={loading} />
+              <Button title="Save" status={fetching} />
             </div>
           </Form>
         </div>
@@ -104,4 +107,5 @@ const ItemsForm = forwardRef(
     );
   }
 );
+
 export default ItemsForm;

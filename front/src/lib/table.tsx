@@ -3,7 +3,7 @@ import Loading from "./loading";
 import Modal from "./modal";
 
 type TableProps = {
-  loading?: boolean;
+  fetching?: boolean;
   deleting?: boolean;
   remove?: ({ variables }: any) => Promise<any>;
   tHead: JSX.Element;
@@ -15,7 +15,7 @@ type TableProps = {
 };
 
 export const Table = ({
-  loading,
+  fetching,
   tHead,
   remove,
   tBody,
@@ -25,7 +25,7 @@ export const Table = ({
   deleting = false,
   Searche,
 }: TableProps) => {
-  if (loading) return <Loading />;
+  if (fetching) return <Loading />;
 
   return (
     <>

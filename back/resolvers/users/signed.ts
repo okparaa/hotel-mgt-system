@@ -54,7 +54,7 @@ export const signedUser = async (parent: any, args: any, ctx: Context) => {
     {
       id: user.id,
       auth: "in",
-      ver: "no",
+      vfy: "no",
     },
     process.env.JWT_SECRET || "secret",
     { expiresIn: "24h" }

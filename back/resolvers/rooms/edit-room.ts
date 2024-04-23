@@ -37,3 +37,27 @@ export const updateRoom = async (parent: any, args: any, ctx: Context) => {
     throwError("trying to save room", ErrorTypes.INTERNAL_SERVER_ERROR, e);
   }
 };
+
+const roomPriceSchema = yup.object({
+  price: yup.string().required("value is required"),
+  id: yup.string().required("value is required"),
+});
+
+export const updateRoomPrice = async (parent: any, args: any, ctx: Context) => {
+  try {
+    await roomPriceSchema.validate({ ...args }, { abortEarly: false });
+  } catch ({ inner }: any) {
+    const roomErrors = getErrors(inner);
+    throwError(
+      "Some room fields are ommited",
+      ErrorTypes.BAD_USER_INPUT,
+      roomErrors
+    );
+  }
+  const [currRoom] = await ctx.db
+    .update(rooms)
+    .set({ ...args })
+    .where(eq(rooms.id, args.id))
+    .returning(roomColumns);
+  return currRoom;
+};

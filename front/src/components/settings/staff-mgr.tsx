@@ -1,7 +1,4 @@
-import { useMutation, useQuery } from "@apollo/client";
 import { Navigate, useParams } from "react-router-dom";
-import { ASSIGN_ROUTE, GET_USER } from "../queries/users-queries";
-import Loading from "../../lib/loading";
 import Avatar from "../../lib/avatar";
 import { ChangeEvent, useRef } from "react";
 import { gConfig } from "../../config";
@@ -9,7 +6,12 @@ import { Accordion } from "../../lib/accordion";
 import Form, { Select } from "../../lib/forms";
 import { ucwords } from "../../lib/utils";
 import { UserToggleSwitch } from "../forms/user-toggle-switch";
-import { GET_ROUTES } from "../queries/routes-queries";
+import {
+  useAssignRouteMutation,
+  useRoutesQuery,
+  useUserQuery,
+} from "../aio-urql";
+import QueryResult from "../../lib/query-result";
 
 const StaffMgr = () => {
   const { userId } = useParams();
@@ -17,34 +19,33 @@ const StaffMgr = () => {
   const avatarUrl = useRef<string | null>();
   if (userId == null) return <Navigate to="/aio/settings/staff" />;
 
-  const { data: routesData, loading: routesLoading } = useQuery(GET_ROUTES);
+  const [routesRes] = useRoutesQuery();
+  const [userRes] = useUserQuery({ variables: { id: userId } });
+  const [assignRouteRes, mutation] = useAssignRouteMutation();
 
-  const { data: userData, loading: userLoading } = useQuery(GET_USER, {
-    variables: {
-      id: userId,
-    },
-  });
+  if (
+    userRes.error ||
+    userRes.fetching ||
+    routesRes.error ||
+    routesRes.fetching
+  ) {
+    return <QueryResult result={userRes} />;
+  }
 
-  const [mutation] = useMutation(ASSIGN_ROUTE);
-
-  if (userLoading || !userData || !routesData) return <Loading />;
-  const { user } = userData;
-  const { routes } = routesData;
-
-  const imageUrl = `${baseUrl}/${rest}/${image}/${user?.photoUrl}`;
+  const imageUrl = `${baseUrl}/${rest}/${image}/${userRes.data?.user?.photoUrl}`;
   const updateAvatar = (imgSrc: string) => {
     avatarUrl.current = imgSrc;
   };
 
-  const section_options = routes
+  const route_options = routesRes.data?.routes
     ?.map((route) => ({
       key: route?.id,
       value: route?.section,
       slug: route?.slug,
     }))
-    .filter((route) => route.value && route.slug);
+    .filter((route: { value: any; slug: any }) => route.value && route.slug);
 
-  const fullname = `${user?.surname} ${user?.firstname} ${user?.lastname}`;
+  const fullname = `${userRes.data?.user?.surname} ${userRes.data?.user?.firstname} ${userRes.data?.user?.lastname}`;
   return (
     <div className="overflow-x-auto">
       <div className="max-w-4xl flex items-center h-auto flex-wrap mx-auto mt-5">
@@ -76,29 +77,32 @@ const StaffMgr = () => {
             <div className="text-2xl">
               <strong>Section</strong>
             </div>
-            <Accordion msg={user?.route?.section || ""} title="Section">
+            <Accordion
+              className="mb-2 rounded-md bg-slate-100"
+              msg={userRes.data?.user?.route?.section || ""}
+              title="Section"
+            >
               <div className="px-3 py-1 flex flex-col">
                 <div className="flex justify-between p-2">
-                  <div>Allow staff:</div>
-                  <Form defaultValues={{ role: user?.route?.id }}>
+                  <div>Post to section:</div>
+                  <Form defaultValues={{ role: userRes.data?.user?.route?.id }}>
                     <Select
-                      options={section_options}
+                      options={route_options}
                       name="role"
-                      loading={routesLoading}
+                      fetching={assignRouteRes.fetching}
                       className="block bg-white text-[17px] px-3 w-auto rounded-md border border-gray-300 focus:outline-none"
                       not_input={1}
                       onChange={async (e: ChangeEvent) => {
                         const option =
-                          section_options![
+                          route_options &&
+                          route_options[
                             (e.currentTarget as HTMLSelectElement)
                               .selectedIndex - 1
                           ];
                         await mutation({
-                          variables: {
-                            user: {
-                              id: user!.id,
-                              routeId: option.key,
-                            },
+                          user: {
+                            id: userRes.data?.user?.id || "",
+                            routeId: option?.key,
                           },
                         });
                       }}
@@ -111,30 +115,36 @@ const StaffMgr = () => {
             <div className="text-2xl">
               <strong>Permissions</strong>
             </div>
-
-            {routes?.map((route) => {
-              return !route?.slug || route.slug === user?.route?.slug ? null : (
-                <Accordion
-                  active={user?.routeSlugs?.includes(route.slug)}
-                  title={`(${route.slug}) ${ucwords(route.section || "")}`}
-                  key={route.id}
-                >
-                  <div className="px-3 flex flex-col">
-                    <div className="flex justify-between p-2">
-                      <div>Allow: Execute sales</div>
-                      <Form defaultValues={{}}>
-                        <UserToggleSwitch
-                          user={user}
-                          id={route.id}
-                          value={route.slug}
-                          status={user?.routeSlugs?.includes(route.slug)}
-                        />
-                      </Form>
+            <div className="flex justify-evenly flex-wrap">
+              {routesRes.data?.routes?.map((route) => {
+                return (
+                  <Accordion
+                    active={userRes.data?.user?.routeSlugs?.includes(
+                      route?.slug || ""
+                    )}
+                    title={`(${route?.slug}) ${ucwords(route?.section || "")}`}
+                    key={route?.id}
+                    className="accordion-duo mb-2 rounded-md bg-slate-100"
+                  >
+                    <div className="px-3 flex flex-col">
+                      <div className="flex justify-between p-2">
+                        <div>Allow</div>
+                        <Form defaultValues={{}}>
+                          <UserToggleSwitch
+                            user={userRes.data?.user}
+                            id={route?.id || ""}
+                            value={route?.slug || ""}
+                            status={userRes.data?.user?.routeSlugs?.includes(
+                              route?.slug || ""
+                            )}
+                          />
+                        </Form>
+                      </div>
                     </div>
-                  </div>
-                </Accordion>
-              );
-            })}
+                  </Accordion>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

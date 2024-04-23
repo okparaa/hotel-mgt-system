@@ -1,12 +1,11 @@
-import { useQuery } from "@apollo/client";
-import { miniSearch as MiniSearche } from "./client";
 import { SearchIcon } from "lucide-react";
-import { MINI_SEARCH } from "../components/queries/locals";
+import { useChest } from "../state-mgr/app-chest";
 
 export const MiniSearch = () => {
   const {
     data: { mini_search },
-  } = useQuery(MINI_SEARCH);
+    updateChest,
+  } = useChest();
 
   return (
     <div className="w-full border-2 mb-1 p-2 flex justify-between">
@@ -18,7 +17,10 @@ export const MiniSearch = () => {
           value={mini_search || ""}
           placeholder="search..."
           onChange={(e) => {
-            MiniSearche((e.target as HTMLInputElement)?.value);
+            updateChest({
+              type: "mini_search",
+              data: (e.target as HTMLInputElement)?.value,
+            });
           }}
         />
         <SearchIcon className="absolute ml-1 top-1 pt-1 left-0 text-gray-400" />

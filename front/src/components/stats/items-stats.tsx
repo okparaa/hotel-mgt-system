@@ -1,20 +1,21 @@
-import { BarChart } from "chartist";
 import { useCallback } from "react";
 import "chartist/dist/index.css";
-import { useQuery } from "@apollo/client";
-import { GET_ITEMS_CHART } from "../queries/items-queries";
-import Loading from "../../lib/loading";
+import { BarChart } from "chartist";
+import { useItemsChartQuery } from "../aio-urql";
+import QueryResult from "../../lib/query-result";
 
 const ItemStats = () => {
-  const { data } = useQuery(GET_ITEMS_CHART);
+  const [itemsChartRes] = useItemsChartQuery();
 
   let graphtRef = useCallback(
     (node: any) => {
       const labels =
-        (data && data?.itemsChart?.map((item: any) => item.name)) || [];
+        (itemsChartRes?.data &&
+          itemsChartRes?.data?.itemsChart?.map((item: any) => item.name)) ||
+        [];
       const values =
-        (data &&
-          data?.itemsChart?.map((item: any) => ({
+        (itemsChartRes?.data &&
+          itemsChartRes?.data?.itemsChart?.map((item: any) => ({
             meta: item,
             value: item.qtyBought,
           }))) ||
@@ -85,10 +86,12 @@ const ItemStats = () => {
         });
       }
     },
-    [data]
+    [itemsChartRes.data]
   );
 
-  if (!data) return <Loading />;
+  if (itemsChartRes.error || itemsChartRes.fetching) {
+    return <QueryResult result={itemsChartRes} />;
+  }
 
   return (
     <div className="flex justify-center items-center flex-col">

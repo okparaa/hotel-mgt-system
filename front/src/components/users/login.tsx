@@ -3,13 +3,12 @@ import wstbrke from "../../images/wstbrke.jpg";
 import { Image } from "../../lib/image";
 import Plogin from "./partials/plogin";
 import A2b from "./partials/a2b";
-import { useQuery } from "@apollo/client";
-import { SESSION } from "../queries/locals";
+import { useChest } from "../../state-mgr/app-chest";
 
 const Login = () => {
   const {
     data: { session },
-  } = useQuery(SESSION);
+  } = useChest();
 
   if (session.auth === "ok") {
     return <Navigate to="/aio" />;
@@ -28,14 +27,14 @@ const Login = () => {
         />
       </div>
       <div className="flex flex-col flex-1 justify-center items-center bg-gradient-to-tr from-transparent via-transparent to-blue-100 py-4">
-        {session.auth == "in" ? (
+        {session.auth === "in" ? (
           <A2b />
-        ) : session.auth == "no" ? (
+        ) : session.auth === "" ? (
           <Plogin />
         ) : (
           ""
         )}
-        {session.auth == "no" && (
+        {session.auth == "" && (
           <div>
             <span>Don't have account? </span>
             <Link to="/users/signup" className="link">

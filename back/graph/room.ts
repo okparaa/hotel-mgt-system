@@ -2,17 +2,17 @@ import { eq } from "drizzle-orm";
 import { rooms, users } from "../db/schemas";
 import { createNewRoom } from "../resolvers/rooms/new-room";
 import { Context } from "../types/context";
-import { updateRoom } from "../resolvers/rooms/edit-room";
-import { roomColumns } from "../helpers";
-import { createRandomRooms } from "../faker";
+import { updateRoom, updateRoomPrice } from "../resolvers/rooms/edit-room";
+import { roomColumns, sleep } from "../helpers";
+import { bookings } from "../resolvers/rooms/bookings";
 export const typeDef = /* GraphQL */ `
   type Room {
     id: ID!
-    name: String
+    name: String!
     description: String
     createdAt: String
     deleted: String
-    price: String
+    price: Int
     sku: String
     guestName: String
     guestEmail: String
@@ -34,18 +34,27 @@ export const typeDef = /* GraphQL */ `
     eRoom(room: RoomInput): Room
     newRoom(room: NewRoomInput): Room
     dRoom(id: ID!): Room
-    roomPrice(id: ID!, price: String): Room
+    roomPrice(id: ID!, price: Int): Room
+    booker(book: RoomBookInput): [Room]
   }
   input NewRoomInput {
     name: String
     description: String
-    price: String
+    price: Int
     type: String
   }
+  input RoomBookInput {
+    id: String!
+    txfa: Int
+    total: Int
+    pos: Int
+    cash: Int
+  }
+
   input RoomInput {
     id: String
     name: String
-    price: String
+    price: Int
     description: String
     type: String
   }
@@ -55,7 +64,15 @@ export const resolvers = {
     rooms: async (parent: any, args: any, ctx: Context) => {
       return await ctx.db.select(roomColumns).from(rooms);
     },
+    room: async (parent: any, args: any, ctx: Context) => {
+      const [room] = await ctx.db
+        .select()
+        .from(rooms)
+        .where(eq(rooms.id, args.id));
+      return room;
+    },
   },
+
   Mutation: {
     newRoom: async (parent: any, args: any, ctx: Context) => {
       return await createNewRoom(parent, args, ctx);
@@ -63,7 +80,14 @@ export const resolvers = {
     eRoom: async (parent: any, args: any, ctx: Context) => {
       return await updateRoom(parent, args, ctx);
     },
+    roomPrice: async (parent: any, args: any, ctx: Context) => {
+      return await updateRoomPrice(parent, args, ctx);
+    },
+    booker: async (parent: any, args: any, ctx: Context) => {
+      return await bookings(parent, args, ctx);
+    },
   },
+
   Room: {
     user: async (parent: any, args: any, ctx: Context) => {
       const [user] = await ctx.db

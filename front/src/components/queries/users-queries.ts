@@ -1,4 +1,30 @@
-import { gql } from "../../__generated__";
+import { gql } from "@urql/preact";
+
+export const ACCESS_KODE = gql(`
+  mutation Verified($kode: String!) {
+    verified(kode: $kode) {
+        id
+        surname
+        firstname
+        lastname
+        phone
+        address
+        active
+        token
+        username
+        photoUrl
+        createdAt
+        message
+        routeSlugs
+        route {
+            id
+            name
+            section
+            slug
+        }
+      }
+    }
+`);
 
 export const GET_USERS = gql(`
   query Users {
@@ -78,7 +104,7 @@ export const CREATE_USER = gql(`
   }
 `);
 export const SALARY = gql(`
-  mutation Salary($id: ID!, $salary: String) {
+  mutation Salary($id: ID!, $salary: Int) {
     salary(id: $id, salary: $salary) {
       id
       salary
@@ -87,37 +113,20 @@ export const SALARY = gql(`
   }
 `);
 
-export const ACCESS_KODE = gql(`
-  query Verified($kode: String!) {
-    verified(kode: $kode) {
-        id
-        surname
-        firstname
-        lastname
-        phone
-        address
-        active
-        token
-        username
-        photoUrl
-        createdAt
-        message
-        routeSlugs
-        route {
-            id
-            name
-            section
-            slug
-        }
-      }
-    }
-`);
-
 export const EDIT_USER_SLUGS = gql(`
-  mutation EUserSlugs($user: UserSlugInput!) @serialize(key: ["mutation"]) {
+  mutation EditUserSlugs($user: UserSlugInput!) {
     eUserSlugs(user: $user) {
       id
       routeSlugs
+    }
+  }
+`);
+
+export const LOGIN = gql(`
+  mutation Login($user: LoggedUserInput!) {
+    signed(user: $user) {
+      id
+      accessToken
     }
   }
 `);

@@ -1,12 +1,14 @@
-import { CodegenConfig } from "@graphql-codegen/cli";
+import type { CodegenConfig } from "@graphql-codegen/cli";
+
 const config: CodegenConfig = {
+  overwrite: true,
   schema: "http://localhost:5100/api",
-  documents: ["src/**/*.{js,jsx,ts,tsx}"],
+  documents: ["src/**/*.{js,ts,tsx,jsx}"],
   generates: {
-    "./src/__generated__/": {
-      preset: "client",
-      presetConfig: {
-        gqlTagName: "gql",
+    "./src/components/aio-urql.ts": {
+      plugins: ["typescript", "typescript-operations", "typescript-urql"],
+      config: {
+        minify: true,
       },
     },
   },

@@ -1,18 +1,27 @@
-import { useMutation, useQuery, useReactiveVar } from "@apollo/client";
-import { orderItems } from "../../../lib/client";
-import { ORDER_ITEMS } from "../../queries/locals";
-import { addInput, toCommas } from "../../../lib/utils";
-import { CREATE_ORDER_ITEMS } from "../../queries/orders-items-queries";
+import { useState } from "react";
+import {
+  addInput,
+  errorMsgHandler,
+  toCommas,
+  ucwords,
+} from "../../../lib/utils";
+import { useChest } from "../../../state-mgr/app-chest";
+import { useNewOrderItemsMutation } from "../../aio-urql";
 import { Check, RotateCcw, Save, X } from "lucide-react";
 
 export const TOrderCheckout = () => {
-  const order = useReactiveVar(orderItems);
-  const denom = order.cash + order.pos + order.txfa;
   const {
     data: { order_items },
-  } = useQuery(ORDER_ITEMS);
+    updateChest,
+  } = useChest();
+  const [errorMsg, setErrorMsg] = useState("");
+  const order = order_items;
+  const denom = order.cash + order.pos + order.txfa;
 
-  const [newOrderItems] = useMutation(CREATE_ORDER_ITEMS);
+  const [orderItemsRes, newOrderItems] = useNewOrderItemsMutation();
+  if (orderItemsRes.error) {
+    setErrorMsg(() => errorMsgHandler(orderItemsRes.error)?.message);
+  }
 
   return (
     <>
@@ -43,17 +52,22 @@ export const TOrderCheckout = () => {
                     className="bwks border-y border-slate-400 cursor-text flex w-20 h-10 m-auto justify-center items-center rounded-md"
                     onClick={(e) =>
                       addInput(e, (value) => {
-                        orderItems({
-                          cash: +value,
-                          txfa: order.txfa,
-                          pos: order.pos,
-                          total: order.total,
-                          items: order.items,
-                          hash: order.hash,
+                        updateChest({
+                          type: "order_items",
+                          data: {
+                            cash: +value,
+                            txfa: order.txfa,
+                            pos: order.pos,
+                            total: order.total,
+                            items: order.items,
+                            hash: order.hash,
+                          },
                         });
                       })
                     }
-                  ></span>
+                  >
+                    {toCommas(order_items.cash)}
+                  </span>
                 </div>
                 <div className="!border-none">
                   <span>pos</span>
@@ -61,17 +75,22 @@ export const TOrderCheckout = () => {
                     className="bwks border-y border-slate-400 cursor-text flex w-20 h-10 m-auto justify-center items-center rounded-md"
                     onClick={(e) =>
                       addInput(e, (value) => {
-                        orderItems({
-                          cash: order.cash,
-                          txfa: order.txfa,
-                          pos: +value,
-                          total: order.total,
-                          items: order.items,
-                          hash: order.hash,
+                        updateChest({
+                          type: "order_items",
+                          data: {
+                            cash: order.cash,
+                            txfa: order.txfa,
+                            pos: +value,
+                            total: order.total,
+                            items: order.items,
+                            hash: order.hash,
+                          },
                         });
                       })
                     }
-                  ></span>
+                  >
+                    {toCommas(order_items.pos)}
+                  </span>
                 </div>
                 <div className="!border-none">
                   <span>transfer</span>
@@ -79,23 +98,28 @@ export const TOrderCheckout = () => {
                     className="bwks border-y border-slate-400 cursor-tex flex w-20 h-10 m-auto justify-center items-center rounded-md"
                     onClick={(e) =>
                       addInput(e, (value) => {
-                        orderItems({
-                          cash: order.cash,
-                          txfa: +value,
-                          pos: order.pos,
-                          total: order.total,
-                          items: order.items,
-                          hash: order.hash,
+                        updateChest({
+                          type: "order_items",
+                          data: {
+                            cash: order.cash,
+                            txfa: +value,
+                            pos: order.pos,
+                            total: order.total,
+                            items: order.items,
+                            hash: order.hash,
+                          },
                         });
                       })
                     }
-                  ></span>
+                  >
+                    {toCommas(order_items.txfa)}
+                  </span>
                 </div>
                 <div>
                   <span>total</span>
                   <span className="bwks relative border border-slate-400 flex w-20 h-10 m-auto justify-center items-center rounded-md">
                     {toCommas(denom)}
-                    {denom != order.total ? (
+                    {denom !== order.total ? (
                       <X className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
                     ) : (
                       <Check className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
@@ -113,13 +137,16 @@ export const TOrderCheckout = () => {
               <div className="p-1 text-[16px] gap-10 flex justify-center">
                 <button
                   onClick={() => {
-                    orderItems({
-                      cash: 0,
-                      pos: 0,
-                      txfa: 0,
-                      hash: "",
-                      total: 0,
-                      items: [],
+                    updateChest({
+                      type: "order_items",
+                      data: {
+                        cash: 0,
+                        pos: 0,
+                        txfa: 0,
+                        hash: "",
+                        total: 0,
+                        items: [],
+                      },
                     });
                   }}
                   className="px-4 shadow-md py-0 outline-1 bg-fuchsia-800 text-white border text-lg flex items-center gap-2 rounded-full"
@@ -130,12 +157,10 @@ export const TOrderCheckout = () => {
                   onClick={() => {
                     try {
                       newOrderItems({
-                        variables: {
-                          orderItems: order_items.items,
-                          pos: order_items.pos,
-                          txfa: order_items.txfa,
-                          cash: order_items.cash,
-                        },
+                        orderItems: order_items.items,
+                        pos: order_items.pos,
+                        txfa: order_items.txfa,
+                        cash: order_items.cash,
                       });
                     } catch (error) {}
                   }}
@@ -147,6 +172,15 @@ export const TOrderCheckout = () => {
               </div>
             </td>
           </tr>
+          {errorMsg && (
+            <tr>
+              <td colSpan={5} style={{ border: "none" }}>
+                <div className="text-2xl text-center pt-4 text-red-600">
+                  {ucwords(errorMsg)}
+                </div>
+              </td>
+            </tr>
+          )}
         </>
       )}
     </>

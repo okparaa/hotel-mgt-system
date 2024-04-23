@@ -7,10 +7,7 @@ import { registerUser } from "../resolvers/users/new-user";
 import { signedUser } from "../resolvers/users/signed";
 import { logoutUser } from "../resolvers/users/logout";
 import { verifiedUser } from "../resolvers/users/verified";
-import {
-  updateRouteSlugs,
-  updateUserRoute,
-} from "../resolvers/users/edit-user";
+import { updateRouteSlugs, assignRoute } from "../resolvers/users/edit-user";
 
 let currentNumber = 0;
 
@@ -50,22 +47,27 @@ export const typeDef = /* GraphQL */ `
     user(id: ID!): User
     currentNumber: Int
     logout(id: ID!): Message
-    verified(kode: String!): User
     loggedIn: [String]
     cur_user: CurUser
   }
   type Mutation {
+    verified(kode: String!): User
     newUser(user: NewUserInput!): User
     signed(user: LoggedUserInput!): Session
-    salary(id: ID!, salary: String): User
+    salary(id: ID!, salary: Int): User
     eUserSlugs(user: UserSlugInput): User
     assignRoute(user: UserInput): User
+    refreshToken(user: UserTokenInput): User
   }
   type Subscription {
     numberIncremented: Int
   }
   type Message {
     message: String
+  }
+  input UserTokenInput {
+    id: ID
+    token: String
   }
   input NewUserInput {
     surname: String!
@@ -95,9 +97,6 @@ export const resolvers = {
   Query: {
     currentNumber() {
       return currentNumber;
-    },
-    verified: async (parent: any, args: any, ctx: Context) => {
-      return await verifiedUser(parent, args, ctx);
     },
     users: async (parent: any, args: any, ctx: Context) => {
       return await ctx.db.select().from(users).orderBy(asc(users.surname));
@@ -136,6 +135,9 @@ export const resolvers = {
     },
   },
   Mutation: {
+    verified: async (parent: any, args: any, ctx: Context) => {
+      return await verifiedUser(parent, args, ctx);
+    },
     signed: async (parent: any, args: any, ctx: Context) => {
       return await signedUser(parent, args, ctx);
     },
@@ -143,14 +145,15 @@ export const resolvers = {
       return await registerUser(parent, args, ctx);
     },
     salary: async (parent: any, args: any, ctx: Context) => {
-      return await ctx.db
+      const [user] = await ctx.db
         .update(users)
         .set({ salary: args.salary })
         .where(eq(users.id, args.id))
         .returning();
+      return user;
     },
     assignRoute: async (parent: any, args: any, ctx: Context) => {
-      return await updateUserRoute(parent, args, ctx);
+      return await assignRoute(parent, args, ctx);
     },
     eUserSlugs: async (parent: any, args: any, ctx: Context) => {
       return await updateRouteSlugs(parent, args, ctx);

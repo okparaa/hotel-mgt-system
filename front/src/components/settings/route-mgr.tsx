@@ -1,36 +1,43 @@
-import { useQuery } from "@apollo/client";
 import { Navigate, useParams } from "react-router-dom";
 import Loading from "../../lib/loading";
 import { Accordion } from "../../lib/accordion";
-import Form from "../../lib/forms";
+import Form, { Select } from "../../lib/forms";
 import { ucwords } from "../../lib/utils";
 import { RouteToggleSwitch } from "../forms/route-toggle-switch";
-import { GET_ROUTE, GET_ROUTES } from "../queries/routes-queries";
 import { gConfig } from "../../config";
+import { ChangeEvent } from "preact/compat";
+import {
+  useRouteQuery,
+  useRoutesQuery,
+  useParentRouteMutation,
+} from "../aio-urql";
 
 const RouteMgr = () => {
   const { routeId: ruteId } = useParams();
   if (ruteId == null) return <Navigate to="/aio/settings/routes" />;
-  const { data: routeData, loading: routeLoading } = useQuery(GET_ROUTE, {
+  const [{ data: ruteData, fetching: ruteLoading }] = useRouteQuery({
     variables: {
       id: ruteId,
     },
   });
-  const { data: routesData } = useQuery(GET_ROUTES);
+
+  const [{ data: routesData }] = useRoutesQuery();
+
+  const [parentRouteRes, mutation] = useParentRouteMutation();
+
+  if (ruteLoading || !ruteData || !routesData) return <Loading />;
+  const { route: rute } = ruteData;
+
   const { rest, baseUrl, image } = gConfig;
-  // const [eRoute, { loading: loadingSection }] = useMutation(EDIT_ROUTE);
-  if (routeLoading || !routeData || !routesData) return <Loading />;
-  const { route: rute } = routeData;
-  const { routes } = routesData;
-
-  console.log(rute?.otherSlugs);
-
   const imageUrl = `${baseUrl}/${rest}/${image}/route.jpg`;
 
-  // const section_options = routes?.map((route) => ({
-  //   key: route?.id,
-  //   value: route?.section,
-  // }));
+  const route_options = routesData.routes
+    ?.map((route) => ({
+      key: route?.id,
+      value: route?.section,
+      slug: route?.slug,
+    }))
+    .filter((route: { value: any; slug: any }) => route.value && route.slug);
 
   return (
     <div className="overflow-x-auto">
@@ -57,37 +64,75 @@ const RouteMgr = () => {
               </svg>
               What I do: Represent places here
             </p>
+            <div className="text-2xl">
+              <strong>Section</strong>
+            </div>
+            <Accordion
+              className="mb-2 rounded-md bg-slate-100"
+              msg={rute?.route?.section || ""}
+              title="Parent"
+            >
+              <div className="px-3 py-1 flex flex-col">
+                <div className="flex justify-between p-2">
+                  <div>Allow from: </div>
+                  <Form defaultValues={{ role: rute?.route?.id }}>
+                    <Select
+                      options={route_options}
+                      name="role"
+                      fetching={parentRouteRes.fetching}
+                      className="block bg-white text-[17px] px-3 w-auto rounded-md border border-gray-300 focus:outline-none"
+                      not_input={1}
+                      onChange={async (e: ChangeEvent) => {
+                        const option =
+                          route_options![
+                            (e.currentTarget as HTMLSelectElement)
+                              .selectedIndex - 1
+                          ];
+                        await mutation({
+                          route: {
+                            id: rute!.id,
+                            routeId: option.key,
+                          },
+                        });
+                      }}
+                    />
+                  </Form>
+                </div>
+              </div>
+            </Accordion>
             <div className="mx-auto lg:mx-0 pt-3 border-b-2 border-green-500 opacity-25"></div>
             <div className="text-2xl">
               <strong>Users Permissions</strong>
             </div>
-
-            {routes?.map((route) => {
-              return !route?.slug ? null : (
-                <Accordion
-                  active={rute?.otherSlugs?.includes(route?.slug || "@")}
-                  title={`(${route?.slug}) ${ucwords(route?.section || "")}`}
-                  key={route?.id}
-                >
-                  <div className="px-3 flex flex-col">
-                    <div className="flex justify-between p-2">
-                      <div>Allow: Execute sales</div>
-                      <Form>
-                        <RouteToggleSwitch
-                          key={route?.id}
-                          route={rute}
-                          id={route!.id}
-                          slug={route?.slug || ""}
-                          status={rute?.otherSlugs?.includes(
-                            route?.slug || "@"
-                          )}
-                        />
-                      </Form>
+            <div className="flex justify-evenly flex-wrap">
+              {routesData.routes?.map((route) => {
+                return !route?.slug ? null : (
+                  <Accordion
+                    active={rute?.otherSlugs?.includes(route?.slug || "@")}
+                    title={`(${route?.slug}) ${ucwords(route?.section || "")}`}
+                    key={route?.id}
+                    className="accordion-duo mb-2 rounded-md bg-slate-100"
+                  >
+                    <div className="px-3 flex flex-col">
+                      <div className="flex justify-between p-2">
+                        <div>Allow</div>
+                        <Form>
+                          <RouteToggleSwitch
+                            key={route?.id}
+                            route={rute}
+                            id={route!.id}
+                            slug={route?.slug || ""}
+                            status={rute?.otherSlugs?.includes(
+                              route?.slug || "@"
+                            )}
+                          />
+                        </Form>
+                      </div>
                     </div>
-                  </div>
-                </Accordion>
-              );
-            })}
+                  </Accordion>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

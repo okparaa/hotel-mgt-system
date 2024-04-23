@@ -1,4 +1,4 @@
-import { gql } from "../../__generated__";
+import { gql } from "urql";
 
 export const EDIT_ORDER = gql(`
   mutation EOrder($order: OrderInput!) {

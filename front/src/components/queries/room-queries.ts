@@ -1,4 +1,4 @@
-import { gql } from "../../__generated__";
+import { gql } from "@urql/preact";
 
 export const CREATE_ROOM = gql(`
   mutation NewRoom($room: NewRoomInput!) {
@@ -38,10 +38,25 @@ export const DEL_ROOM = gql(`
   }
 `);
 export const ROOM_PRICE = gql(`
-  mutation RoomPrice($id: ID!, $price: String) {
+  mutation RoomPrice($id: ID!, $price: Int) {
     roomPrice(id: $id, price: $price) {
       id
       price
+    }
+  }
+`);
+
+export const BOOKER = gql(`
+  mutation Booker($book: RoomBookInput!) {
+    booker(book: $book) {
+      id
+      name
+      deleted
+      inDate
+      outDate
+      bookDate
+      status
+      type
     }
   }
 `);
@@ -82,9 +97,19 @@ export const GET_ROOMS = gql(`
 
 export const GET_ROOM = gql(`
   query Room($id: ID!) {
-    room(id: $id) {
+    room (id: $id) {
       id
+      name
+      description
+      price
       sku
+      createdAt
+      deleted
+      inDate
+      outDate
+      bookDate
+      status
+      type
     }
   }
 `);

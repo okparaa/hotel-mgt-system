@@ -17,4 +17,5 @@ export const routes = pgTable("routes", {
   section: varchar("section"),
   isSxn: boolean("section_name").default(true),
   description: varchar("description"),
+  routeId: varchar("route_id", { length: 128 }).references(() => routes.id),
 });

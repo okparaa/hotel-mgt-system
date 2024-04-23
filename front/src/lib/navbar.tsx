@@ -8,21 +8,32 @@ import {
 } from "lucide-react";
 import { Image } from "./image";
 import logo from "../images/logo.png";
-import { useQuery } from "@apollo/client";
-import { SESSION } from "../components/queries/locals";
-import { uSession } from "./client";
-import { decodeSession } from "./utils";
+import { useChest } from "../state-mgr/app-chest";
 
 const Navbar = () => {
   const {
     data: { session },
-  } = useQuery(SESSION);
+    updateChest,
+  } = useChest();
 
   const navigate = useNavigate();
   const signOut = (e: MouseEvent) => {
     e.preventDefault();
     localStorage.clear();
-    uSession(decodeSession(""));
+    sessionStorage.clear();
+    const sess = { id: "", auth: "", vfy: "", iat: "", exp: "" };
+    updateChest({ type: "session", data: sess });
+    const usr = {
+      id: "",
+      sur: "",
+      fir: "",
+      las: "",
+      pic: "",
+      usr: "",
+      slg: "",
+      rut: "",
+    };
+    updateChest({ type: "user", data: usr });
     navigate("/");
   };
   return (
@@ -40,7 +51,7 @@ const Navbar = () => {
           <Link to="/services">
             <PencilRulerIcon className="w-5 inline-block" /> Services
           </Link>
-          {session.auth !== "no" ? (
+          {session.auth !== "" ? (
             <Link onClick={signOut} to="/" className="w-28 inline-block">
               <Power className="w-5 inline-block mb-0 p-0" /> Logout
             </Link>

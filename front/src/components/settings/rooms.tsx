@@ -1,61 +1,52 @@
 import { useRef, useState } from "react";
 import { FormRef } from "../../lib/forms";
-import { useMutation, useQuery } from "@apollo/client";
-import { errorHandler, updateFxn } from "../../lib/utils";
-import { SEARCH } from "../queries/locals";
+import { errorHandler } from "../../lib/utils";
 import FormModal from "../../lib/form-modal";
 import { Search } from "../../lib/search";
 import { Table } from "../../lib/table";
-import { store as roomStore } from "../../lib/client";
 import { TRoomBody } from "./partials/t-room-body";
 import RoomsForm from "../forms/rooms-form";
+import { useChest } from "../../state-mgr/app-chest";
 import {
-  CREATE_ROOM,
-  DEL_ROOM,
-  EDIT_ROOM,
-  GET_ROOMS,
-  ROOM_PRICE,
-} from "../queries/room-queries";
-import { Room } from "../../__generated__/graphql";
+  Room,
+  useDRoomMutation,
+  useERoomMutation,
+  useNewRoomMutation,
+  useRoomPriceMutation,
+  useRoomsQuery,
+} from "../aio-urql";
 
 const Rooms = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [newRoom, { loading: creating }] = useMutation(CREATE_ROOM, {
-    onError: (error) => {
-      setOpen(false);
-      errorHandler(error, formRef.current);
-    },
+  const [{ fetching: creating, error: newError, data: newData }, newRoom] =
+    useNewRoomMutation();
+  if (!newError && newData) {
+    formRef.current?.reset();
+    setOpen(false);
+  } else if (newError) {
+    setOpen(false);
+    errorHandler(newError, formRef.current);
+  }
 
-    update: (cache, { data }) => {
-      formRef.current?.reset();
-      setOpen(false);
-      cache.updateQuery({ query: GET_ROOMS }, ({ rooms }: any) => ({
-        rooms: [data?.newRoom, ...rooms],
-      }));
-    },
-  });
-  const [roomPrice] = useMutation(ROOM_PRICE, {
-    update: (cache, { data }) => {
-      cache.updateQuery({ query: GET_ROOMS }, ({ rooms }: any) => ({
-        rooms: rooms.map((room: any) => {
-          if (room.id === data?.roomPrice?.id)
-            return { ...rooms, price: data?.roomPrice?.price };
-          return room;
-        }),
-      }));
-    },
-  });
+  const {
+    data: { search },
+    updateChest,
+  } = useChest();
+  const [{}, roomPrice] = useRoomPriceMutation();
 
-  const { data: { rooms } = {}, loading } = useQuery(GET_ROOMS);
+  const [{ data: roomData, fetching: loading }] = useRoomsQuery();
 
-  const deleteItem = (room: Room) => {
-    roomStore({ name: room.name, id: room.id });
+  const deleteRoom = (room: Room) => {
+    updateChest({ type: "store", data: { name: room.name, id: room.id } });
     setOpenDel(true);
   };
-  const editItem = (room: Room) => {
-    roomStore({ room });
+  const editRoom = (room: Room) => {
+    updateChest({
+      type: "store",
+      data: { __typename: "Room", id: room.id },
+    });
     setOpen(true);
   };
 
@@ -74,11 +65,7 @@ const Rooms = () => {
     </tr>
   );
 
-  const {
-    data: { search },
-  } = useQuery(SEARCH);
-
-  const searchItems = rooms?.filter((item: any) => {
+  const searchItems = roomData?.rooms?.filter((item: any) => {
     const str = Object.values(item).join(" ").toLowerCase();
     const searche = search || "";
     return str.includes(searche.toLowerCase());
@@ -87,32 +74,16 @@ const Rooms = () => {
   const tBody = (
     <TRoomBody
       searchRooms={searchItems}
-      editRoom={editItem}
-      deleteRoom={deleteItem}
+      editRoom={editRoom}
+      deleteRoom={deleteRoom}
       roomPrice={roomPrice}
       bookable={bookable}
     />
   );
 
-  const [eRoom, { loading: updating }] = useMutation(EDIT_ROOM, {
-    onError: (error) => {
-      errorHandler(error, formRef.current);
-    },
-    update: (cache, { data: eData }) => {
-      setOpen(false);
-      cache.updateQuery({ query: GET_ROOMS }, ({ rooms }: any) => ({
-        rooms: updateFxn(rooms, eData?.eRoom),
-      }));
-    },
-  });
+  const [{ fetching: updating }, eRoom] = useERoomMutation();
 
-  const [dRoom, { loading: deleting }] = useMutation(DEL_ROOM, {
-    update: (cache, { data: { dRoom } }: any) => {
-      cache.updateQuery({ query: GET_ROOMS }, ({ rooms }: any) => ({
-        rooms: rooms.filter((room: any) => room.id !== dRoom.id),
-      }));
-    },
-  });
+  const [{ fetching: deleting }, dRoom] = useDRoomMutation();
 
   const defaultValues = {
     name: "",
@@ -129,21 +100,22 @@ const Rooms = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <RoomsForm
-          loading={creating || updating}
+          fetching={creating || updating}
           newRoom={newRoom}
           eRoom={eRoom}
           ref={formRef}
           bookable={bookable}
+          closeModal={() => setOpen(false)}
           defaultValues={defaultValues}
         />
       </FormModal>
-      {rooms && (
+      {roomData?.rooms && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
             Searche={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
-            loading={loading}
+            fetching={loading}
             deleting={deleting}
             remove={dRoom}
             open={openDel}

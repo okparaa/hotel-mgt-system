@@ -1,87 +1,59 @@
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useCallback, useRef } from "react";
 import { CalendarDays } from "lucide-react";
-import "pikaday/css/pikaday.css";
-import Pikaday from "pikaday";
 
 import { Table } from "../../lib/table";
-import {
-  CREATE_INVENTORY,
-  DEL_INVENTORY,
-  EDIT_INVENTORY,
-  GET_INVENTORIES,
-  GET_ITEM_INVENTORIES,
-} from "../queries/inventory-queries";
-import Working from "../../lib/working";
 import { Search } from "../../lib/search";
 import { MiniSearch } from "../../lib/mini-search";
-import { MINI_SEARCH, SEARCH, STORE } from "../queries/locals";
 import { TInventoryBody } from "./partials/t-inventory-body";
 import { TInventoryItemBody } from "./partials/t-inventory-item-body";
 import { getDateFromTimestamp } from "../../lib/utils";
-import { store } from "../../lib/client";
+
+import "../pikaday/css/pikaday.css";
+import { Pikaday } from "../pikaday/pikaday";
+import { useChest } from "../../state-mgr/app-chest";
+import { useLazyQuery } from "../../lib/useLazyQuery";
+import {
+  InventoriesQuery,
+  useDInventoryMutation,
+  useEInventoryMutation,
+  useInventoriesItemsQuery,
+  useNewInventoryMutation,
+} from "../aio-urql";
+import QueryResult from "../../lib/query-result";
+import { GET_INVENTORIES } from "../queries/inventory-queries";
 
 const Inventory = () => {
   const today = getDateFromTimestamp();
-  const { data, loading } = useQuery(GET_ITEM_INVENTORIES, {
+  const [inventoriesItemsRes] = useInventoriesItemsQuery({
     variables: { date: today },
   });
-  const {
-    data: { prevDate },
-  } = useQuery(STORE);
 
-  const [getInventories, { data: inData }] = useLazyQuery(GET_INVENTORIES, {
-    variables: { date: prevDate ? prevDate : today },
+  if (inventoriesItemsRes.error || inventoriesItemsRes.fetching) {
+    return <QueryResult result={inventoriesItemsRes} />;
+  }
+
+  const {
+    data: { search, mini_search },
+    updateChest,
+  } = useChest();
+
+  const [inventoriesRes, getInventories] = useLazyQuery<InventoriesQuery>({
+    query: GET_INVENTORIES,
   });
 
-  const {
-    data: { search },
-  } = useQuery(SEARCH);
+  const [{}, dInventory] = useDInventoryMutation();
 
-  const {
-    data: { mini_search },
-  } = useQuery(MINI_SEARCH);
+  const [{}, newInventory] = useNewInventoryMutation();
+  const [{}, eInventory] = useEInventoryMutation();
 
-  const [dInventory] = useMutation(DEL_INVENTORY, {
-    update: (cache) => {
-      cache.updateQuery(
-        {
-          query: GET_INVENTORIES,
-          variables: { date: prevDate ? prevDate : today },
-        },
-        ({ inventories }: any) => ({
-          inventories: inventories.filter((inv: any) => inv.deleted == false),
-        })
-      );
-    },
-  });
-
-  const [newInventory] = useMutation(CREATE_INVENTORY);
-  const [eInventory] = useMutation(EDIT_INVENTORY);
-
-  const triggerRef = useRef(null);
+  const triggerRef = useRef(undefined);
   const min_year = 2022;
   const max_year = 2040;
 
   const initial_date = new Date();
-  const dateSelect = (dateObj: any) => {
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-    const day = String(dateObj.getDate()).padStart(2, "0");
-    const date = `${year}-${month}-${day}`;
 
-    store({ prevDate: date });
-    getInventories({
-      variables: { date },
-    });
-  };
-
-  const { inventories, items, dates } = { ...data, ...inData }; //at this point data is not null
-
-  const evts = dates?.map((inventory) => {
-    return inventory?.createdAt
-      ? new Date(inventory.createdAt).toDateString()
-      : "";
+  const evts = inventoriesItemsRes.data?.dates?.map((date) => {
+    return date?.createdAt ? new Date(date.createdAt).toDateString() : "";
   });
 
   const pikaRef = useCallback(
@@ -104,10 +76,18 @@ const Inventory = () => {
         },
       });
     },
-    [dates]
+    [inventoriesItemsRes.data?.dates]
   );
 
-  if (loading || !data) return <Working loading={loading} />;
+  const dateSelect = (_: any, dateObj: any) => {
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    const date = `${year}-${month}-${day}`;
+    console.log("new date", date);
+    updateChest({ type: "store", data: { prev_date: date } });
+    getInventories({ date });
+  };
 
   const tItemHead = (
     <tr>
@@ -135,14 +115,17 @@ const Inventory = () => {
     </tr>
   );
 
-  const searchItems = items?.filter((item: any) => {
-    const str = Object.values(item).join(" ").toLowerCase();
+  const searchItems = inventoriesItemsRes.data?.items?.filter((item) => {
+    const str = Object.values(item!).join(" ").toLowerCase();
     const searche = search || "";
     return str.includes(searche.toLowerCase());
   });
 
-  const currInventories = inventories?.filter((inventory: any) => {
-    const str = Object.values(inventory.item).join(" ").toLowerCase();
+  const currInventories = (
+    inventoriesRes.data?.inventories || inventoriesItemsRes.data?.inventories
+  )?.filter((inventory) => {
+    const item = inventory?.item;
+    const str = (item && Object.values(item).join(" ").toLowerCase()) || "";
     const searche = mini_search || "";
     return inventory?.deleted === false && str.includes(searche.toLowerCase());
   });
@@ -179,7 +162,7 @@ const Inventory = () => {
             Searche={<MiniSearch />}
             tHead={tInventoryHead}
             tBody={tInventoryBody}
-            loading={loading}
+            fetching={inventoriesItemsRes.fetching}
           />
         </div>
       </div>

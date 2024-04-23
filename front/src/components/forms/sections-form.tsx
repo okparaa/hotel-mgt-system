@@ -8,29 +8,30 @@ import Form, {
 } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import revenues from "../../images/revenues.jpg";
-import { STORE } from "../queries/locals";
-import { useQuery } from "@apollo/client";
+import { useChest } from "../../state-mgr/app-chest";
+import { useSectionQuery } from "../aio-urql";
 
 type RoutesFormProps = {
   newSection: ({ variables }: any) => Promise<any>;
-  loading: boolean;
+  fetching: boolean;
   defaultValues: any;
   eSection: ({ variables }: any) => Promise<any>;
 };
 
 const SectionsForm = forwardRef(
   (
-    { newSection, loading, defaultValues, eSection }: RoutesFormProps,
+    { newSection, fetching, defaultValues, eSection }: RoutesFormProps,
     ref: any
   ) => {
     const {
       data: { store },
-    } = useQuery(STORE);
+    } = useChest();
 
     const neu = store.neu;
 
-    if (store.section && store.section.__typename === "Section") {
-      defaultValues = store.section;
+    if (store.id && store.__typename === "Section") {
+      const [sectionRes] = useSectionQuery({ variables: { id: store.id } });
+      defaultValues = sectionRes.data?.section;
     }
 
     return (
@@ -55,27 +56,23 @@ const SectionsForm = forwardRef(
             defaultValues={defaultValues}
             onSubmit={async (data: any) => {
               try {
-                if (store.section && store.section.__typename === "Section") {
+                if (store.id && store.__typename === "Section") {
                   await eSection({
-                    variables: {
-                      section: {
-                        id: data.id,
-                        name: data.name,
-                        description: data.description,
-                        slug: data.slug,
-                        isSxn: data.isSxn,
-                      },
+                    section: {
+                      id: data.id,
+                      name: data.name,
+                      description: data.description,
+                      slug: data.slug,
+                      isSxn: data.isSxn,
                     },
                   });
                 } else {
                   await newSection({
-                    variables: {
-                      section: {
-                        name: data.name,
-                        description: data.description,
-                        slug: data.slug,
-                        isSxn: data.isSxn,
-                      },
+                    section: {
+                      name: data.name,
+                      description: data.description,
+                      slug: data.slug,
+                      isSxn: data.isSxn,
                     },
                   });
                 }
@@ -110,7 +107,7 @@ const SectionsForm = forwardRef(
               legend="Section?"
             />
             <div className="btn text-center">
-              <Button title="Save" status={loading} />
+              <Button title="Save" status={fetching} />
             </div>
           </Form>
         </div>

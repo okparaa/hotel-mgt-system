@@ -13,7 +13,7 @@ export const TStaffBody = ({ searchItems, editItem }: TItemBodyProps) => {
         <tr key={user.id} className="bg-tr">
           <td>
             <Link
-              to={`/aio/settings/pro-mgr/${user.id}`}
+              to={`/aio/settings/staff-mgr/${user.id}`}
               className="text-fuchsia-800"
             >
               {user.surname}, {user.firstname} {user.lastname[0]}.
@@ -29,10 +29,8 @@ export const TStaffBody = ({ searchItems, editItem }: TItemBodyProps) => {
               onClick={(e) =>
                 addInput(e, (value) => {
                   editItem({
-                    variables: {
-                      id: user.id,
-                      salary: value,
-                    },
+                    id: user.id,
+                    salary: value,
                   });
                 })
               }

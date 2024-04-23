@@ -1,4 +1,4 @@
-import { gql } from "../../__generated__";
+import { gql } from "@urql/preact";
 
 export const CREATE_ITEM = gql(`
   mutation NewItem($item: NewItemInput!) {
@@ -77,7 +77,13 @@ export const GET_ITEM = gql(`
   query Item($id: ID!) {
     item(id: $id) {
       id
+      name
+      description
+      type
+      price
       sku
+      createdAt
+      deleted
     }
   }
 `);

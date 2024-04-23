@@ -1,31 +1,20 @@
-import { useQuery } from "@apollo/client";
 import { MiniSearch } from "../../lib/mini-search";
-import { Search } from "../../lib/search";
 import { Table } from "../../lib/table";
-import { MINI_SEARCH, ORDER_ITEMS, SEARCH } from "../queries/locals";
 import { TOrderItemBody } from "./partials/t-order-item-body";
 import { TOrderBody } from "./partials/t-order-body";
-import Loading from "../../lib/loading";
-import { GET_ITEMS } from "../queries/items-queries";
 import { TOrderCheckout } from "./partials/t-order-checkout";
+import { useItemsQuery } from "../aio-urql";
+import { useChest } from "../../state-mgr/app-chest";
+import QueryResult from "../../lib/query-result";
+import { Search } from "../../lib/search";
 
 const Orders = () => {
-  const { loading, data } = useQuery(GET_ITEMS);
+  const [result] = useItemsQuery();
+  const { data: dataItems, error, fetching: fetchingItems } = result;
+  if (error || fetchingItems) return <QueryResult result={result} />;
   const {
-    data: { search },
-  } = useQuery(SEARCH);
-
-  const {
-    data: { mini_search },
-  } = useQuery(MINI_SEARCH);
-
-  const {
-    data: { order_items },
-  } = useQuery(ORDER_ITEMS);
-
-  if (loading || !data) return <Loading />;
-
-  const { items } = data;
+    data: { search, mini_search, order_items },
+  } = useChest();
 
   const tOrdersHead = (
     <tr>
@@ -45,13 +34,13 @@ const Orders = () => {
     </tr>
   );
 
-  const searchItems = items?.filter((item: any) => {
-    const str = Object.values(item).join(" ").toLowerCase();
+  const searchItems = dataItems?.items?.filter((item) => {
+    const str = Object.values(item!).join(" ").toLowerCase();
     const searche = search || "";
     return str.includes(searche.toLowerCase());
   });
 
-  const pickedItems = order_items.items?.filter((item: any) => {
+  const pickedItems = order_items.items?.filter((item) => {
     const str = Object.values(item).join(" ").toLowerCase();
     const searche = mini_search || "";
     return str.includes(searche.toLowerCase());
@@ -75,7 +64,7 @@ const Orders = () => {
           Searche={<MiniSearch />}
           tHead={tOrdersHead}
           tBody={tOrdersBody}
-          loading={loading}
+          fetching={fetchingItems}
           tOrder={<TOrderCheckout />}
         />
       </div>

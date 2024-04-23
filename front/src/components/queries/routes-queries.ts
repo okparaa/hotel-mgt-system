@@ -1,4 +1,4 @@
-import { gql } from "../../__generated__";
+import { gql } from "urql";
 
 export const CREATE_ROUTE = gql(`
   mutation NewRoute($route: NewRouteInput!) {
@@ -10,13 +10,14 @@ export const CREATE_ROUTE = gql(`
       deleted
       slug
       section
+      isSxn
       otherSlugs
     }
   }
 `);
 
 export const EDIT_ROUTE = gql(`
-  mutation ERoute($route: RouteInput!) {
+  mutation EditRoute($route: RouteInput!) {
     eRoute(route: $route) {
       id
       name
@@ -25,13 +26,14 @@ export const EDIT_ROUTE = gql(`
       deleted
       section
       slug
+      isSxn
       otherSlugs
     }
   }
 `);
 
 export const EDIT_OTHER_SLUG = gql(`
-  mutation EOtherSlug($route: RouteSlugInput!) {
+  mutation EditOtherSlug ($route: RouteSlugInput!) {
     otherSlugs(route: $route) {
       id
       name
@@ -40,12 +42,29 @@ export const EDIT_OTHER_SLUG = gql(`
       deleted
       section
       slug
+      isSxn
       otherSlugs
     }
   }
 `);
+
+export const PARENT_ROUTE = gql(`
+  mutation ParentRoute($route: ParentRouteInput!) {
+    parentRoute(route: $route) {
+        id
+        otherSlugs
+        route {
+            id
+            name
+            section
+            slug
+        }
+      }
+    }
+`);
+
 export const DEL_ROUTE = gql(`
-  mutation DRoute($id: ID!) {
+  mutation DelRoute($id: ID!) {
     dRoute(id: $id) {
       id
     }
@@ -53,7 +72,7 @@ export const DEL_ROUTE = gql(`
 `);
 
 export const GET_ROUTES = gql(`
-  query GetRoutes {
+  query Routes {
     routes {
       id
       name
@@ -64,12 +83,16 @@ export const GET_ROUTES = gql(`
       otherSlugs
       section
       isSxn
+      route{
+        id
+        slug
+      }
     }
   }
 `);
 
 export const GET_ROUTE = gql(`
-  query GetRoute($id: ID!) {
+  query Route($id: ID!) {
     route(id: $id) {
       id
       name
@@ -80,6 +103,13 @@ export const GET_ROUTE = gql(`
       otherSlugs
       section
       isSxn
+      route {
+        id
+        name
+        slug
+        section
+        isSxn
+      }
     }
   }
 `);

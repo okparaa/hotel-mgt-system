@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { addInput, getDateFromTimestamp, toCommas } from "../../../lib/utils";
-import { store as itemStore } from "../../../lib/client";
 import { Fragment } from "react";
+import { useChest } from "../../../state-mgr/app-chest";
 
 type TItemBodyProps = {
   currInventories?: any[];
@@ -17,6 +17,7 @@ export const TItemBody = ({
   deleteItem,
   itemPrice,
 }: TItemBodyProps) => {
+  const { updateChest } = useChest();
   return (
     <Fragment>
       {searchItems?.map((item: any) => (
@@ -34,10 +35,8 @@ export const TItemBody = ({
               onClick={(e) =>
                 addInput(e, (value) => {
                   itemPrice({
-                    variables: {
-                      id: item.id,
-                      price: value,
-                    },
+                    id: item.id,
+                    price: value,
                   });
                 })
               }
@@ -49,7 +48,7 @@ export const TItemBody = ({
             <span
               className="icon-span"
               onClick={() => {
-                itemStore({ neu: false });
+                updateChest({ data: { neu: false }, type: "store" });
                 editItem(item);
               }}
             >

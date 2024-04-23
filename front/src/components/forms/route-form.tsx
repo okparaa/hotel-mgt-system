@@ -8,26 +8,31 @@ import Form, {
 } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import routepng from "../../images/routes.png";
-import { STORE } from "../queries/locals";
-import { useQuery } from "@apollo/client";
+import { useChest } from "../../state-mgr/app-chest";
+import { useRouteQuery } from "../aio-urql";
 
 type RoutesFormProps = {
   newRoute: ({ variables }: any) => Promise<any>;
-  loading: boolean;
+  fetching: boolean;
   defaultValues: any;
   eRoute: ({ variables }: any) => Promise<any>;
+  closeModal: () => void;
 };
 
 const RoutesForm = forwardRef(
-  ({ newRoute, loading, defaultValues, eRoute }: RoutesFormProps, ref: any) => {
+  (
+    { newRoute, fetching, defaultValues, eRoute, closeModal }: RoutesFormProps,
+    ref: any
+  ) => {
     const {
       data: { store },
-    } = useQuery(STORE);
+    } = useChest();
 
     const neu = store.neu;
 
-    if (store.route && store.route.__typename === "Route") {
-      defaultValues = store.route;
+    if (store.id && store.__typename === "Route") {
+      const [routeRes] = useRouteQuery({ variables: { id: store.id } });
+      defaultValues = routeRes?.data?.route;
     }
 
     return (
@@ -53,31 +58,29 @@ const RoutesForm = forwardRef(
             defaultValues={defaultValues}
             onSubmit={async (data: any) => {
               try {
-                if (store.route && store.route.__typename === "Route") {
+                if (store.id && store.__typename === "Route") {
                   await eRoute({
-                    variables: {
-                      route: {
-                        id: data.id,
-                        name: data.name,
-                        description: data.description,
-                        section: data.section,
-                        slug: data.slug,
-                        isSxn: data.isSxn,
-                      },
+                    route: {
+                      id: data.id,
+                      name: data.name,
+                      description: data.description,
+                      section: data.section,
+                      slug: data.slug,
+                      isSxn: data.isSxn,
                     },
                   });
+                  closeModal();
                 } else {
                   await newRoute({
-                    variables: {
-                      route: {
-                        name: data.name,
-                        description: data.description,
-                        section: data.section,
-                        slug: data.slug,
-                        isSxn: data.isSxn,
-                      },
+                    route: {
+                      name: data.name,
+                      description: data.description,
+                      section: data.section,
+                      slug: data.slug,
+                      isSxn: data.isSxn,
                     },
                   });
+                  closeModal();
                 }
               } catch (error) {}
             }}
@@ -86,7 +89,7 @@ const RoutesForm = forwardRef(
             <Input
               req_msg="required"
               name="name"
-              placeholder="Route name"
+              placeholder="Route url"
               size="w-10/12"
             />
             <Input
@@ -115,7 +118,7 @@ const RoutesForm = forwardRef(
               legend="Is this a Revenue Point?"
             />
             <div className="btn text-center">
-              <Button title="Save" status={loading} />
+              <Button title="Save" status={fetching} />
             </div>
           </Form>
         </div>

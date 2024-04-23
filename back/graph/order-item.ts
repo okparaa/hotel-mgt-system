@@ -19,9 +19,9 @@ export const typeDef = /* GraphQL */ `
     eOrderItem(id: ID): OrderItem
     newOrderItems(
       orderItems: [NewOrderItemInput!]
-      pos: String
-      txfa: String
-      cash: String
+      pos: Int
+      txfa: Int
+      cash: Int
     ): [OrderItem]
   }
   input NewOrderItemInput {

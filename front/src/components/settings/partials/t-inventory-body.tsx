@@ -3,8 +3,8 @@ import { addInput, toCommas } from "../../../lib/utils";
 import { Fragment } from "react";
 type TInventoryBodyProps = {
   currInventories?: any[];
-  eInventory: ({ variables }: any) => void;
-  dInventory: ({ variables }: any) => void;
+  eInventory: (variables: any) => void;
+  dInventory: (variables: any) => void;
 };
 export const TInventoryBody = ({
   currInventories,
@@ -23,14 +23,12 @@ export const TInventoryBody = ({
               onClick={(e) =>
                 addInput(e, (value) =>
                   eInventory({
-                    variables: {
-                      inventory: {
-                        id: inventory.id,
-                        priceBought: value,
-                        qtyBought: inventory.qtyBought,
-                        itemId: inventory.item.id,
-                        createdAt: inventory.createdAt,
-                      },
+                    inventory: {
+                      id: inventory.id,
+                      priceBought: value,
+                      qtyBought: inventory.qtyBought,
+                      itemId: inventory.item.id,
+                      createdAt: inventory.createdAt,
                     },
                   })
                 )
@@ -45,14 +43,12 @@ export const TInventoryBody = ({
               onClick={(e) =>
                 addInput(e, (value) =>
                   eInventory({
-                    variables: {
-                      inventory: {
-                        id: inventory.id,
-                        qtyBought: value,
-                        priceBought: inventory.priceBought + "",
-                        itemId: inventory.item.id,
-                        createdAt: inventory.createdAt,
-                      },
+                    inventory: {
+                      id: inventory.id,
+                      qtyBought: value,
+                      priceBought: inventory.priceBought + "",
+                      itemId: inventory.item.id,
+                      createdAt: inventory.createdAt,
                     },
                   })
                 )
@@ -67,7 +63,8 @@ export const TInventoryBody = ({
               className="icon-span"
               onClick={() => {
                 dInventory({
-                  variables: { id: inventory.id, itemId: inventory.item.id },
+                  id: inventory.id,
+                  itemId: inventory.item.id,
                 });
               }}
             >

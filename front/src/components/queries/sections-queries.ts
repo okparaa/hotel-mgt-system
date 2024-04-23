@@ -1,4 +1,4 @@
-import { gql } from "../../__generated__";
+import { gql } from "urql";
 
 export const CREATE_SECTION = gql(`
   mutation NewSection($section: NewSectionInput!) {
@@ -51,7 +51,7 @@ export const GET_SECTION = gql(`
 `);
 
 export const GET_SECTIONS = gql(`
-  query Sections($id: ID!) {
+  query Sections {
     sections {
       id
       name

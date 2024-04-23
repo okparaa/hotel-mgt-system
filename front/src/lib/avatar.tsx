@@ -1,8 +1,8 @@
 import { PencilIcon } from "lucide-react";
-import { useState } from "react";
 import { Image } from "./image";
 import { X } from "lucide-react";
 import ImageCropper from "./image-cropper";
+import { useState } from "preact/hooks";
 
 const Avatar = ({ avatarUrl, updateAvatar, imageUrl }: any) => {
   const [modalOpen, setModalOpen] = useState(false);

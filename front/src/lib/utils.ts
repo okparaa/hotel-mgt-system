@@ -1,8 +1,6 @@
-import { ApolloError } from "@apollo/client";
 import { emailRegex, phoneRegex } from "./regexes";
 import { FormRef } from "./forms";
 import { gConfig } from "../config";
-
 export type Session = { [x: string]: string | boolean | number };
 
 export const jwt = {
@@ -62,15 +60,32 @@ export const getValidPattern = (options: any) => {
   return validation;
 };
 
-export const errorHandler = (error: ApolloError, formRef: FormRef | null) => {
+export const errorHandler = (error: any, formRef: FormRef | null) => {
   if (error.graphQLErrors) {
     for (let erro of error.graphQLErrors) {
       const err = <Array<any>>erro.extensions.info;
-      for (let [key, message] of err) {
-        formRef?.setError(key, { message });
+      if (err) {
+        for (let [key, message] of err) {
+          formRef?.setError(key, { message });
+        }
       }
     }
   }
+};
+
+export const errorMsgHandler = (error: any) => {
+  let errorMsg = null;
+  if (error.graphQLErrors) {
+    for (let erro of error.graphQLErrors) {
+      const err = erro.extensions.info;
+      if (err) {
+        for (let [key, message] of err) {
+          errorMsg = { key, message };
+        }
+      }
+    }
+  }
+  return errorMsg;
 };
 
 export const uploadImage = async (form: FormData) => {
@@ -118,7 +133,7 @@ export const updateFxn = (items: any[], utem: any) => {
   });
 };
 
-export const addInput = (e: any, prxy: (value: string) => void) => {
+export const addInput = (e: any, prxy: (value: number) => void) => {
   let td = e.target as HTMLElement;
   let revert = "innerText" in td ? td.innerText + "" : "";
   let input = document.createElement("input");
@@ -133,8 +148,8 @@ export const addInput = (e: any, prxy: (value: string) => void) => {
     if (e.type == "blur" && input.value === "") {
       td.innerHTML = revert;
     } else if (e.type == "blur") {
-      td.innerHTML = toCommas(input.value);
-      prxy(input.value);
+      td.innerHTML = "";
+      prxy(+input.value);
     }
   });
 
@@ -248,7 +263,7 @@ export const toCommas = (value: number | string) => {
   }
   const num = Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
-  }).format(+value);
+  }).format(value);
   return num;
 };
 
@@ -258,4 +273,33 @@ export const toReal = (value: number | string) => {
   }
   const num = Intl.NumberFormat("en-US").format(+value);
   return num;
+};
+
+const TOKEN_KEY = "token";
+const REFRESH_TOKEN_KEY = "rtoken";
+
+export type AuthState = {
+  token: string;
+  refreshToken: string;
+};
+
+export const saveAuthState = ({ token, refreshToken }: AuthState) => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+};
+
+export const getToken = () => {
+  if (typeof window === "undefined") return;
+  return localStorage.getItem(TOKEN_KEY);
+};
+export const getRefreshToken = () => {
+  if (typeof window === "undefined") return;
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
+};
+
+export const clearAuthState = () => {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(REFRESH_TOKEN_KEY);
 };

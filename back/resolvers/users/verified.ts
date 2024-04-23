@@ -39,7 +39,7 @@ export const verifiedUser = async (parent: any, args: any, ctx: Context) => {
     {
       id: user.id,
       auth: "ok",
-      ver: "ok",
+      vfy: "ok",
     },
     process.env.JWT_SECRET || "secret",
     { expiresIn: "24h" }

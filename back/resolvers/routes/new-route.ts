@@ -14,6 +14,8 @@ const routeSchema = yup.object({
 
 export const createRoute = async (parent: any, args: any, ctx: Context) => {
   // await sleep(8000);
+  console.log(args.route);
+
   try {
     await routeSchema.validate({ ...args.route }, { abortEarly: false });
   } catch ({ inner }: any) {
@@ -51,10 +53,10 @@ export const createRoute = async (parent: any, args: any, ctx: Context) => {
   }
 
   try {
-    const [currRoute] = await ctx.db
+    const [currRoute] = (await ctx.db
       .insert(routes)
       .values({ ...args.route })
-      .returning();
+      .returning()) as any[];
     return currRoute;
   } catch (err) {
     throwError("trying to save route", ErrorTypes.INTERNAL_SERVER_ERROR, err);

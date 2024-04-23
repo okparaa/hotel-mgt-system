@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { store as sectionStore } from "../../../lib/client";
 import { Fragment } from "react";
+import { useChest } from "../../../state-mgr/app-chest";
 
 type TSectionBodyProps = {
   searchSections?: any[];
@@ -13,6 +13,7 @@ export const TSectionBody = ({
   editSection,
   deleteSection,
 }: TSectionBodyProps) => {
+  const { updateChest } = useChest();
   return (
     <Fragment>
       {searchSections?.map((section: any) => (
@@ -26,7 +27,7 @@ export const TSectionBody = ({
             <span
               className="icon-span"
               onClick={() => {
-                sectionStore({ neu: false });
+                updateChest({ type: "store", data: { neu: false } });
                 editSection(section);
               }}
             >

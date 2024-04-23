@@ -1,7 +1,7 @@
-import { gql } from "../../__generated__";
+import { gql } from "@urql/preact";
 
 export const CREATE_ORDER_ITEMS = gql(`
-  mutation NewOrderItems($orderItems: [NewOrderItemInput!], $pos: String, $cash: String, $txfa: String) {
+  mutation NewOrderItems($orderItems: [NewOrderItemInput!], $pos: Int, $cash: Int, $txfa: Int) {
     newOrderItems(orderItems: $orderItems, pos: $pos, cash: $cash, txfa: $txfa) {
       items {
         id

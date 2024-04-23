@@ -2,32 +2,41 @@ import { forwardRef } from "react";
 import Form, { Button, Hidden, Input, Select, Textarea } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import keyboard from "../../images/keyboard.jpg";
-import { STORE } from "../queries/locals";
-import { useQuery } from "@apollo/client";
+import { useChest } from "../../state-mgr/app-chest";
+import { useRoomQuery } from "../aio-urql";
 
 type RoomsFormProps = {
   newRoom: ({ variables }: any) => Promise<any>;
-  loading: boolean;
+  fetching: boolean;
   defaultValues: any;
   eRoom: ({ variables }: any) => Promise<any>;
   bookable: string[];
+  closeModal: () => void;
 };
 
 const RoomsForm = forwardRef(
   (
-    { newRoom, loading, defaultValues, eRoom, bookable }: RoomsFormProps,
+    {
+      newRoom,
+      fetching,
+      defaultValues,
+      eRoom,
+      bookable,
+      closeModal,
+    }: RoomsFormProps,
     ref: any
   ) => {
     const {
       data: { store },
-    } = useQuery(STORE);
+    } = useChest();
 
     const neu = store.neu;
 
-    if (store.room && store.room.__typename === "Room") {
-      defaultValues = store.room;
+    if (store.id && store.__typename === "Room") {
+      const [roomRes] = useRoomQuery({ variables: { id: store.id } });
+      defaultValues = roomRes.data?.room;
     }
-
+    const options = bookable.map((val, ky) => ({ key: ky, value: val }));
     return (
       <div className="flex divide-x">
         <div className="p-4 flex flex-col flex-1 text-left">
@@ -37,35 +46,33 @@ const RoomsForm = forwardRef(
             defaultValues={defaultValues}
             onSubmit={async (data: any) => {
               try {
-                if (store.room && store.room.__typename === "Room") {
+                if (store.id && store.__typename === "Room") {
                   await eRoom({
-                    variables: {
-                      room: {
-                        id: data.id,
-                        name: data.name,
-                        price: data.price,
-                        type: data.type,
-                        description: data.description,
-                      },
+                    room: {
+                      id: data.id,
+                      name: data.name,
+                      price: data.price,
+                      type: data.type,
+                      description: data.description,
                     },
                   });
+                  closeModal();
                 } else {
                   await newRoom({
-                    variables: {
-                      room: {
-                        name: data.name,
-                        price: data.price,
-                        description: data.description,
-                        type: data.type,
-                      },
+                    room: {
+                      name: data.name,
+                      price: data.price,
+                      description: data.description,
+                      type: data.type,
                     },
                   });
+                  closeModal();
                 }
               } catch (error) {}
             }}
           >
             {!neu ? <Hidden name="id" /> : <></>}
-            <Select req_msg="required" name="type" options={bookable} />
+            <Select req_msg="required" name="type" options={options} />
             <Input
               req_msg="required"
               name="name"
@@ -79,7 +86,7 @@ const RoomsForm = forwardRef(
               placeholder="Describe the room"
             />
             <div className="btn">
-              <Button title="Save" status={loading} />
+              <Button title="Save" status={fetching} />
             </div>
           </Form>
         </div>

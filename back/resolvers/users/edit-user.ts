@@ -65,7 +65,7 @@ const userRouteSchema = yup.object({
   routeId: yup.string().required("value is required"),
 });
 
-export const updateUserRoute = async (parent: any, args: any, ctx: Context) => {
+export const assignRoute = async (parent: any, args: any, ctx: Context) => {
   try {
     await userRouteSchema.validate(args.user, { abortEarly: false });
   } catch ({ inner }: any) {

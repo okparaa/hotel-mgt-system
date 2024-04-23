@@ -2,7 +2,11 @@ import { eq } from "drizzle-orm";
 import { routes, sections } from "../db/schemas";
 import { Context } from "../types/context";
 import { createRoute } from "../resolvers/routes/new-route";
-import { updateRoute, updateOtherSlugs } from "../resolvers/routes/edit-route";
+import {
+  updateRoute,
+  updateOtherSlugs,
+  parentRoute,
+} from "../resolvers/routes/edit-route";
 
 export const typeDef = /* GraphQL */ `
   type Route {
@@ -11,12 +15,13 @@ export const typeDef = /* GraphQL */ `
     createdAt: String
     updatedAt: String
     deleted: Boolean
-    name: String
+    name: String!
     slug: String
     otherSlugs: String
     isSxn: Boolean
     section: String
     description: String
+    route: Route
   }
 
   type Query {
@@ -28,16 +33,17 @@ export const typeDef = /* GraphQL */ `
     eRoute(route: RouteInput): Route
     dRoute(id: ID): Route
     otherSlugs(route: RouteSlugInput): Route
+    parentRoute(route: ParentRouteInput): Route
   }
   input NewRouteInput {
-    name: String
-    slug: String
-    isSxn: String
+    name: String!
+    slug: String!
+    isSxn: Boolean
     section: String
     description: String
   }
   input RouteInput {
-    id: ID
+    id: ID!
     name: String
     slug: String
     section: String
@@ -48,6 +54,11 @@ export const typeDef = /* GraphQL */ `
   input RouteSlugInput {
     id: String!
     otherSlugs: String
+  }
+
+  input ParentRouteInput {
+    id: String!
+    routeId: String
   }
 `;
 export const resolvers = {
@@ -73,6 +84,17 @@ export const resolvers = {
     otherSlugs: async (parent: any, args: any, ctx: Context) => {
       return await updateOtherSlugs(parent, args, ctx);
     },
+    parentRoute: async (parent: any, args: any, ctx: Context) => {
+      return await parentRoute(parent, args, ctx);
+    },
   },
-  Route: {},
+  Route: {
+    route: async (parent: any, args: any, ctx: Context) => {
+      const [route] = await ctx.db
+        .select()
+        .from(routes)
+        .where(eq(parent.routeId, routes.id));
+      return route;
+    },
+  },
 };

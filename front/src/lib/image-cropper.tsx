@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import "react-image-crop/dist/ReactCrop.css";
 import ReactCrop, {
   Crop,
@@ -7,6 +6,7 @@ import ReactCrop, {
   makeAspectCrop,
 } from "react-image-crop";
 import setCanvasPreview from "./set-canvas-preview";
+import { useRef, useState } from "preact/hooks";
 
 const ASPECT_RATIO = 1;
 
