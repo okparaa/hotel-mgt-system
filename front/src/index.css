@@ -115,7 +115,18 @@ form {
 .accordion-duo {
   @apply w-full md:w-5/12 flex-grow mx-1;
 }
-
+.checkout span:first-child {
+  @apply font-semibold;
+}
+.booker {
+  @apply flex justify-around border-2 mt-1;
+}
+.booker span:not(:last-child) {
+  @apply flex-1 border-r-2 p-2 uppercase;
+}
+.booker span:last-child {
+  @apply p-2;
+}
 .icon {
   @apply text-sky-900;
 }

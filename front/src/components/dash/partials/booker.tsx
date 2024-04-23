@@ -1,136 +1,59 @@
 import { Trash2 } from "lucide-react";
-import { addInput, toCommas, toReal } from "../../../lib/utils";
-import { Fragment } from "react";
 import { useChest } from "../../../state-mgr/app-chest";
 
 type TOrderBodyProps = {
   pickedItems?: any;
 };
 
-export const Booker = ({ pickedItems }: TOrderBodyProps) => {
+export const Booker = ({}: TOrderBodyProps) => {
   const {
-    data: { order_items: order },
+    data: { booker },
     updateChest,
   } = useChest();
 
-  return (
-    <Fragment>
-      {pickedItems?.map((item: any) => (
-        <div key={item.itemId} className="bg-tr">
-          <span>{item.sku}</span>
-          <span>{item.name}</span>
-          <span>
-            <span
-              className="bwks border-y cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
-                  const orda = {
-                    itemId: item.itemId,
-                    priceSold: value,
-                    qtySold: item.qtySold,
-                  };
-                  const updatedItems: any = order.items.map((ord: any) => {
-                    if (ord.itemId === orda.itemId) {
-                      return { ...ord, ...orda };
-                    }
-                    return ord;
-                  });
-                  const total = updatedItems.reduce(
-                    (acc: number, item: any) => {
-                      return (
-                        acc + Number(item.priceSold) * Number(item.qtySold)
-                      );
-                    },
-                    0
-                  );
+  const bookable = ["room", "hall", "pool", "other"];
+  console.log(booker);
 
-                  updateChest({
-                    type: "order_items",
-                    data: {
-                      cash: order.cash,
-                      pos: order.pos,
-                      txfa: order.txfa,
-                      hash: order.hash,
-                      total,
-                      items: updatedItems,
-                    },
-                  });
-                })
-              }
-            >
-              {toCommas(item.priceSold)}
+  return (
+    <div>
+      <div>sales</div>
+      {booker.bookables.map((book) => {
+        return (
+          <div className="booker">
+            <span>
+              {bookable[book.type]} {book.name}
             </span>
-          </span>
-          <span className="text-center">
+            <span>@{book.price}</span>
             <span
-              className="border-y cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
-                  const orda = {
-                    itemId: item.itemId,
-                    priceSold: item.priceSold,
-                    qtySold: value,
-                  };
-                  const updatedItems: any = order.items.map((ord: any) => {
-                    if (ord.itemId === orda.itemId) {
-                      return { ...ord, ...orda };
-                    }
-                    return ord;
-                  });
-                  const total = updatedItems.reduce(
-                    (acc: number, item: any) => {
-                      return (
-                        acc + Number(item.priceSold) * Number(item.qtySold)
-                      );
-                    },
-                    0
-                  );
-                  updateChest({
-                    type: "order_items",
-                    data: {
-                      cash: order.cash,
-                      pos: order.pos,
-                      txfa: order.txfa,
-                      hash: order.hash,
-                      total,
-                      items: updatedItems,
-                    },
-                  });
-                })
-              }
-            >
-              {toReal(item.qtySold)}
-            </span>
-          </span>
-          <span className="!text-center">
-            <span
-              id={item.itemId}
-              className="icon-span"
               onClick={() => {
-                const updatedItems: any = order.items.filter(
-                  (ord: any) => ord.itemId !== item.itemId
+                const updatedBooking: any = booker.bookables.filter(
+                  (buk: any) => buk.id !== book.id
                 );
-                const total = updatedItems.reduce((acc: number, item: any) => {
-                  return acc + Number(item.priceSold) * Number(item.qtySold);
-                }, 0);
+                const total = updatedBooking.reduce(
+                  (acc: number, book: any) => {
+                    return acc + Number(book.price);
+                  },
+                  0
+                );
+
                 updateChest({
-                  type: "order_items",
+                  type: "booker",
                   data: {
-                    cash: order.cash,
-                    pos: order.pos,
-                    txfa: order.txfa,
-                    hash: order.hash,
+                    cash: booker.cash,
+                    pos: booker.pos,
+                    txfa: booker.txfa,
+                    hash: booker.hash,
                     total,
-                    items: updatedItems,
+                    bookables: updatedBooking,
                   },
                 });
               }}
             >
-              <Trash2 size={20} className="ikon" />
+              <Trash2 size={20} className="ikon cursor-pointer" />
             </span>
-          </span>
-        </div>
-      ))}
-    </Fragment>
+          </div>
+        );
+      })}
+    </div>
   );
 };

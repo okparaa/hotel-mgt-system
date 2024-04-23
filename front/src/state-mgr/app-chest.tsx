@@ -30,6 +30,14 @@ type OrderItems = {
   total: number;
   items: Record<string, any>[];
 };
+type Booker = {
+  hash: string;
+  cash: number;
+  txfa: number;
+  pos: number;
+  total: number;
+  bookables: Record<string, any>[];
+};
 
 type Search = string;
 
@@ -50,11 +58,19 @@ interface AppState {
   search: Search;
   mini_search: MiniSearch;
   session: Session;
+  booker: Booker;
 }
 
 type Ops = {
-  type: "user" | "store" | "order_items" | "search" | "mini_search" | "session";
-  data: User | Store | OrderItems | Search | MiniSearch | Session;
+  type:
+    | "booker"
+    | "user"
+    | "store"
+    | "order_items"
+    | "search"
+    | "mini_search"
+    | "session";
+  data: User | Store | OrderItems | Search | MiniSearch | Session | Booker;
 };
 
 export const reducer = (state: AppState, payload: Ops) => {
@@ -90,6 +106,12 @@ export const reducer = (state: AppState, payload: Ops) => {
       newState = {
         ...state,
         order_items: { ...state.order_items, ...(data as OrderItems) },
+      };
+      break;
+    case "booker":
+      newState = {
+        ...state,
+        booker: { ...state.booker, ...(data as Booker) },
       };
       break;
     case "search":
@@ -153,6 +175,14 @@ const AppProvider: FunctionalComponent<any> = ({ children }) => {
       pos: 0,
       total: 0.0,
       items: [],
+    },
+    booker: {
+      hash: "",
+      cash: 0,
+      txfa: 0,
+      pos: 0,
+      total: 0.0,
+      bookables: [],
     },
     session: { id: "", auth: "", vfy: "", iat: "", exp: "" },
     user: {
