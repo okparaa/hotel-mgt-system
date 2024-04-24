@@ -1,7 +1,7 @@
 import { TStaffBody } from "./partials/t-staff-body";
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 import { useSalaryMutation, useUsersQuery } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 

@@ -1,10 +1,10 @@
-import { Sofa } from "lucide-react";
+import { Check, Sofa, X } from "lucide-react";
 import { useRoomsQuery } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { Search } from "../../lib/search";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 import { Booker } from "./partials/booker";
-import { addInput } from "../../lib/utils";
+import { addInput, toCommas } from "../../lib/utils";
 
 const DashRooms = () => {
   const [roomsRes] = useRoomsQuery();
@@ -18,6 +18,7 @@ const DashRooms = () => {
     updateChest,
   } = useChest();
 
+  const total = booker.cash + booker.pos + booker.txfa;
   const roomSearch = roomsRes.data?.rooms?.filter((room: any) => {
     const str = "room " + room.name + " room" + room.name;
     const searche = search || "";
@@ -77,7 +78,7 @@ const DashRooms = () => {
           <div className="flex-1 text-center checkout">
             <span>cash</span>
             <span
-              className="border-y cursor-text border-gray-400 flex w-10/12 h-8 m-auto justify-center items-center rounded-md"
+              className="border-y cursor-text border-gray-400 flex w-10/12 m-auto justify-center items-center rounded-md h-10"
               onClick={(e) => {
                 addInput(e, (value) => {
                   updateChest({
@@ -94,13 +95,13 @@ const DashRooms = () => {
                 });
               }}
             >
-              {booker.cash}
+              {toCommas(booker.cash)}
             </span>
           </div>
           <div className="flex-1 text-center">
             <span>pos</span>
             <span
-              className="border-y cursor-text border-gray-400 flex w-10/12 h-8 m-auto justify-center items-center rounded-md"
+              className="border-y cursor-text border-gray-400 flex w-10/12 h-10 m-auto justify-center items-center rounded-md"
               onClick={(e) => {
                 addInput(e, (value) => {
                   updateChest({
@@ -117,13 +118,13 @@ const DashRooms = () => {
                 });
               }}
             >
-              {booker.pos}
+              {toCommas(booker.pos)}
             </span>
           </div>
           <div className="flex-1 text-center">
             <span>txfer</span>
             <span
-              className="border-y cursor-text border-gray-400 flex w-10/12 h-8 m-auto justify-center items-center rounded-md"
+              className="border-y cursor-text border-gray-400 flex w-10/12 h-10 m-auto justify-center items-center rounded-md"
               onClick={(e) => {
                 addInput(e, (value) => {
                   updateChest({
@@ -140,13 +141,18 @@ const DashRooms = () => {
                 });
               }}
             >
-              {booker.txfa}
+              {toCommas(booker.txfa)}
             </span>
           </div>
           <div className="flex-1 text-center">
             <span>total</span>
-            <span className="border-y cursor-text border-gray-400 flex w-10/12 h-8 m-auto justify-center items-center rounded-md">
-              {booker.total}
+            <span className="bwks relative font-semibold border border-slate-400 flex w-20 h-10 m-auto justify-center items-center rounded-md">
+              {toCommas(total)}
+              {total !== booker.total ? (
+                <X className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
+              ) : (
+                <Check className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
+              )}
             </span>
           </div>
         </div>

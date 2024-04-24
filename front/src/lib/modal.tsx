@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import Working from "./working";
-import { useChest } from "../state-mgr/app-chest";
+import { useChest } from "../app-chest";
 
 type ModalProps = {
   children?: React.ReactNode;

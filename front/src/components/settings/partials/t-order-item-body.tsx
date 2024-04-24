@@ -1,7 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import { getKey, toCommas } from "../../../lib/utils";
 import { Fragment, useRef } from "react";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 
 type TItemBodyProps = {
   searchItems?: any[];

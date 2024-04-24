@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { addInput, getDateFromTimestamp, toCommas } from "../../../lib/utils";
 import { Fragment } from "react";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 
 type TItemBodyProps = {
   currInventories?: any[];

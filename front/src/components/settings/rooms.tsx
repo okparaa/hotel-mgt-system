@@ -6,7 +6,7 @@ import { Search } from "../../lib/search";
 import { Table } from "../../lib/table";
 import { TRoomBody } from "./partials/t-room-body";
 import RoomsForm from "../forms/rooms-form";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 import {
   Room,
   useDRoomMutation,

@@ -14,7 +14,7 @@ import {
   useSectionsQuery,
 } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 
 const Sections = () => {
   const [open, setOpen] = useState(false); //for edit and new modal

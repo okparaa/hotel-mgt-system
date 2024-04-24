@@ -261,10 +261,7 @@ export const toCommas = (value: number | string) => {
   if (typeof value === "string") {
     value = +value;
   }
-  const num = Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-  }).format(value);
-  return num;
+  return value.toLocaleString();
 };
 
 export const toReal = (value: number | string) => {

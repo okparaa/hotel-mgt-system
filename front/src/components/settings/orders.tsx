@@ -4,7 +4,7 @@ import { TOrderItemBody } from "./partials/t-order-item-body";
 import { TOrderBody } from "./partials/t-order-body";
 import { TOrderCheckout } from "./partials/t-order-checkout";
 import { useItemsQuery } from "../aio-urql";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 import QueryResult from "../../lib/query-result";
 import { Search } from "../../lib/search";
 

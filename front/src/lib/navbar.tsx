@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Image } from "./image";
 import logo from "../images/logo.png";
-import { useChest } from "../state-mgr/app-chest";
+import { useChest } from "../app-chest";
 
 const Navbar = () => {
   const {

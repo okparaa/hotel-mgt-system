@@ -5,7 +5,7 @@ import {
   toCommas,
   ucwords,
 } from "../../../lib/utils";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 import { useNewOrderItemsMutation } from "../../aio-urql";
 import { Check, RotateCcw, Save, X } from "lucide-react";
 

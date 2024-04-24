@@ -3,7 +3,7 @@ import Working from "../../../lib/working";
 import { useRef } from "react";
 import Form, { FormRef, Input } from "../../../lib/forms";
 import { decodeSession, errorHandler } from "../../../lib/utils";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 import { useVerifiedMutation } from "../../aio-urql";
 
 const defaultValues = {

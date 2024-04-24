@@ -2,7 +2,7 @@ import { LockIcon } from "lucide-react";
 import Form, { Button, FormRef, Input } from "../../../lib/forms";
 import { useRef } from "react";
 import { decodeSession, errorHandler } from "../../../lib/utils";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 import { useLoginMutation } from "../../aio-urql";
 
 const defaultValues = {

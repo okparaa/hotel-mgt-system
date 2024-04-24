@@ -1,5 +1,5 @@
 import { SearchIcon } from "lucide-react";
-import { useChest } from "../state-mgr/app-chest";
+import { useChest } from "../app-chest";
 
 export const MiniSearch = () => {
   const {

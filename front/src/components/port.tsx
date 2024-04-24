@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "../lib/navbar";
 import SideColBar from "../lib/sidebar";
-import { useChest } from "../state-mgr/app-chest";
+import { useChest } from "../app-chest";
 
 const Port = () => {
   const {
@@ -12,7 +12,7 @@ const Port = () => {
   }
 
   return (
-    <div className="w-10/12 mx-auto bg-gray-50">
+    <div className="w-11/12 mx-auto bg-gray-50">
       <Navbar />
       <SideColBar />
       <div className="ml-[90px]">

@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import Form, { Button, Hidden, Input, Textarea } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import keyboard from "../../images/keyboard.jpg";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 import { useItemQuery } from "../aio-urql";
 
 type ItemsFormProps = {

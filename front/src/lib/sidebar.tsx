@@ -15,7 +15,7 @@ import {
   UserCircle,
 } from "lucide-react";
 import { gConfig } from "../config";
-import { useChest } from "../state-mgr/app-chest";
+import { useChest } from "../app-chest";
 
 type SidebarProps = {
   children: ReactNode;

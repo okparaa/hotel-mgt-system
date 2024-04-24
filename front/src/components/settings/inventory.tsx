@@ -1,5 +1,5 @@
-import { useCallback, useRef } from "react";
-import { CalendarDays } from "lucide-react";
+// import { useCallback, useRef } from "react";
+// import { CalendarDays } from "lucide-react";
 
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
@@ -8,9 +8,9 @@ import { TInventoryBody } from "./partials/t-inventory-body";
 import { TInventoryItemBody } from "./partials/t-inventory-item-body";
 import { getDateFromTimestamp } from "../../lib/utils";
 
-import "../pikaday/css/pikaday.css";
-import { Pikaday } from "../pikaday/pikaday";
-import { useChest } from "../../state-mgr/app-chest";
+// import "../pikaday/css/pikaday.css";
+// import { Pikaday } from "../pikaday/pikaday";
+import { useChest } from "../../app-chest";
 import { useLazyQuery } from "../../lib/useLazyQuery";
 import {
   InventoriesQuery,
@@ -21,6 +21,7 @@ import {
 } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { GET_INVENTORIES } from "../queries/inventory-queries";
+import DatePicker from "../calendar/date-picker";
 
 const Inventory = () => {
   const today = getDateFromTimestamp();
@@ -46,47 +47,20 @@ const Inventory = () => {
   const [{}, newInventory] = useNewInventoryMutation();
   const [{}, eInventory] = useEInventoryMutation();
 
-  const triggerRef = useRef(undefined);
-  const min_year = 2022;
-  const max_year = 2040;
-
-  const initial_date = new Date();
-
-  const evts = inventoriesItemsRes.data?.dates?.map((date) => {
-    return date?.createdAt ? new Date(date.createdAt).toDateString() : "";
+  const evts = new Map();
+  inventoriesItemsRes.data?.dates?.forEach((date) => {
+    const key: string = date?.createdAt || "j";
+    evts.set(key, true);
   });
 
-  const pikaRef = useCallback(
-    (node: any) => {
-      new Pikaday({
-        field: node,
-        trigger: triggerRef.current,
-        reposition: true,
-        events: evts,
-        format: "YYYY-M-D",
-        keyboardInput: false,
-        defaultDate: initial_date,
-        yearRange: [min_year, max_year],
-        onSelect: dateSelect,
-        toString(date: any) {
-          const day = date.getDate();
-          const month = date.getMonth() + 1;
-          const year = date.getFullYear();
-          return `${year}-${month}-${day}`;
-        },
-      });
-    },
-    [inventoriesItemsRes.data?.dates]
-  );
-
-  const dateSelect = (_: any, dateObj: any) => {
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-    const day = String(dateObj.getDate()).padStart(2, "0");
-    const date = `${year}-${month}-${day}`;
+  const dateSelect = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const selectedDate = `${year}-${month}-${day}`;
     console.log("new date", date);
-    updateChest({ type: "store", data: { prev_date: date } });
-    getInventories({ date });
+    updateChest({ type: "store", data: { prev_date: selectedDate } });
+    getInventories({ date: selectedDate });
   };
 
   const tItemHead = (
@@ -97,6 +71,12 @@ const Inventory = () => {
     </tr>
   );
 
+  const options = {
+    minYear: 2022,
+    maxYear: 2040,
+    initialDate: new Date(),
+  };
+
   const tInventoryHead = (
     <tr>
       <th className="w-16">SKU</th>
@@ -105,11 +85,12 @@ const Inventory = () => {
       <th className="w-24 !text-center">QTY</th>
       <th className="!text-center">
         DEL
-        <span
-          ref={pikaRef}
-          className="border-b border-gray-600 pl-1 pb-1 absolute cursor-pointer top-0 right-0"
-        >
-          <CalendarDays className="hover:-translate-x-[2px] transition-transform" />
+        <span className="border-b border-gray-600 pl-1 pb-1 absolute cursor-pointer top-0 right-0">
+          <DatePicker
+            options={options}
+            events={evts}
+            onSelectDate={dateSelect}
+          />
         </span>
       </th>
     </tr>

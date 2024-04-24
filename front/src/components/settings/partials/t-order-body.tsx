@@ -1,7 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { addInput, toCommas, toReal } from "../../../lib/utils";
 import { Fragment } from "react";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 
 type TOrderBodyProps = {
   pickedItems?: any;

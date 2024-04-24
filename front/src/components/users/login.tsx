@@ -3,7 +3,7 @@ import wstbrke from "../../images/wstbrke.jpg";
 import { Image } from "../../lib/image";
 import Plogin from "./partials/plogin";
 import A2b from "./partials/a2b";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 
 const Login = () => {
   const {

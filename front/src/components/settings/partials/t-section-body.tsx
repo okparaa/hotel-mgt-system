@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
 import { Fragment } from "react";
-import { useChest } from "../../../state-mgr/app-chest";
+import { useChest } from "../../../app-chest";
 
 type TSectionBodyProps = {
   searchSections?: any[];

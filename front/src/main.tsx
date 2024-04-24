@@ -3,7 +3,7 @@ import "./index.css";
 import App from "./app.tsx";
 import client from "./client.ts";
 import { Provider } from "urql";
-import AppProvider from "./state-mgr/app-chest.tsx";
+import AppProvider from "./app-chest.tsx";
 
 render(
   <Provider value={client}>

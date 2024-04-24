@@ -8,7 +8,7 @@ import Form, {
 } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import revenues from "../../images/revenues.jpg";
-import { useChest } from "../../state-mgr/app-chest";
+import { useChest } from "../../app-chest";
 import { useSectionQuery } from "../aio-urql";
 
 type RoutesFormProps = {

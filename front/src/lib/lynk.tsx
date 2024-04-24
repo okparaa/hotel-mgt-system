@@ -1,6 +1,6 @@
 import { ReactNode } from "preact/compat";
 import { Link } from "react-router-dom";
-import { useChest } from "../state-mgr/app-chest";
+import { useChest } from "../app-chest";
 import { RoutesQuery } from "../components/aio-urql";
 
 type LynkProps = {
