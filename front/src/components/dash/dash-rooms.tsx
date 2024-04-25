@@ -36,27 +36,28 @@ const DashRooms = () => {
             <span
               className="link-btn-room"
               onClick={() => {
-                const today = new Date();
-                const tomorrow = new Date("tomorrow");
                 const newBooking = [
                   ...booker.bookables,
                   {
                     id: room.id,
                     price: room.price,
-                    inDate: today,
-                    outDate: tomorrow,
+                    inDate: "",
+                    outDate: "",
                     name: room.name,
                     type: room.type,
                   },
                 ];
+                const total = newBooking.reduce(
+                  (acc: number, book: Record<string, any>) => {
+                    return acc + Number(book.price);
+                  },
+                  0
+                );
                 updateChest({
                   type: "booker",
                   data: {
-                    pos: booker.pos,
-                    txfa: booker.txfa,
-                    hash: booker.hash,
-                    cash: booker.cash,
-                    total: booker.total,
+                    ...booker,
+                    total,
                     bookables: newBooking,
                   },
                 });
@@ -72,7 +73,7 @@ const DashRooms = () => {
           );
         })}
       </div>
-      <div className="basis-[40%] p-[12px] rounded-md shadow-2xl bg-slate-50">
+      <div className="basis-[40%] bg-zinc-500 p-[12px] rounded-md shadow-2xl">
         <Booker />
         <div className="flex border-2 py-2 mt-2">
           <div className="flex-1 text-center checkout">
@@ -84,12 +85,8 @@ const DashRooms = () => {
                   updateChest({
                     type: "booker",
                     data: {
+                      ...booker,
                       cash: +value,
-                      txfa: booker.txfa,
-                      pos: booker.pos,
-                      total: booker.total,
-                      bookables: booker.bookables,
-                      hash: booker.hash,
                     },
                   });
                 });
@@ -107,12 +104,8 @@ const DashRooms = () => {
                   updateChest({
                     type: "booker",
                     data: {
+                      ...booker,
                       pos: +value,
-                      txfa: booker.txfa,
-                      cash: booker.cash,
-                      total: booker.total,
-                      bookables: booker.bookables,
-                      hash: booker.hash,
                     },
                   });
                 });
@@ -130,12 +123,8 @@ const DashRooms = () => {
                   updateChest({
                     type: "booker",
                     data: {
+                      ...booker,
                       txfa: +value,
-                      cash: booker.cash,
-                      pos: booker.pos,
-                      total: booker.total,
-                      bookables: booker.bookables,
-                      hash: booker.hash,
                     },
                   });
                 });

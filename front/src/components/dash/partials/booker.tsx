@@ -1,7 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { useChest } from "../../../app-chest";
 import { toCommas } from "../../../lib/utils";
-import { useState } from "preact/hooks";
 import DatePicker from "../../calendar/date-picker";
 type TOrderBodyProps = {};
 
@@ -12,15 +11,35 @@ export const Booker = ({}: TOrderBodyProps) => {
   } = useChest();
 
   const bookable = ["Room", "hall", "pool", "other"];
-
-  const [checkInDate, setCheckInDate] = useState<Date>(new Date());
-  const [checkOutDate, setCheckOutDate] = useState<Date>(new Date());
-
-  const handleCheckInDate = (date: Date) => {
-    setCheckInDate(date);
+  const handleCheckInDate = (date: Date, book: Record<string, any>) => {
+    book.inDate = date.toDateString();
+    updateChest({
+      type: "booker",
+      data: {
+        ...booker,
+        bookables: booker.bookables?.map((buk) => {
+          if (buk.id === book.id) {
+            return { ...buk, ...book };
+          }
+          return buk;
+        }),
+      },
+    });
   };
-  const handleCheckOutDate = (date: Date) => {
-    setCheckOutDate(date);
+  const handleCheckOutDate = (date: Date, book: Record<string, any>) => {
+    book.outDate = date.toDateString();
+    updateChest({
+      type: "booker",
+      data: {
+        ...booker,
+        bookables: booker.bookables?.map((buk) => {
+          if (buk.id === book.id) {
+            return { ...buk, ...book };
+          }
+          return buk;
+        }),
+      },
+    });
   };
   const options = {
     minYear: 2022,
@@ -31,8 +50,10 @@ export const Booker = ({}: TOrderBodyProps) => {
 
   return (
     <div>
-      <div>sales</div>
-      {booker.bookables.map((book) => {
+      <div className="font-semibold text-center text-lg">
+        Sales: @{toCommas(booker.total)}
+      </div>
+      {booker.bookables?.map((book) => {
         return (
           <div className="booker">
             <span>
@@ -41,21 +62,27 @@ export const Booker = ({}: TOrderBodyProps) => {
             </span>
             <span>
               In:
-              <DatePicker options={options} onSelectDate={handleCheckInDate} />
-              <div className="text-sm">{checkInDate.toDateString()}</div>
+              <DatePicker
+                options={options}
+                onSelectDate={(date) => handleCheckInDate(date, book)}
+              />
+              <div className="text-sm">{book.inDate}</div>
             </span>
             <span>
               Out:
-              <DatePicker options={options} onSelectDate={handleCheckOutDate} />
-              <div className="text-sm">{checkOutDate.toDateString()}</div>
+              <DatePicker
+                options={options}
+                onSelectDate={(date) => handleCheckOutDate(date, book)}
+              />
+              <div className="text-sm">{book.outDate}</div>
             </span>
             <span
               onClick={() => {
-                const updatedBooking: any = booker.bookables.filter(
+                const updatedBooking: any = booker.bookables?.filter(
                   (buk: any) => buk.id !== book.id
                 );
                 const total = updatedBooking.reduce(
-                  (acc: number, book: any) => {
+                  (acc: number, book: Record<string, any>) => {
                     return acc + Number(book.price);
                   },
                   0
@@ -64,10 +91,7 @@ export const Booker = ({}: TOrderBodyProps) => {
                 updateChest({
                   type: "booker",
                   data: {
-                    cash: booker.cash,
-                    pos: booker.pos,
-                    txfa: booker.txfa,
-                    hash: booker.hash,
+                    ...booker,
                     total,
                     bookables: updatedBooking,
                   },

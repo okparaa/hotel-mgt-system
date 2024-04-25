@@ -45,7 +45,7 @@ const DatePicker: React.FC<CustomDatePickerProps> = ({
     };
     document.addEventListener("mousedown", checkOutsideClick);
     return () => document.removeEventListener("mousedown", checkOutsideClick);
-  }, []);
+  }, [showCalendar]);
   const showMonthPicker = () => {
     setShowMonths(true);
     setShowCalendar(false);

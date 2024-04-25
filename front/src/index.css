@@ -121,11 +121,8 @@ form {
 .booker {
   @apply flex justify-around border-2 mt-1;
 }
-.booker span:not(:last-child) {
-  @apply border-r-2 px-2 py-1;
-}
-.booker span:last-child {
-  @apply p-2;
+.booker span {
+  @apply px-2 py-1;
 }
 .icon {
   @apply text-sky-900;
