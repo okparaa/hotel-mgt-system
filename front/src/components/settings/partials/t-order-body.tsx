@@ -1,5 +1,5 @@
 import { Trash2 } from "lucide-react";
-import { addInput, toCommas, toReal } from "../../../lib/utils";
+import { addInput, toCommas } from "../../../lib/utils";
 import { Fragment } from "react";
 import { useChest } from "../../../app-chest";
 
@@ -99,7 +99,7 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                 })
               }
             >
-              {toReal(item.qtySold)}
+              {toCommas(item.qtySold)}
             </span>
           </td>
           <td className="!text-center">

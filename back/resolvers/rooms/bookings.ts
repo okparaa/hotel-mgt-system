@@ -23,6 +23,7 @@ export const bookings = async (parent: any, args: any, ctx: Context) => {
       roomErrors
     );
   }
+
   return await ctx.db
     .update(rooms)
     .set({ ...args.book })

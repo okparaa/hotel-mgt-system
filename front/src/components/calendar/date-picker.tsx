@@ -1,80 +1,57 @@
 import { CalendarDays } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { RenderCalendar } from "./calendar";
 import { RenderMonths } from "./months";
+import { PickerContext, reducer } from "./date-picker-state";
 
-interface CustomDatePickerProps {
-  onSelectDate: (date: Date) => void;
+export type DatePickerOptions = {
+  minYear?: number;
+  maxYear?: number;
+  initialDate?: Date;
+  className?: string;
+  normal?: boolean;
   events?: Map<string, boolean> | undefined;
-  options?: {
-    minYear: number;
-    maxYear: number;
-    initialDate: Date;
-    className: string;
-  };
+};
+
+interface DatePickerProps {
+  onSelectDate: (date: Date) => void;
+  options: DatePickerOptions;
 }
 
-const DatePicker: React.FC<CustomDatePickerProps> = ({
-  onSelectDate,
-  events,
-  options,
-}) => {
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showMonths, setShowMonths] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
-
-  const toggleCalendar = () => {
-    setShowCalendar(!showCalendar);
+const DatePicker = ({ onSelectDate, options }: DatePickerProps) => {
+  const initialDateState = {
+    isCalendar: false,
+    isMonths: false,
+    currentDate: new Date(),
   };
-
-  const handleDateSelect = (date: Date) => {
-    onSelectDate(date);
-    setShowCalendar(false);
-    setShowMonths(false);
-  };
+  const [data, dispatch] = useReducer(reducer, initialDateState);
 
   useEffect(() => {
     const checkOutsideClick = (e: MouseEvent) => {
       if (
-        (showCalendar || showMonths) &&
+        (data.isCalendar || data.isMonths) &&
         !(e.target as HTMLElement).closest(".calendar")
       ) {
-        setShowCalendar(false);
-        setShowMonths(false);
+        dispatch({ data, type: "CLOSE" });
       }
     };
-    document.addEventListener("mousedown", checkOutsideClick);
-    return () => document.removeEventListener("mousedown", checkOutsideClick);
-  }, [showCalendar]);
-  const showMonthPicker = () => {
-    setShowMonths(true);
-    setShowCalendar(false);
-  };
-  const showCalendarPicker = () => {
-    setShowMonths(false);
-    setShowCalendar(true);
-  };
+    document.addEventListener("click", checkOutsideClick);
+    return () => document.removeEventListener("click", checkOutsideClick);
+  }, [data.isCalendar, data.isMonths]);
 
   return (
-    <div className={`relative ${options?.className}`}>
-      <CalendarDays onClick={toggleCalendar} className="cursor-pointer" />
-      {showCalendar && !showMonths && (
-        <RenderCalendar
-          showMonthPicker={showMonthPicker}
-          handleDateSelect={handleDateSelect}
-          currentDate={currentDate}
-          setCurrentDate={setCurrentDate}
-          events={events}
+    <PickerContext.Provider value={{ data, dispatch }}>
+      <div className={`relative ${options?.className}`}>
+        <CalendarDays
+          onClick={() => dispatch({ data, type: "TOGGLE_CALENDAR" })}
+          className="cursor-pointer"
         />
-      )}
-      {showMonths && !showCalendar && (
-        <RenderMonths
-          showCalendarPicker={showCalendarPicker}
-          currentDate={currentDate}
-          setCurrentDate={setCurrentDate}
-        />
-      )}
-    </div>
+        {data.isCalendar && (
+          <RenderCalendar options={options} onSelectDate={onSelectDate} />
+        )}
+        {data.isMonths && <RenderMonths options={options} />}
+      </div>
+    </PickerContext.Provider>
   );
 };
 

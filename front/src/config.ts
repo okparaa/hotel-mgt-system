@@ -6,3 +6,20 @@ export const gConfig = {
   pay: "pay",
   verifyPmt: "vfy",
 };
+
+export const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export const bookable = ["Room", "Hall", "Pool", "Other"];

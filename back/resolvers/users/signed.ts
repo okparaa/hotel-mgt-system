@@ -73,6 +73,7 @@ export const signedUser = async (parent: any, args: any, ctx: Context) => {
       const token: any = jwt.decode(oldSess.accessToken);
       const now = parseInt(+new Date() / 1000 + "");
       const isExpired = now - token.exp > 0;
+      console.log(oldSess);
 
       if (isExpired) {
         [session] = await ctx.db.transaction(async (tx) => {

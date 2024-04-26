@@ -1,6 +1,3 @@
-// import { useCallback, useRef } from "react";
-// import { CalendarDays } from "lucide-react";
-
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
 import { MiniSearch } from "../../lib/mini-search";
@@ -8,8 +5,6 @@ import { TInventoryBody } from "./partials/t-inventory-body";
 import { TInventoryItemBody } from "./partials/t-inventory-item-body";
 import { getDateFromTimestamp } from "../../lib/utils";
 
-// import "../pikaday/css/pikaday.css";
-// import { Pikaday } from "../pikaday/pikaday";
 import { useChest } from "../../app-chest";
 import { useLazyQuery } from "../../lib/useLazyQuery";
 import {
@@ -21,10 +16,10 @@ import {
 } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { GET_INVENTORIES } from "../queries/inventory-queries";
-import DatePicker from "../calendar/date-picker";
+import DatePicker, { DatePickerOptions } from "../calendar/date-picker";
 
 const Inventory = () => {
-  const today = getDateFromTimestamp();
+  const today = getDateFromTimestamp(new Date().toDateString());
   const [inventoriesItemsRes] = useInventoriesItemsQuery({
     variables: { date: today },
   });
@@ -71,10 +66,12 @@ const Inventory = () => {
     </tr>
   );
 
-  const options = {
+  const options: DatePickerOptions = {
     minYear: 2022,
     maxYear: 2040,
     initialDate: new Date(),
+    normal: true,
+    events: evts,
   };
 
   const tInventoryHead = (
@@ -86,11 +83,7 @@ const Inventory = () => {
       <th className="!text-center">
         DEL
         <span className="border-b border-gray-600 pl-1 pb-1 absolute cursor-pointer top-0 right-0">
-          <DatePicker
-            options={options}
-            events={evts}
-            onSelectDate={dateSelect}
-          />
+          <DatePicker options={options} onSelectDate={dateSelect} />
         </span>
       </th>
     </tr>

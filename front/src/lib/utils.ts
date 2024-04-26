@@ -1,6 +1,6 @@
 import { emailRegex, phoneRegex } from "./regexes";
 import { FormRef } from "./forms";
-import { gConfig } from "../config";
+import { gConfig, months } from "../config";
 export type Session = { [x: string]: string | boolean | number };
 
 export const jwt = {
@@ -232,7 +232,7 @@ export const humanDate = (date: any) => {
 // console.log(time_ago(new Date(Date.now() - aDay * 2)));
 
 export const getDateFromTimestamp = (
-  timestamp: number | null = null,
+  timestamp: number | string | null,
   format = "y-m-d"
 ) => {
   const date = timestamp ? new Date(timestamp) : new Date();
@@ -250,6 +250,9 @@ export const getDateFromTimestamp = (
     case "d-m-y":
       ndate = `${day}-${month}-${year}`;
       break;
+    case "d-msh-y":
+      ndate = `${day} ${months[+month - 1]}/${year}`;
+      break;
     default:
       ndate = `${year}-${month}-${day}`;
       break;
@@ -262,14 +265,6 @@ export const toCommas = (value: number | string) => {
     value = +value;
   }
   return value.toLocaleString();
-};
-
-export const toReal = (value: number | string) => {
-  if (typeof value === "string") {
-    value = +value;
-  }
-  const num = Intl.NumberFormat("en-US").format(+value);
-  return num;
 };
 
 const TOKEN_KEY = "token";

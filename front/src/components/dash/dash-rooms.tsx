@@ -26,8 +26,8 @@ const DashRooms = () => {
   });
 
   return (
-    <div className="h-fit flex flex-wrap py-5 justify-between">
-      <div className="basis-7/12 flex flex-wrap gap-4">
+    <div className="h-fit flex flex-wrap py-5 justify-between flex-col-reverse md:flex-row">
+      <div className="basis-full md:basis-[50%] lg:basis-7/12 flex flex-wrap">
         <Search hasBtn={false} />
         {roomSearch?.map((room: any) => {
           if (!room) return <></>;
@@ -73,9 +73,9 @@ const DashRooms = () => {
           );
         })}
       </div>
-      <div className="basis-[40%] bg-zinc-500 p-[12px] rounded-md shadow-2xl">
+      <div className="basis-full md:basis-[38%] lg:basis-[40%] mb-4 bg-gradient-to-b from-fuchsia-300 to-gray-800 bg-rose-300 p-[12px] rounded-md shadow-2xl">
         <Booker />
-        <div className="flex border-2 py-2 mt-2">
+        <div className="flex border-2 border-rose-400 py-2 mt-2 rounded-md">
           <div className="flex-1 text-center checkout">
             <span>cash</span>
             <span

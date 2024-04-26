@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import throwError, { ErrorTypes } from "./errors";
 import { get20Words, lt20Words } from "../db/constants";
+import { log } from "console";
 dotenv.config();
 
 export const usernameExists = async (username: string, ctx: Context) => {
@@ -62,12 +63,17 @@ type Identity = {
 export const getUser = async (req: any) => {
   const secret = process.env.JWT_SECRET || "secret";
   let decoded = null;
+
+  console.log(req.headers.authorization);
+
   try {
     decoded = jwt.verify(
       req.headers.authorization,
       secret
     ) as unknown as Identity;
   } catch (error) {
+    console.log(error);
+
     throwError("jwt decode failed", ErrorTypes.UNAUTHENTICATED, [
       ["kode", "code has expired"],
     ]);

@@ -14,7 +14,6 @@ const A2b = () => {
   const formRef = useRef<FormRef>(null);
   const { updateChest } = useChest();
   const [{ data, fetching, error }, verified] = useVerifiedMutation();
-  console.log("we are here");
 
   if (!error && data) {
     const { verified: user } = data;

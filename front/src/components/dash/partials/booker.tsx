@@ -1,7 +1,8 @@
 import { Trash2 } from "lucide-react";
 import { useChest } from "../../../app-chest";
-import { toCommas } from "../../../lib/utils";
-import DatePicker from "../../calendar/date-picker";
+import { getDateFromTimestamp, toCommas } from "../../../lib/utils";
+import DatePicker, { DatePickerOptions } from "../../calendar/date-picker";
+import { bookable } from "../../../config";
 type TOrderBodyProps = {};
 
 export const Booker = ({}: TOrderBodyProps) => {
@@ -10,7 +11,6 @@ export const Booker = ({}: TOrderBodyProps) => {
     updateChest,
   } = useChest();
 
-  const bookable = ["Room", "hall", "pool", "other"];
   const handleCheckInDate = (date: Date, book: Record<string, any>) => {
     book.inDate = date.toDateString();
     updateChest({
@@ -26,6 +26,7 @@ export const Booker = ({}: TOrderBodyProps) => {
       },
     });
   };
+
   const handleCheckOutDate = (date: Date, book: Record<string, any>) => {
     book.outDate = date.toDateString();
     updateChest({
@@ -41,7 +42,8 @@ export const Booker = ({}: TOrderBodyProps) => {
       },
     });
   };
-  const options = {
+
+  const options: DatePickerOptions = {
     minYear: 2022,
     maxYear: 2040,
     initialDate: new Date(),
@@ -55,26 +57,40 @@ export const Booker = ({}: TOrderBodyProps) => {
       </div>
       {booker.bookables?.map((book) => {
         return (
-          <div className="booker">
-            <span>
+          <div className="booker rounded-md">
+            <span className="flex flex-col">
               {bookable[book.type]} {book.name}{" "}
               <strong>@{toCommas(book.price)}</strong>
             </span>
-            <span>
-              In:
-              <DatePicker
-                options={options}
-                onSelectDate={(date) => handleCheckInDate(date, book)}
-              />
-              <div className="text-sm">{book.inDate}</div>
+            <span className="flex items-center flex-col">
+              <span className="flex">
+                In:
+                <DatePicker
+                  options={options}
+                  onSelectDate={(date) => handleCheckInDate(date, book)}
+                />
+              </span>
+              <span
+                style={{ padding: "0 5px 2px 5px" }}
+                className="text-white text-sm bg-rose-600 rounded-xl p-0"
+              >
+                {getDateFromTimestamp(book.inDate, "d-msh-y")}
+              </span>
             </span>
-            <span>
-              Out:
-              <DatePicker
-                options={options}
-                onSelectDate={(date) => handleCheckOutDate(date, book)}
-              />
-              <div className="text-sm">{book.outDate}</div>
+            <span className="flex items-center flex-col">
+              <span className="flex">
+                Out:
+                <DatePicker
+                  options={options}
+                  onSelectDate={(date) => handleCheckOutDate(date, book)}
+                />
+              </span>
+              <span
+                style={{ padding: "0 5px 2px 5px" }}
+                className="text-white text-sm bg-rose-600 rounded-xl p-0"
+              >
+                {getDateFromTimestamp(book.outDate, "d-msh-y")}
+              </span>
             </span>
             <span
               onClick={() => {
@@ -87,7 +103,6 @@ export const Booker = ({}: TOrderBodyProps) => {
                   },
                   0
                 );
-
                 updateChest({
                   type: "booker",
                   data: {
@@ -98,7 +113,9 @@ export const Booker = ({}: TOrderBodyProps) => {
                 });
               }}
             >
-              <Trash2 size={20} className="ikon cursor-pointer" />
+              <span className="flex">
+                <Trash2 size={20} className="ikon cursor-pointer" />
+              </span>
             </span>
           </div>
         );
