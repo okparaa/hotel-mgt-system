@@ -1,8 +1,9 @@
 import { Trash2 } from "lucide-react";
 import { addInput, toCommas } from "../../../lib/utils";
 import { Fragment } from "react";
+import { ChestBookItem } from "../../../lib/types";
 type TInventoryBodyProps = {
-  currInventories?: any[];
+  currInventories?: ChestBookItem[];
   eInventory: (variables: any) => void;
   dInventory: (variables: any) => void;
 };
@@ -14,7 +15,7 @@ export const TInventoryBody = ({
   return (
     <Fragment>
       {currInventories?.map((inventory: any) => (
-        <tr key={inventory.id} className="bg-tr">
+        <tr key={inventory.itemId} className="bg-tr">
           <td>{inventory.item?.sku}</td>
           <td>{inventory.item?.name}</td>
           <td>
@@ -24,10 +25,9 @@ export const TInventoryBody = ({
                 addInput(e, (value) =>
                   eInventory({
                     inventory: {
-                      id: inventory.id,
                       priceBought: value,
                       qtyBought: inventory.qtyBought,
-                      itemId: inventory.item.id,
+                      itemId: inventory.itemId,
                       createdAt: inventory.createdAt,
                     },
                   })
@@ -44,10 +44,9 @@ export const TInventoryBody = ({
                 addInput(e, (value) =>
                   eInventory({
                     inventory: {
-                      id: inventory.id,
                       qtyBought: value,
-                      priceBought: inventory.priceBought + "",
-                      itemId: inventory.item.id,
+                      priceBought: inventory.priceBought,
+                      itemId: inventory.itemId,
                       createdAt: inventory.createdAt,
                     },
                   })
@@ -63,8 +62,7 @@ export const TInventoryBody = ({
               className="icon-span"
               onClick={() => {
                 dInventory({
-                  id: inventory.id,
-                  itemId: inventory.item.id,
+                  itemId: inventory.itemId,
                 });
               }}
             >

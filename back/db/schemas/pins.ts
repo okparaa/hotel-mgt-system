@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { boolean, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { pinStatusEnum } from ".";
+import { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
 export const pins = pgTable("pins", {
   id: varchar("id", { length: 128 })
@@ -12,3 +13,6 @@ export const pins = pgTable("pins", {
   status: pinStatusEnum("pin_status").default("valid"),
   pin: varchar("pin"),
 });
+
+export type PinsSelect = InferSelectModel<typeof pins>;
+export type PinsInsert = InferInsertModel<typeof pins>;

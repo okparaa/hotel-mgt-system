@@ -6,8 +6,8 @@ import { Context } from "../types/context";
 export const typeDef = /* GraphQL */ `
   type OrderItem {
     id: ID!
-    priceSold: String
-    qtySold: String
+    priceSold: Float
+    qtySold: Int
     order: Order
     items: [Item]
     syn: Boolean
@@ -27,8 +27,8 @@ export const typeDef = /* GraphQL */ `
   input NewOrderItemInput {
     userId: String
     itemId: String
-    qtySold: String
-    priceSold: String
+    qtySold: Int
+    priceSold: Float
     name: String
     sku: String
     hash: String

@@ -13,3 +13,5 @@ export * from "./routes";
 export * from "./orders-items";
 export * from "./sessions";
 export * from "./items";
+export * from "./bookings";
+export * from "./recoveries";

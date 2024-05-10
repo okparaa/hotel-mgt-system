@@ -1,6 +1,7 @@
 import { createId } from "@paralleldrive/cuid2";
 import { boolean, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { sections } from ".";
+import { InferSelectModel, InferInsertModel } from "drizzle-orm";
 
 export const routes = pgTable("routes", {
   id: varchar("id", { length: 128 })
@@ -19,3 +20,6 @@ export const routes = pgTable("routes", {
   description: varchar("description"),
   routeId: varchar("route_id", { length: 128 }).references(() => routes.id),
 });
+
+export type RoutesSelect = InferSelectModel<typeof routes>;
+export type RoutesInsert = InferInsertModel<typeof routes>;

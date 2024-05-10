@@ -1,7 +1,8 @@
 import { createId } from "@paralleldrive/cuid2";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
-  PgBoolean,
   boolean,
+  date,
   decimal,
   integer,
   pgTable,
@@ -9,7 +10,6 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { roomStatusEnum } from ".";
 
 export const rooms = pgTable("rooms", {
   id: varchar("id", { length: 128 })
@@ -21,15 +21,10 @@ export const rooms = pgTable("rooms", {
   deleted: boolean("deleted").default(false),
   name: varchar("name"),
   description: varchar("description"),
-  guestPhone: varchar("guest_phone"),
-  guestEmail: varchar("guest_email"),
-  guestName: varchar("guest_name"),
-  inDate: timestamp("in_date").defaultNow(),
-  outDate: timestamp("out_date").defaultNow(),
-  userId: varchar("user_id"),
   type: integer("type"),
   price: decimal("price").default("0"),
   sku: serial("sku"),
-  bookDate: timestamp("book_date").defaultNow(),
-  status: boolean("status").default(false),
 });
+
+export type RoomsSelect = InferSelectModel<typeof rooms>;
+export type RoomsInsert = InferInsertModel<typeof rooms>;

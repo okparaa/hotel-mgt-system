@@ -52,10 +52,17 @@ export const GET_ITEM_INVENTORIES = gql(`
       qtyBought
       deleted
       createdAt
+      userId
       item {
         id
         sku
+        type
         name
+        price
+        description
+        qtyBought
+        qtySold
+        deleted
       }
     }
     items {
@@ -65,6 +72,8 @@ export const GET_ITEM_INVENTORIES = gql(`
       name
       price
       description
+      qtyBought
+      qtySold
       deleted
     }
     dates{
@@ -82,6 +91,7 @@ export const GET_INVENTORIES = gql(`
       qtyBought
       deleted
       createdAt
+      userId
       item {
         id
         sku

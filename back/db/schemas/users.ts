@@ -43,5 +43,5 @@ export const userRelation = relations(users, ({ many, one }) => ({
   order: many(orders),
 }));
 
-export type UserSelect = InferSelectModel<typeof users>;
-export type UserInsert = InferInsertModel<typeof users>;
+export type UsersSelect = InferSelectModel<typeof users>;
+export type UsersInsert = InferInsertModel<typeof users>;

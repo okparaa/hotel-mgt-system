@@ -39,7 +39,10 @@ const Rooms = () => {
   const [{ data: roomData, fetching: loading }] = useRoomsQuery();
 
   const deleteRoom = (room: Room) => {
-    updateChest({ type: "store", data: { name: room.name, id: room.id } });
+    updateChest({
+      type: "store",
+      data: { delMsg: `Delete Room ${room.name}?`, id: room.id },
+    });
     setOpenDel(true);
   };
   const editRoom = (room: Room) => {

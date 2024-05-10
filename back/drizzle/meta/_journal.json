@@ -197,6 +197,125 @@
       "when": 1713177447001,
       "tag": "0027_opposite_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1714621945062,
+      "tag": "0028_spotty_tinkerer",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1714668800177,
+      "tag": "0029_watery_fallen_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1714668884849,
+      "tag": "0030_worthless_susan_delgado",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1714811172711,
+      "tag": "0031_clumsy_killer_shrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "5",
+      "when": 1714816774002,
+      "tag": "0032_furry_stingray",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "5",
+      "when": 1714818538159,
+      "tag": "0033_solid_tyrannus",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "5",
+      "when": 1714818611978,
+      "tag": "0034_colossal_wasp",
+      "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "5",
+      "when": 1714828940443,
+      "tag": "0035_safe_black_widow",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "5",
+      "when": 1714928702703,
+      "tag": "0036_tranquil_guardsmen",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "5",
+      "when": 1714984769595,
+      "tag": "0037_regular_lady_bullseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1714985798619,
+      "tag": "0038_pale_forgotten_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1715024921457,
+      "tag": "0039_ancient_spacker_dave",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "5",
+      "when": 1715072800282,
+      "tag": "0040_awesome_rocket_racer",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "5",
+      "when": 1715318218834,
+      "tag": "0041_same_winter_soldier",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "5",
+      "when": 1715319110730,
+      "tag": "0042_chemical_firelord",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "5",
+      "when": 1715319244299,
+      "tag": "0043_fixed_blizzard",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "5",
+      "when": 1715321035682,
+      "tag": "0044_broad_senator_kelly",
+      "breakpoints": true
     }
   ]
 }

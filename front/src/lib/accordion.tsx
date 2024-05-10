@@ -6,7 +6,8 @@ type AccordionProps = {
   children: ReactNode;
   active?: boolean | undefined;
   msg?: string;
-  className: string;
+  className?: string;
+  extra?: string;
 };
 export const Accordion = ({
   title,
@@ -14,6 +15,7 @@ export const Accordion = ({
   className,
   active,
   msg,
+  extra,
 }: AccordionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -28,7 +30,9 @@ export const Accordion = ({
         onClick={() => toggleAccordion()}
       >
         <div className={`flex w-full ${isOpen ? "border-b-2" : ""}`}>
-          <div className={`font-semibold flex-1`}>{title}:</div>
+          <div className={`font-semibold flex-1`}>
+            {title}: {extra}
+          </div>
           {active && <CheckCheck className="mr-1" />}
           {msg && (
             <div className="flex-1 text-center border-2 font-semibold">

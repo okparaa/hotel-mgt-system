@@ -22,5 +22,5 @@ export const sectionsRelation = relations(sections, ({ many }) => ({
   inventories: many(inventories),
 }));
 
-export type SectionSelect = InferSelectModel<typeof sections>;
-export type SectionInsert = InferInsertModel<typeof sections>;
+export type SectionsSelect = InferSelectModel<typeof sections>;
+export type SectionsInsert = InferInsertModel<typeof sections>;

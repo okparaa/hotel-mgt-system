@@ -17,6 +17,7 @@ const Staff = lazy(() => import("./components/settings/staff"));
 const StatsIndex = lazy(() => import("./components/stats/stats-index"));
 const ItemsStats = lazy(() => import("./components/stats/items-stats"));
 const Rooms = lazy(() => import("./components/settings/rooms"));
+const OrdersBookings = lazy(() => import("./components/orders/bookings"));
 const OrdersIndex = lazy(() => import("./components/orders/orders-index"));
 const StaffMgr = lazy(() => import("./components/settings/staff-mgr"));
 const RouteMgr = lazy(() => import("./components/settings/route-mgr"));
@@ -31,8 +32,6 @@ const App = () => {
   useEffect(() => {
     SwInit.init();
   }, []);
-
-  // useQuery(GET_ROUTES);
 
   return (
     <BrowserRouter>
@@ -67,7 +66,7 @@ const App = () => {
           <Route path="/aio" element={<Aio />} />
           <Route path="/aio/settings" element={<SettingsIndex />} />
           <Route path="/aio/settings/items" element={<Items />} />
-          <Route path="/aio/settings/purchases" element={<Inventory />} />
+          <Route path="/aio/settings/inventory" element={<Inventory />} />
           <Route path="/aio/settings/orders" element={<Orders />} />
           <Route path="/aio/settings/sections" element={<Sections />} />
           <Route path="/aio/settings/staff" element={<Staff />} />
@@ -83,6 +82,7 @@ const App = () => {
           <Route path="/aio/settings/rooms" element={<Rooms />} />
           <Route path="/aio/dash/rooms" element={<DashRooms />} />
           <Route path="/aio/orders" element={<OrdersIndex />} />
+          <Route path="/aio/orders/bookings" element={<OrdersBookings />} />
           <Route path="/aio/stats" element={<StatsIndex />} />
           <Route path="/aio/stats/items" element={<ItemsStats />} />
         </Route>

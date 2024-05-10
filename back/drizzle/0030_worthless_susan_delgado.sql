@@ -1,0 +1,1 @@
+ALTER TABLE "orders_bookings" ADD COLUMN "user_id" varchar;

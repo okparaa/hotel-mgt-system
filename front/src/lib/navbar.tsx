@@ -9,6 +9,7 @@ import {
 import { Image } from "./image";
 import logo from "../images/logo.png";
 import { useChest } from "../app-chest";
+import { storage } from "../client";
 
 const Navbar = () => {
   const {
@@ -17,10 +18,11 @@ const Navbar = () => {
   } = useChest();
 
   const navigate = useNavigate();
-  const signOut = (e: MouseEvent) => {
+  const signOut = async (e: MouseEvent) => {
     e.preventDefault();
     localStorage.clear();
     sessionStorage.clear();
+    await storage.clear();
     const sess = { id: "", auth: "", vfy: "", iat: "", exp: "" };
     updateChest({ type: "session", data: sess });
     const usr = {

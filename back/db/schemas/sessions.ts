@@ -25,5 +25,5 @@ export const sessionRelation = relations(sessions, ({ one }) => ({
   }),
 }));
 
-export type SessionSelect = InferSelectModel<typeof sessions>;
-export type SessionInsert = InferInsertModel<typeof sessions>;
+export type SessionsSelect = InferSelectModel<typeof sessions>;
+export type SessionsInsert = InferInsertModel<typeof sessions>;

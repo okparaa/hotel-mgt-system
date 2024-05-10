@@ -28,9 +28,7 @@ export const RenderMonths = ({}: RenderMonthsProps) => {
         </span>
         <div
           className="cursor-pointer basis-4/6 bg-blue-200 hover:bg-blue-300 rounded-md px-3 pt-[2px] text-center"
-          onClick={() =>
-            dispatch({ data: { currentDate }, type: "OPEN_CALENDAR" })
-          }
+          onClick={() => dispatch({ type: "OPEN_CALENDAR" })}
         >
           {currentDate?.toLocaleString("default", {
             year: "numeric",
@@ -45,7 +43,7 @@ export const RenderMonths = ({}: RenderMonthsProps) => {
               type: "SET_CURRENT_DATE",
             });
           }}
-          className="px-2 basis-1/6 cursor-pointer py-0 border-2 border-gray-300 hover:bg-gray-300"
+          className="px-2 basis-1/6 cursor-pointer py-0 border-2 border-gray-300 hover:bg-gray-300 flex justify-end"
         >
           <MoveRight />
         </span>
@@ -55,7 +53,6 @@ export const RenderMonths = ({}: RenderMonthsProps) => {
           <div
             onClick={() => {
               if (!currentDate) return; //return early
-
               currentDate.setMonth(key);
               dispatch({
                 data: {

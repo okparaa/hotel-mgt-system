@@ -1,10 +1,9 @@
-import { eq } from "drizzle-orm";
-import { rooms, users } from "../db/schemas";
+import { desc, eq } from "drizzle-orm";
+import { bookings, rooms, users } from "../db/schemas";
 import { createNewRoom } from "../resolvers/rooms/new-room";
 import { Context } from "../types/context";
 import { updateRoom, updateRoomPrice } from "../resolvers/rooms/edit-room";
 import { roomColumns, sleep } from "../helpers";
-import { bookings } from "../resolvers/rooms/bookings";
 export const typeDef = /* GraphQL */ `
   type Room {
     id: ID!
@@ -14,41 +13,30 @@ export const typeDef = /* GraphQL */ `
     deleted: String
     price: Int
     sku: String
-    guestName: String
-    guestEmail: String
-    guestPhone: String
     syn: Boolean
     type: String
-    inDate: String
-    outDate: String
-    bookDate: String
     status: String
-    user: User
+    booking: Booking
   }
+
   type Query {
     room(id: ID!): Room
     rooms: [Room]
     roomsChart: [Room]
   }
+
   type Mutation {
     eRoom(room: RoomInput): Room
     newRoom(room: NewRoomInput): Room
     dRoom(id: ID!): Room
     roomPrice(id: ID!, price: Int): Room
-    booker(book: RoomBookInput): [Room]
   }
+
   input NewRoomInput {
     name: String
     description: String
     price: Int
     type: String
-  }
-  input RoomBookInput {
-    id: String!
-    txfa: Int
-    total: Int
-    pos: Int
-    cash: Int
   }
 
   input RoomInput {
@@ -59,6 +47,7 @@ export const typeDef = /* GraphQL */ `
     type: String
   }
 `;
+
 export const resolvers = {
   Query: {
     rooms: async (parent: any, args: any, ctx: Context) => {
@@ -83,18 +72,18 @@ export const resolvers = {
     roomPrice: async (parent: any, args: any, ctx: Context) => {
       return await updateRoomPrice(parent, args, ctx);
     },
-    booker: async (parent: any, args: any, ctx: Context) => {
-      return await bookings(parent, args, ctx);
-    },
   },
 
   Room: {
-    user: async (parent: any, args: any, ctx: Context) => {
-      const [user] = await ctx.db
+    booking: async (parent: any, args: any, ctx: Context) => {
+      console.log(parent, args);
+      const [book] = await ctx.db
         .select()
-        .from(users)
-        .where(eq(users.id, parent.userId));
-      return user;
+        .from(bookings)
+        .where(eq(bookings.roomId, parent.id))
+        .orderBy(desc(bookings.bookDate))
+        .limit(1);
+      return book;
     },
   },
 };

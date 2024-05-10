@@ -163,9 +163,9 @@ const SideColBar = () => {
           text="Users"
         />
         <SidebarItem
-          href="/aio/inventory"
+          href="/aio/orders"
           icon={<Boxes size={size} className="icon" />}
-          text="Inventory"
+          text="Orders"
         />
         <SidebarItem
           href="/aio/billing"

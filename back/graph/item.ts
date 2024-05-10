@@ -11,14 +11,15 @@ export const typeDef = /* GraphQL */ `
     name: String!
     sku: String
     type: String
-    price: String
+    price: Float
     description: String
     createdAt: String
     updatedAt: String
     orders: [Order]
     syn: Boolean
     deleted: Boolean
-    qtyBought: String
+    qtyBought: Int
+    qtySold: Int
     inventories: [Inventory]
   }
   type Query {
@@ -39,7 +40,7 @@ export const typeDef = /* GraphQL */ `
     description: String
     type: String
     sku: String
-    price: String
+    price: Float
   }
   input ItemInput {
     id: ID!
@@ -47,7 +48,7 @@ export const typeDef = /* GraphQL */ `
     description: String
     type: String
     sku: String
-    price: String
+    price: Float
   }
 `;
 export const resolvers = {

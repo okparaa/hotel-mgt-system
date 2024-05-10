@@ -1,65 +1,17 @@
-import { User } from "lucide-react";
 import { FunctionalComponent } from "preact";
 import { createContext, useContext, useReducer } from "react";
-const SESSION_KEY = "appv1";
-
-type User = {
-  id: string;
-  sur: string;
-  fir: string;
-  las: string;
-  pic: string;
-  usr: string;
-  slg: string;
-  rut: string;
-};
-type Store = {
-  id?: string;
-  open?: boolean;
-  name?: string;
-  neu?: boolean;
-  prev_date?: string;
-  __typename?: string;
-};
-
-type OrderItems = {
-  hash: string;
-  cash: number;
-  txfa: number;
-  pos: number;
-  total: number;
-  items: Record<string, any>[];
-};
-type Booker = {
-  hash: string;
-  cash: number;
-  txfa: number;
-  pos: number;
-  total: number;
-  bookables: Record<string, any>[];
-};
-
-type Search = string;
-
-type MiniSearch = string;
-
-type Session = {
-  id: string;
-  auth: string;
-  vfy: string;
-  iat: string;
-  exp: string;
-};
-
-interface AppState {
-  user: User;
-  store: Store;
-  order_items: OrderItems;
-  search: Search;
-  mini_search: MiniSearch;
-  session: Session;
-  booker: Booker;
-}
+import {
+  ChestAppState,
+  ChestBooker,
+  ChestInventory,
+  ChestMiniSearch,
+  ChestOrderItems,
+  ChestSearch,
+  ChestSession,
+  ChestStore,
+  ChestUser,
+} from "./lib/types";
+const SESSION_KEY = "appv2";
 
 type Ops = {
   type:
@@ -69,11 +21,20 @@ type Ops = {
     | "order_items"
     | "search"
     | "mini_search"
-    | "session";
-  data: User | Store | OrderItems | Search | MiniSearch | Session | Booker;
+    | "session"
+    | "inventory";
+  data:
+    | ChestInventory
+    | ChestUser
+    | ChestStore
+    | ChestOrderItems
+    | ChestSearch
+    | ChestMiniSearch
+    | ChestSession
+    | ChestBooker;
 };
 
-export const reducer = (state: AppState, payload: Ops) => {
+export const reducer = (state: ChestAppState, payload: Ops) => {
   const data = payload.data;
   const usr = state.user;
   if (usr.fir === "") {
@@ -87,43 +48,49 @@ export const reducer = (state: AppState, payload: Ops) => {
     case "store":
       newState = {
         ...state,
-        store: { ...state.store, ...(data as Store) },
+        store: { ...state.store, ...(data as ChestStore) },
       };
       break;
     case "session":
       newState = {
         ...state,
-        session: { ...state.session, ...(data as Session) },
+        session: { ...state.session, ...(data as ChestSession) },
       };
       break;
     case "user":
       newState = {
         ...state,
-        user: { ...state.user, ...(data as User) },
+        user: { ...state.user, ...(data as ChestUser) },
+      };
+      break;
+    case "inventory":
+      newState = {
+        ...state,
+        inventory: { ...state.inventory, ...(data as ChestInventory) },
       };
       break;
     case "order_items":
       newState = {
         ...state,
-        order_items: { ...state.order_items, ...(data as OrderItems) },
+        order_items: { ...state.order_items, ...(data as ChestOrderItems) },
       };
       break;
     case "booker":
       newState = {
         ...state,
-        booker: { ...state.booker, ...(data as Booker) },
+        booker: { ...state.booker, ...(data as ChestBooker) },
       };
       break;
     case "search":
       newState = {
         ...state,
-        search: data as Search,
+        search: data as ChestSearch,
       };
       break;
     case "mini_search":
       newState = {
         ...state,
-        mini_search: data as MiniSearch,
+        mini_search: data as ChestMiniSearch,
       };
       break;
     default:
@@ -137,7 +104,7 @@ export const reducer = (state: AppState, payload: Ops) => {
 };
 
 interface AppContextState {
-  data: AppState;
+  data: ChestAppState;
   updateChest: (payload: Ops) => void;
 }
 
@@ -155,7 +122,25 @@ export function useChest() {
   }
   return context;
 }
-
+export const initBooking = {
+  guestName: "",
+  guestPhone: "",
+  guestEmail: "",
+  hash: "",
+  cash: 0,
+  txfa: 0,
+  pos: 0,
+  total: 0.0,
+  bookables: [],
+};
+export const initOrderItems = {
+  hash: "",
+  cash: 0,
+  txfa: 0,
+  pos: 0,
+  total: 0.0,
+  items: [],
+};
 const AppProvider: FunctionalComponent<any> = ({ children }) => {
   const initalState = {
     store: {
@@ -166,24 +151,15 @@ const AppProvider: FunctionalComponent<any> = ({ children }) => {
       prev_date: "",
       __typename: "",
     },
-    search: "",
-    mini_search: "",
-    order_items: {
+    inventory: {
+      total: 0,
       hash: "",
-      cash: 0,
-      txfa: 0,
-      pos: 0,
-      total: 0.0,
       items: [],
     },
-    booker: {
-      hash: "",
-      cash: 0,
-      txfa: 0,
-      pos: 0,
-      total: 0.0,
-      bookables: [],
-    },
+    search: "",
+    mini_search: "",
+    order_items: initOrderItems,
+    booker: initBooking,
     session: { id: "", auth: "", vfy: "", iat: "", exp: "" },
     user: {
       id: "",

@@ -5,12 +5,6 @@ export const EDIT_ORDER = gql(`
     eOrder(order: $order) {
       id
       price
-      qty
-      item {
-        id
-        sku
-        name
-      } 
     }
   }
 `);
@@ -22,31 +16,46 @@ export const DEL_ORDER = gql(`
   }
 `);
 
-export const GET_ORDERS = gql(`
-  query Orders {
-    orders {
-      id
-      price
-      qty
-      item {
-        id
-        sku
-        name
-      } 
-    }
-  }
-`);
-
 export const GET_ORDER = gql(`
   query Order($id: ID!) {
     order(id: $id) {
       id,
       price
-      qty
-      item {
+      
+    }
+  }
+`);
+export const ORDERS = gql(`
+  query Orders($date: String) {
+    orders(date: $date) {
+      id
+      amount,
+      pos
+      cash
+      hash
+      txfa
+      guestName
+      guestPhone
+      guestEmail
+      user {
         id
-        sku
-        name
+        surname
+      }
+      bookings {
+        id
+        inDate
+        outDate
+        days
+        canceled
+        amount 
+        bookDate
+        room {
+          id
+          name
+          price
+          type
+          deleted
+        }
       }
     }
   }

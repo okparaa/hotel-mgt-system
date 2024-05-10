@@ -10,43 +10,53 @@ export const typeDef = /* GraphQL */ `
   type Inventory {
     id: ID!
     priceBought: Float
-    qtyBought: String
+    qtyBought: Float
     section: Section
     user: User
     item: Item
     createdAt: String
     updatedAt: String
+    userId: String
     syn: Boolean
     deleted: Boolean
   }
+
   type InventoryDate {
     id: ID!
     createdAt: String
   }
+
   type Query {
     inventory(id: ID!): Inventory
     inventories(date: String): [Inventory]
     dates: [InventoryDate]
   }
+
   type Mutation {
-    newInventory(inventory: NewInventoryInput): Inventory
+    newInventory(inventory: NewInventoryInput): [Inventory]
     eInventory(inventory: EInventoryInput): Inventory
     dInventory(id: ID!, itemId: String): Inventory
   }
+
   input NewInventoryInput {
-    priceBought: String
-    qtyBought: String
-    userId: String
-    itemId: String
-    sectionId: String
-    createdAt: String
+    hash: String
+    items: [InventoryItem]
   }
+
   input EInventoryInput {
     id: ID!
-    priceBought: String
-    qtyBought: String
+    priceBought: Float
+    qtyBought: Float
     itemId: String
     createdAt: String
+  }
+
+  input InventoryItem {
+    priceBought: Float
+    qtyBought: Float
+    itemId: String
+    createdAt: String
+    userId: String
   }
 `;
 export const resolvers = {

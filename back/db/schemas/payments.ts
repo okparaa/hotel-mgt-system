@@ -1,4 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
+import { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { boolean, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const payments = pgTable("payments", {
@@ -16,3 +17,6 @@ export const payments = pgTable("payments", {
   message: varchar("message"),
   userId: varchar("user_id"),
 });
+
+export type PaymentsSelect = InferSelectModel<typeof payments>;
+export type PaymentsInsert = InferInsertModel<typeof payments>;

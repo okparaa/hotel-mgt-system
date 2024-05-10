@@ -5,7 +5,7 @@ import { useChest } from "../app-chest";
 
 type ModalProps = {
   children?: React.ReactNode;
-  action?: ({ variables }: any) => Promise<void>;
+  action?: ({ variables }: any) => Promise<any>;
   isOpen: boolean;
   onClose: () => void;
   loading: boolean;
@@ -15,6 +15,7 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const {
     data: { store },
+    updateChest,
   } = useChest();
 
   useEffect(() => {
@@ -30,6 +31,13 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
 
   const handleCloseModal = () => {
     if (onClose) {
+      updateChest({
+        data: {
+          delMsg: "",
+          id: "",
+        },
+        type: "store",
+      });
       onClose();
     }
   };
@@ -39,7 +47,7 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
     }
   };
 
-  const yesText = "ok";
+  const yesText = "Ok";
   return (
     <dialog
       ref={modalRef}
@@ -47,13 +55,10 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
       onKeyDown={handleKeyDown}
     >
       <div className="text-xl text-center">{children}</div>
-      {store.name && (
-        <>
-          <span className="text-lg font-semibold">{store.name}</span> will be
-          deleted
-        </>
+      {store.delMsg && (
+        <span className="text-lg font-extrabold">{store.delMsg}</span>
       )}
-      <div className="text-center">
+      <div className="text-center flex justify-center">
         <button
           onClick={async () => {
             if (typeof action === "function") {
@@ -67,7 +72,7 @@ const Modal = ({ children, isOpen, onClose, action, loading }: ModalProps) => {
               }
             }
           }}
-          className="border rounded-full px-6 py-0 mt-1 text-xl outline-1 hover:bg-blue-300 flex"
+          className="border rounded-full px-6 py-0 mt-1 text-xl outline-1 bg-slate-300 flex hover:bg-slate-600 hover:text-white"
         >
           <div>{yesText}</div>
           <Working loading={loading} />

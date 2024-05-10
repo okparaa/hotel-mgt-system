@@ -9,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { users, sections, items, routes } from ".";
-import { relations } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 
 export const inventories = pgTable(
   "inventories",
@@ -25,7 +25,6 @@ export const inventories = pgTable(
     qtyBought: decimal("qty_bought").default("0").$type<number>(),
     userId: varchar("user_id", { length: 128 }).references(() => users.id),
     itemId: varchar("item_id", { length: 128 }).references(() => items.id),
-    routeId: varchar("route_id", { length: 128 }).references(() => routes.id),
   },
   (tbl) => ({
     syn: boolean("syn").default(true),
@@ -43,3 +42,6 @@ export const inventoryRelation = relations(inventories, ({ one, many }) => ({
     references: [items.id],
   }),
 }));
+
+export type InventoriesSelect = InferSelectModel<typeof inventories>;
+export type InventoriesInsert = InferInsertModel<typeof inventories>;

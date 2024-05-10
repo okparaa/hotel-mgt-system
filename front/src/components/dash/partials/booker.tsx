@@ -1,8 +1,14 @@
 import { Trash2 } from "lucide-react";
 import { useChest } from "../../../app-chest";
-import { getDateFromTimestamp, toCommas } from "../../../lib/utils";
+import {
+  addDaysToDate,
+  getDateFromTimestamp,
+  getDays,
+  toCommas,
+} from "../../../lib/utils";
 import DatePicker, { DatePickerOptions } from "../../calendar/date-picker";
 import { bookable } from "../../../config";
+import { ChestBook } from "../../../lib/types";
 type TOrderBodyProps = {};
 
 export const Booker = ({}: TOrderBodyProps) => {
@@ -11,30 +17,50 @@ export const Booker = ({}: TOrderBodyProps) => {
     updateChest,
   } = useChest();
 
-  const handleCheckInDate = (date: Date, book: Record<string, any>) => {
-    book.inDate = date.toDateString();
+  const handleCheckInDate = (date: Date, book: ChestBook) => {
+    book.inDate = getDateFromTimestamp(date.toDateString());
+    const { days } = getDays({ inDate: book.inDate, outDate: book.outDate });
+    const num = days > 1 ? days : 1;
+    book.outDate = getDateFromTimestamp(
+      addDaysToDate(date, num).toDateString()
+    );
+    const books: ChestBook[] = [];
+    let total = 0;
+
+    booker.bookables?.forEach((buk) => {
+      const { days } = getDays({ inDate: buk.inDate, outDate: buk.outDate });
+      if (buk.roomId === book.roomId) {
+        total += book.price * days;
+        books.push({ ...buk, ...book });
+      } else {
+        total += buk.price * days;
+        books.push(buk);
+      }
+    });
+    booker.total = total;
+    booker.bookables = books;
     updateChest({
       type: "booker",
       data: {
         ...booker,
-        bookables: booker.bookables?.map((buk) => {
-          if (buk.id === book.id) {
-            return { ...buk, ...book };
-          }
-          return buk;
-        }),
       },
     });
   };
 
-  const handleCheckOutDate = (date: Date, book: Record<string, any>) => {
-    book.outDate = date.toDateString();
+  const handleCheckOutDate = (date: Date, book: ChestBook) => {
+    const { days, outDate } = getDays({
+      date,
+      inDate: book.inDate,
+      outDate: book.outDate,
+    });
+    book.outDate = getDateFromTimestamp(outDate as string);
+    booker.total = book.price * days + booker.total;
     updateChest({
       type: "booker",
       data: {
         ...booker,
         bookables: booker.bookables?.map((buk) => {
-          if (buk.id === book.id) {
+          if (buk.roomId === book.roomId) {
             return { ...buk, ...book };
           }
           return buk;
@@ -48,16 +74,17 @@ export const Booker = ({}: TOrderBodyProps) => {
     maxYear: 2040,
     initialDate: new Date(),
     className: "inline-block",
+    inDate: getDateFromTimestamp(),
   };
 
   return (
     <div>
-      <div className="font-semibold text-center text-lg">
+      <div className="font-extrabold bg-slate-600 text-white p-2 text-center text-xl mb-3 rounded-md border-2">
         Sales: @{toCommas(booker.total)}
       </div>
       {booker.bookables?.map((book) => {
         return (
-          <div className="booker rounded-md">
+          <div className="booker rounded-md border-slate-600">
             <span className="flex flex-col">
               {bookable[book.type]} {book.name}{" "}
               <strong>@{toCommas(book.price)}</strong>
@@ -66,13 +93,13 @@ export const Booker = ({}: TOrderBodyProps) => {
               <span className="flex">
                 In:
                 <DatePicker
-                  options={options}
+                  options={{ ...options, inDate: book.inDate, checkIn: true }}
                   onSelectDate={(date) => handleCheckInDate(date, book)}
                 />
               </span>
               <span
                 style={{ padding: "0 5px 2px 5px" }}
-                className="text-white text-sm bg-rose-600 rounded-xl p-0"
+                className="text-black border-2 border-slate-600 text-sm rounded-md p-0 font-semibold"
               >
                 {getDateFromTimestamp(book.inDate, "d-msh-y")}
               </span>
@@ -81,25 +108,29 @@ export const Booker = ({}: TOrderBodyProps) => {
               <span className="flex">
                 Out:
                 <DatePicker
-                  options={options}
+                  options={{ ...options, inDate: book.inDate, checkIn: false }}
                   onSelectDate={(date) => handleCheckOutDate(date, book)}
                 />
               </span>
               <span
                 style={{ padding: "0 5px 2px 5px" }}
-                className="text-white text-sm bg-rose-600 rounded-xl p-0"
+                className="text-white text-sm bg-slate-600 rounded-md p-0"
               >
                 {getDateFromTimestamp(book.outDate, "d-msh-y")}
               </span>
             </span>
             <span
               onClick={() => {
-                const updatedBooking: any = booker.bookables?.filter(
-                  (buk: any) => buk.id !== book.id
+                const updatedBooking = booker.bookables?.filter(
+                  (buk: ChestBook) => buk.roomId !== book.roomId
                 );
                 const total = updatedBooking.reduce(
-                  (acc: number, book: Record<string, any>) => {
-                    return acc + Number(book.price);
+                  (acc: number, book: ChestBook) => {
+                    const { days } = getDays({
+                      inDate: book.inDate,
+                      outDate: book.outDate,
+                    });
+                    return acc + Number(book.price) * days;
                   },
                   0
                 );

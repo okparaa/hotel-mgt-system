@@ -64,16 +64,12 @@ export const getUser = async (req: any) => {
   const secret = process.env.JWT_SECRET || "secret";
   let decoded = null;
 
-  console.log(req.headers.authorization);
-
   try {
     decoded = jwt.verify(
       req.headers.authorization,
       secret
     ) as unknown as Identity;
   } catch (error) {
-    console.log(error);
-
     throwError("jwt decode failed", ErrorTypes.UNAUTHENTICATED, [
       ["kode", "code has expired"],
     ]);
@@ -101,6 +97,18 @@ export const getDateFromTimestamp = (timestamp: number | null = null) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = date.getDate();
   return `${year}-${month}-${day}`;
+};
+
+type DateDiffProps = {
+  inDate: string;
+  outDate: string;
+};
+
+export const getDays = ({ inDate, outDate }: DateDiffProps) => {
+  const oneDay = 1000 * 60 * 60 * 24;
+  const date_diff = new Date(outDate).getTime() - new Date(inDate).getTime();
+  const days = Math.round(date_diff / oneDay);
+  return days;
 };
 
 export const itemColumns = {

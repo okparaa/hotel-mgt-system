@@ -1,6 +1,7 @@
 import { emailRegex, phoneRegex } from "./regexes";
 import { FormRef } from "./forms";
 import { gConfig, months } from "../config";
+import { GetDaysProps } from "./types";
 export type Session = { [x: string]: string | boolean | number };
 
 export const jwt = {
@@ -34,10 +35,11 @@ export const decodeSession = (token: string): Session => {
   return parseJwt(token) || jwt;
 };
 
-export const ucwords = (words: string | undefined) => {
+export const ucwords = (words: string | undefined | null) => {
   if (words) {
     return words.replace(/^\w{1}|\s+\w{1}/g, (ltr) => ltr.toUpperCase());
   }
+  return "";
 };
 
 export const parseUser = (): Session => {
@@ -133,6 +135,9 @@ export const updateFxn = (items: any[], utem: any) => {
   });
 };
 
+export const addDaysToDate = (date: Date, days: number) => {
+  return new Date(date.setDate(date.getDate() + days));
+};
 export const addInput = (e: any, prxy: (value: number) => void) => {
   let td = e.target as HTMLElement;
   let revert = "innerText" in td ? td.innerText + "" : "";
@@ -165,6 +170,25 @@ export const addInput = (e: any, prxy: (value: number) => void) => {
   input.focus();
 };
 
+export const getDays = ({ date, inDate, outDate }: GetDaysProps) => {
+  const oneDay = 1000 * 60 * 60 * 24;
+  if (!date) {
+    const days = Math.round(
+      (new Date(outDate).getTime() - new Date(inDate).getTime()) / oneDay
+    );
+    return { days };
+  }
+  const prev_outDate = outDate;
+  outDate = getDateFromTimestamp(date.toDateString());
+  const new_day_diff = new Date(date).getTime() - new Date(inDate).getTime();
+  const old_day_diff =
+    new Date(prev_outDate).getTime() - new Date(inDate).getTime();
+
+  const new_days = Math.round(new_day_diff / oneDay);
+  const old_days = Math.round(old_day_diff / oneDay);
+  const days = new_days - old_days;
+  return { days, outDate };
+};
 export const timeAgo = (time: any) => {
   switch (typeof time) {
     case "number":
@@ -227,12 +251,8 @@ export const humanDate = (date: any) => {
   }).format(date);
 };
 
-// var aDay = 24 * 60 * 60 * 1000;
-// console.log(time_ago(new Date(Date.now() - aDay)));
-// console.log(time_ago(new Date(Date.now() - aDay * 2)));
-
 export const getDateFromTimestamp = (
-  timestamp: number | string | null,
+  timestamp: number | string | null = new Date().valueOf(),
   format = "y-m-d"
 ) => {
   const date = timestamp ? new Date(timestamp) : new Date();
@@ -260,11 +280,11 @@ export const getDateFromTimestamp = (
   return ndate;
 };
 
-export const toCommas = (value: number | string) => {
-  if (typeof value === "string") {
-    value = +value;
+export const toCommas = (value: number | string | null | undefined) => {
+  if (value) {
+    return Number(value).toLocaleString();
   }
-  return value.toLocaleString();
+  return "0";
 };
 
 const TOKEN_KEY = "token";

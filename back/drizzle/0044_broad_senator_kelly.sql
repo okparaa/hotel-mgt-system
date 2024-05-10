@@ -1,0 +1,1 @@
+ALTER TABLE "recoveries" DROP COLUMN IF EXISTS "hash";

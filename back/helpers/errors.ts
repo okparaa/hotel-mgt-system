@@ -19,6 +19,10 @@ export const ErrorTypes = {
     errorCode: "NOT_FOUND",
     errorStatus: 404,
   },
+  UNKWOWN: {
+    errorCode: "UNKWOWN",
+    errorStatus: 520,
+  },
   UNAUTHENTICATED: {
     errorCode: "UNAUTHENTICATED",
     errorStatus: 401,

@@ -1,28 +1,33 @@
 import { eq, getTableColumns, sql } from "drizzle-orm";
 import { Context } from "../types/context";
-import { items, orders } from "../db/schemas";
+import { bookings, orders, users } from "../db/schemas";
 import { createNewOrder } from "../resolvers/orders/new-order";
-import { itemColumns } from "../helpers";
 
 export const typeDef = /* GraphQL */ `
   type Order {
     id: ID!
-    price: String
-    customerEmail: String
+    price: Float
+    guestEmail: String
     name: String!
-    customerPhone: String
-    qty: String
+    guestPhone: String
+    guestName: String
     user: User
-    amount: String
-    item: [Item]
+    amount: Float
+    deleted: Boolean
     syn: Boolean
+    pos: Float
+    txfa: Float
+    cash: Float
+    hash: String
     status: String
+    bookings: [Booking]
     createdAt: String
     updatedAt: String
   }
+
   type Query {
     order(id: ID!): Order
-    orders: [Order]
+    orders(date: String): [Order]
     mini_search: String
   }
   type Mutation {
@@ -33,8 +38,8 @@ export const typeDef = /* GraphQL */ `
 
   input NewOrderInput {
     price: String
-    customerEmail: String
-    customerPhone: String
+    guestEmail: String
+    guestPhone: String
     itemId: String
     orderId: String
     qty: String
@@ -42,8 +47,8 @@ export const typeDef = /* GraphQL */ `
 
   input OrderInput {
     price: String
-    customerEmail: String
-    customerPhone: String
+    guestEmail: String
+    guestPhone: String
     itemId: String
     orderId: String
     qty: String
@@ -56,7 +61,10 @@ export const resolvers = {
       return await ctx.db.select().from(orders).where(eq(orders.id, args.id));
     },
     orders: async (parent: any, args: any, ctx: Context) => {
-      return await ctx.db.select().from(orders);
+      return await ctx.db
+        .select()
+        .from(orders)
+        .where(eq(sql`${orders.createdAt}::date`, args.date));
     },
   },
   Mutation: {
@@ -66,11 +74,18 @@ export const resolvers = {
     },
   },
   Order: {
-    item: async (parent: any, args: any, ctx: Context) => {
+    user: async (parent: any, args: any, ctx: Context) => {
+      const [user] = await ctx.db
+        .select()
+        .from(users)
+        .where(eq(parent.userId, users.id));
+      return user;
+    },
+    bookings: async (parent: any, args: any, ctx: Context) => {
       return await ctx.db
-        .select(itemColumns)
-        .from(items)
-        .where(eq(parent.itemId, items.id));
+        .select()
+        .from(bookings)
+        .where(eq(bookings.orderId, parent.id));
     },
   },
 };

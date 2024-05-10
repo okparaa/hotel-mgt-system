@@ -1,12 +1,11 @@
 import schema from "./urql-schema.json";
-import { Variables, offlineExchange } from "@urql/exchange-graphcache";
+import { Variables, offlineExchange, Cache } from "@urql/exchange-graphcache";
 import { makeDefaultStorage } from "@urql/exchange-graphcache/default-storage";
 import { createClient, fetchExchange } from "urql";
 import { getToken, refreshAuth } from "./lib/auth";
 import { authExchange } from "@urql/exchange-auth";
-import { Cache } from "@urql/exchange-graphcache";
 
-const storage = makeDefaultStorage({
+export const storage = makeDefaultStorage({
   idbName: "__aio__",
   maxAge: 7, // The maximum age of the persisted data in days
 });
@@ -26,7 +25,6 @@ const cache = offlineExchange({
 });
 
 const optimisticRes = (variables: Variables, typename: string) => {
-  console.log(variables, "optim");
   return {
     ...variables,
     __typename: typename,
@@ -56,7 +54,7 @@ export const updateCache = (
 
 const client = createClient({
   url: "http://localhost:5100/api",
-  requestPolicy: "cache-first",
+  requestPolicy: "cache-and-network",
   exchanges: [
     cache,
     authExchange(async (utils) => {

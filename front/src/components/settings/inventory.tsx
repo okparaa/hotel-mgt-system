@@ -1,22 +1,19 @@
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
-import { MiniSearch } from "../../lib/mini-search";
-import { TInventoryBody } from "./partials/t-inventory-body";
 import { TInventoryItemBody } from "./partials/t-inventory-item-body";
-import { getDateFromTimestamp } from "../../lib/utils";
+import {
+  errorMsgHandler,
+  getDateFromTimestamp,
+  ucwords,
+} from "../../lib/utils";
 
 import { useChest } from "../../app-chest";
-import { useLazyQuery } from "../../lib/useLazyQuery";
-import {
-  InventoriesQuery,
-  useDInventoryMutation,
-  useEInventoryMutation,
-  useInventoriesItemsQuery,
-  useNewInventoryMutation,
-} from "../aio-urql";
+import { useInventoriesItemsQuery, useNewInventoryMutation } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
-import { GET_INVENTORIES } from "../queries/inventory-queries";
-import DatePicker, { DatePickerOptions } from "../calendar/date-picker";
+import { TInventoryCheckout } from "./partials/t-inventory-checkout";
+import { RotateCcw, Save } from "lucide-react";
+import { useState } from "react";
+import { options } from "../../config";
 
 const Inventory = () => {
   const today = getDateFromTimestamp(new Date().toDateString());
@@ -24,68 +21,36 @@ const Inventory = () => {
     variables: { date: today },
   });
 
-  if (inventoriesItemsRes.error || inventoriesItemsRes.fetching) {
+  if (inventoriesItemsRes.error || !inventoriesItemsRes.data) {
     return <QueryResult result={inventoriesItemsRes} />;
   }
 
   const {
-    data: { search, mini_search },
+    data: { search, inventory },
     updateChest,
   } = useChest();
 
-  const [inventoriesRes, getInventories] = useLazyQuery<InventoriesQuery>({
-    query: GET_INVENTORIES,
-  });
-
-  const [{}, dInventory] = useDInventoryMutation();
-
-  const [{}, newInventory] = useNewInventoryMutation();
-  const [{}, eInventory] = useEInventoryMutation();
-
+  const [newInventoryRes, newInventory] = useNewInventoryMutation();
+  const [errorMsg, setErrorMsg] = useState("");
+  if (newInventoryRes.error) {
+    setErrorMsg(() => errorMsgHandler(newInventoryRes.error)?.message);
+  }
   const evts = new Map();
   inventoriesItemsRes.data?.dates?.forEach((date) => {
     const key: string = date?.createdAt || "j";
     evts.set(key, true);
   });
 
-  const dateSelect = (date: Date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const selectedDate = `${year}-${month}-${day}`;
-    console.log("new date", date);
-    updateChest({ type: "store", data: { prev_date: selectedDate } });
-    getInventories({ date: selectedDate });
-  };
+  options.events = evts;
 
   const tItemHead = (
     <tr>
-      <th>NAME</th>
+      <th className="">NAME</th>
       <th className="!text-center">SKU</th>
-      <th className="!text-center">PICK</th>
-    </tr>
-  );
-
-  const options: DatePickerOptions = {
-    minYear: 2022,
-    maxYear: 2040,
-    initialDate: new Date(),
-    normal: true,
-    events: evts,
-  };
-
-  const tInventoryHead = (
-    <tr>
-      <th className="w-16">SKU</th>
-      <th>NAME</th>
-      <th className="!text-center">U/Price</th>
-      <th className="w-24 !text-center">QTY</th>
-      <th className="!text-center">
-        DEL
-        <span className="border-b border-gray-600 pl-1 pb-1 absolute cursor-pointer top-0 right-0">
-          <DatePicker options={options} onSelectDate={dateSelect} />
-        </span>
-      </th>
+      <th className="!text-center">QTY</th>
+      <th className="!text-center">DESC</th>
+      <th className="!text-center">PRICE</th>
+      <th className="!text-center w-20">PICK</th>
     </tr>
   );
 
@@ -95,35 +60,12 @@ const Inventory = () => {
     return str.includes(searche.toLowerCase());
   });
 
-  const currInventories = (
-    inventoriesRes.data?.inventories || inventoriesItemsRes.data?.inventories
-  )?.filter((inventory) => {
-    const item = inventory?.item;
-    const str = (item && Object.values(item).join(" ").toLowerCase()) || "";
-    const searche = mini_search || "";
-    return inventory?.deleted === false && str.includes(searche.toLowerCase());
-  });
-
-  const tBody = (
-    <TInventoryItemBody
-      currInventories={currInventories}
-      newInventory={newInventory}
-      searchItems={searchItems}
-    />
-  );
-
-  const tInventoryBody = (
-    <TInventoryBody
-      currInventories={currInventories}
-      dInventory={dInventory}
-      eInventory={eInventory}
-    />
-  );
+  const tBody = <TInventoryItemBody searchItems={searchItems} />;
 
   return (
     <>
       <div className="flex">
-        <div className="basis-5/12 overflow-x-auto">
+        <div className="basis-7/12 overflow-x-auto">
           <Table
             tHead={tItemHead}
             tBody={tBody}
@@ -131,13 +73,53 @@ const Inventory = () => {
           />
         </div>
         <div className="w-6 mx-1 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200"></div>
-        <div className="mr-2 basis-7/12 overflow-x-auto">
-          <Table
-            Searche={<MiniSearch />}
-            tHead={tInventoryHead}
-            tBody={tInventoryBody}
-            fetching={inventoriesItemsRes.fetching}
-          />
+        <div className="w-5/12 rounded-md bg-gradient-to-b from-slate-400 via-slate-200 to-slate-200">
+          <TInventoryCheckout options={options} />
+
+          <div className="p-1 text-[16px] gap-10 flex justify-center mt-3">
+            <button
+              onClick={() => {
+                updateChest({
+                  type: "inventory",
+                  data: {
+                    items: [],
+                    total: 0,
+                    hash: "",
+                  },
+                });
+              }}
+              className="px-4 shadow-md py-0 outline-1 bg-slate-600 text-white border text-lg flex items-center gap-2 rounded-full"
+            >
+              <RotateCcw /> <span className="pb-[3px]">reset</span>
+            </button>
+            <button
+              onClick={() => {
+                try {
+                  const newInventories = inventory.items.map((item) => {
+                    return {
+                      priceBought: item.priceBought,
+                      qtyBought: item.qtyBought,
+                      itemId: item.itemId,
+                      createdAt: item.createdAt,
+                      userId: item.userId,
+                    };
+                  });
+                  newInventory({
+                    inventory: { hash: inventory.hash, items: newInventories },
+                  });
+                } catch (error) {}
+              }}
+              className="px-4 shadow-md pb-0 outline-1 bg-slate-600 text-white border text-lg flex items-center gap-2 rounded-full"
+            >
+              <Save />
+              <span className="pb-[3px]">save</span>
+            </button>
+          </div>
+          {errorMsg && (
+            <div className="text-2xl text-center pt-4 text-red-600">
+              {ucwords(errorMsg)}
+            </div>
+          )}
         </div>
       </div>
     </>

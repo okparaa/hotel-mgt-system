@@ -1,10 +1,11 @@
 import { MoveLeft, MoveRight } from "lucide-react";
 import { getDateFromTimestamp } from "../../lib/utils";
 import { useDatePicker } from "./date-picker-state";
+import { DatePickerOptions } from "./date-picker";
 
 type RenderCalendarProps = {
   onSelectDate: (date: Date) => void;
-  options: Record<string, any>;
+  options: DatePickerOptions;
 };
 
 export const RenderCalendar = ({
@@ -57,9 +58,7 @@ export const RenderCalendar = ({
         </span>
         <div
           className="flex-1 text-center cursor-pointer bg-blue-200 hover:bg-blue-300 rounded-md px-3 pt-[2px]"
-          onClick={() =>
-            dispatch({ type: "OPEN_MONTHS", data: { currentDate } })
-          }
+          onClick={() => dispatch({ type: "OPEN_MONTHS" })}
         >
           {currentDate.toLocaleString("default", {
             month: "short",
@@ -89,17 +88,21 @@ export const RenderCalendar = ({
           const date = current.date;
           const today = getDateFromTimestamp(new Date().toDateString());
           const cur_date = getDateFromTimestamp(date?.toDateString() || "");
-          const is_active = date && new Date(cur_date) >= new Date(today);
+          const in_date = getDateFromTimestamp(options.inDate || "");
+          const is_active = options.checkIn
+            ? new Date(cur_date) >= new Date(today)
+            : new Date(cur_date) > new Date(in_date);
+
           if (options.normal) {
             return (
               <div
                 key={date?.toString()}
                 onClick={() => {
                   date && onSelectDate(date);
-                  dispatch({ type: "CLOSE", data: {} });
+                  date && dispatch({ type: "CLOSE" });
                 }}
-                className={`rounded-md flex justify-center items-center cursor-pointer pb-[2px] ${
-                  date ? "hover:border-fuchsia-600 border" : ""
+                className={`rounded-md flex justify-center items-center pb-[2px] ${
+                  date ? "hover:border-fuchsia-600 border cursor-pointer" : ""
                 } ${current.today ? "bg-fuchsia-400" : ""} ${
                   current.event && !current.today ? "bg-fuchsia-200" : ""
                 }`}
@@ -113,11 +116,11 @@ export const RenderCalendar = ({
             <div
               key={date?.toString()}
               onClick={() => {
-                is_active && onSelectDate(date);
-                is_active && dispatch({ type: "CLOSE", data: {} });
+                is_active && date && onSelectDate(date);
+                is_active && date && dispatch({ type: "CLOSE", data: {} });
               }}
               className={`rounded-md flex justify-center items-center pb-[2px] ${
-                is_active
+                is_active && date
                   ? "hover:border-fuchsia-600 border cursor-pointer"
                   : "bg-gray-100 opacity-40 cursor-default"
               } ${current.today ? "bg-fuchsia-400" : ""} ${

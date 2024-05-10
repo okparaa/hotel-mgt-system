@@ -1,0 +1,1 @@
+ALTER TABLE "bookings" ADD CONSTRAINT "bookings_in_date_room_id_unique" UNIQUE("in_date","room_id");

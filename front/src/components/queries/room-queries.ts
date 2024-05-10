@@ -10,7 +10,14 @@ export const CREATE_ROOM = gql(`
       sku
       createdAt
       deleted
+      status
       type
+      booking {
+        id
+        inDate
+        outDate
+        canceled
+      }
     }
   }
 `);
@@ -25,7 +32,14 @@ export const EDIT_ROOM = gql(`
       sku
       createdAt
       deleted
+      status
       type
+      booking {
+        id
+        inDate
+        outDate
+        canceled
+      }
     }
   }
 `);
@@ -37,6 +51,7 @@ export const DEL_ROOM = gql(`
     }
   }
 `);
+
 export const ROOM_PRICE = gql(`
   mutation RoomPrice($id: ID!, $price: Int) {
     roomPrice(id: $id, price: $price) {
@@ -45,33 +60,21 @@ export const ROOM_PRICE = gql(`
     }
   }
 `);
-
-export const BOOKER = gql(`
-  mutation Booker($book: RoomBookInput!) {
-    booker(book: $book) {
-      id
-      name
-      deleted
-      inDate
-      outDate
-      bookDate
-      status
-      type
-    }
-  }
-`);
-
 export const GET_ROOMS_CHART = gql(`
   query RoomsChart {
     roomsChart {
       id
       name
+      price
       deleted
-      inDate
-      outDate
-      bookDate
       status
       type
+      booking {
+        id
+        inDate
+        outDate
+        canceled
+      }
     }
   }
 `);
@@ -86,11 +89,14 @@ export const GET_ROOMS = gql(`
       sku
       createdAt
       deleted
-      inDate
-      outDate
-      bookDate
       status
       type
+      booking {
+        id
+        inDate
+        outDate
+        canceled
+      }
     }
   }
 `);
@@ -105,11 +111,14 @@ export const GET_ROOM = gql(`
       sku
       createdAt
       deleted
-      inDate
-      outDate
-      bookDate
       status
       type
+      booking {
+        id
+        inDate
+        outDate
+        canceled
+      }
     }
   }
 `);

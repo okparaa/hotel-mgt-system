@@ -19,6 +19,10 @@ import {
 } from "./order-item";
 import { typeDef as Role, resolvers as roleResolver } from "./roles";
 import { typeDef as Route, resolvers as routeResolver } from "./routes";
+import {
+  typeDef as OrderBooking,
+  resolvers as ordersBookingResolver,
+} from "./booking";
 import merge from "lodash/merge";
 
 // import authDirective from "../helpers/directive";
@@ -42,11 +46,13 @@ const schema = makeExecutableSchema({
     Room,
     Role,
     Route,
+    OrderBooking,
   ],
   resolvers: merge(
     sectionResolvers,
     userResolvers,
     sessionResolvers,
+    ordersBookingResolver,
     orderResolvers,
     inventoryResolvers,
     itemResolvers,

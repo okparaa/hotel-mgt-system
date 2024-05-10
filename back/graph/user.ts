@@ -21,7 +21,7 @@ export const typeDef = /* GraphQL */ `
     token: String
     address: String
     active: Boolean
-    salary: String
+    salary: Float
     username: String
     photoUrl: String
     message: String

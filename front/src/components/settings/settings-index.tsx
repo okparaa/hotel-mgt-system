@@ -24,9 +24,9 @@ const SettingsIndex = () => {
       <Lynk
         routes={routesRes.data?.routes}
         className="link-btn-dash"
-        to="aio/settings/purchases"
+        to="aio/settings/inventory"
       >
-        <ShoppingCart className="font-bold w-7 h-7" /> <div>Purchases</div>
+        <ShoppingCart className="font-bold w-7 h-7" /> <div>Inventory</div>
       </Lynk>
       <Lynk
         routes={routesRes.data?.routes}

@@ -11,6 +11,8 @@ export type DatePickerOptions = {
   className?: string;
   normal?: boolean;
   events?: Map<string, boolean> | undefined;
+  inDate?: string;
+  checkIn?: boolean;
 };
 
 interface DatePickerProps {
@@ -32,7 +34,7 @@ const DatePicker = ({ onSelectDate, options }: DatePickerProps) => {
         (data.isCalendar || data.isMonths) &&
         !(e.target as HTMLElement).closest(".calendar")
       ) {
-        dispatch({ data, type: "CLOSE" });
+        dispatch({ type: "CLOSE" });
       }
     };
     document.addEventListener("click", checkOutsideClick);
@@ -43,7 +45,7 @@ const DatePicker = ({ onSelectDate, options }: DatePickerProps) => {
     <PickerContext.Provider value={{ data, dispatch }}>
       <div className={`relative ${options?.className}`}>
         <CalendarDays
-          onClick={() => dispatch({ data, type: "TOGGLE_CALENDAR" })}
+          onClick={() => dispatch({ type: "TOGGLE_CALENDAR" })}
           className="cursor-pointer"
         />
         {data.isCalendar && (

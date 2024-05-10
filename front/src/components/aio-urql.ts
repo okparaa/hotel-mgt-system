@@ -17,6 +17,31 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Booking = {
+  __typename?: 'Booking';
+  amount?: Maybe<Scalars['Float']['output']>;
+  bookDate?: Maybe<Scalars['String']['output']>;
+  canceled?: Maybe<Scalars['Boolean']['output']>;
+  days?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['ID']['output'];
+  inDate?: Maybe<Scalars['String']['output']>;
+  outDate?: Maybe<Scalars['String']['output']>;
+  room?: Maybe<Room>;
+  rooms?: Maybe<Array<Maybe<Room>>>;
+  syn?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type BookingInput = {
+  days?: InputMaybe<Scalars['Int']['input']>;
+  guestEmail?: InputMaybe<Scalars['String']['input']>;
+  guestName?: InputMaybe<Scalars['String']['input']>;
+  guestPhone?: InputMaybe<Scalars['String']['input']>;
+  inDate?: InputMaybe<Scalars['String']['input']>;
+  outDate?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  roomId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CurUser = {
   __typename?: 'CurUser';
   fir?: Maybe<Scalars['String']['output']>;
@@ -47,12 +72,24 @@ export type Deduction = {
   user?: Maybe<User>;
 };
 
+export type DetailInput = {
+  cash?: InputMaybe<Scalars['Float']['input']>;
+  guestEmail?: InputMaybe<Scalars['String']['input']>;
+  guestName?: InputMaybe<Scalars['String']['input']>;
+  guestPhone?: InputMaybe<Scalars['String']['input']>;
+  hash?: InputMaybe<Scalars['String']['input']>;
+  pos?: InputMaybe<Scalars['Float']['input']>;
+  total?: InputMaybe<Scalars['Float']['input']>;
+  txfa?: InputMaybe<Scalars['Float']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type EInventoryInput = {
   createdAt?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   itemId?: InputMaybe<Scalars['String']['input']>;
-  priceBought?: InputMaybe<Scalars['String']['input']>;
-  qtyBought?: InputMaybe<Scalars['String']['input']>;
+  priceBought?: InputMaybe<Scalars['Float']['input']>;
+  qtyBought?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type Inventory = {
@@ -62,17 +99,26 @@ export type Inventory = {
   id: Scalars['ID']['output'];
   item?: Maybe<Item>;
   priceBought?: Maybe<Scalars['Float']['output']>;
-  qtyBought?: Maybe<Scalars['String']['output']>;
+  qtyBought?: Maybe<Scalars['Float']['output']>;
   section?: Maybe<Section>;
   syn?: Maybe<Scalars['Boolean']['output']>;
   updatedAt?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type InventoryDate = {
   __typename?: 'InventoryDate';
   createdAt?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+};
+
+export type InventoryItem = {
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  priceBought?: InputMaybe<Scalars['Float']['input']>;
+  qtyBought?: InputMaybe<Scalars['Float']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Item = {
@@ -84,8 +130,9 @@ export type Item = {
   inventories?: Maybe<Array<Maybe<Inventory>>>;
   name: Scalars['String']['output'];
   orders?: Maybe<Array<Maybe<Order>>>;
-  price?: Maybe<Scalars['String']['output']>;
-  qtyBought?: Maybe<Scalars['String']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
+  qtyBought?: Maybe<Scalars['Int']['output']>;
+  qtySold?: Maybe<Scalars['Int']['output']>;
   sku?: Maybe<Scalars['String']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
   type?: Maybe<Scalars['String']['output']>;
@@ -96,7 +143,7 @@ export type ItemInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
   sku?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
 };
@@ -114,6 +161,8 @@ export type Message = {
 export type Mutation = {
   __typename?: 'Mutation';
   assignRoute?: Maybe<User>;
+  booker?: Maybe<Array<Maybe<Room>>>;
+  cancelBooking?: Maybe<Booking>;
   dInventory?: Maybe<Inventory>;
   dItem?: Maybe<Item>;
   dOrder?: Maybe<Order>;
@@ -126,6 +175,7 @@ export type Mutation = {
   eInventory?: Maybe<Inventory>;
   eItem?: Maybe<Item>;
   eOrder?: Maybe<Order>;
+  eOrderBook?: Maybe<Booking>;
   eOrderItem?: Maybe<OrderItem>;
   eRole?: Maybe<Role>;
   eRoom?: Maybe<Room>;
@@ -133,7 +183,7 @@ export type Mutation = {
   eSection?: Maybe<Section>;
   eUserSlugs?: Maybe<User>;
   itemPrice?: Maybe<Item>;
-  newInventory?: Maybe<Inventory>;
+  newInventory?: Maybe<Array<Maybe<Inventory>>>;
   newItem?: Maybe<Item>;
   newOrder?: Maybe<Order>;
   newOrderItems?: Maybe<Array<Maybe<OrderItem>>>;
@@ -155,6 +205,17 @@ export type Mutation = {
 
 export type MutationAssignRouteArgs = {
   user?: InputMaybe<UserInput>;
+};
+
+
+export type MutationBookerArgs = {
+  books?: InputMaybe<Array<BookingInput>>;
+  detail?: InputMaybe<DetailInput>;
+};
+
+
+export type MutationCancelBookingArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -216,6 +277,11 @@ export type MutationEItemArgs = {
 
 export type MutationEOrderArgs = {
   order?: InputMaybe<OrderInput>;
+};
+
+
+export type MutationEOrderBookArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -345,25 +411,21 @@ export type MutationVerifiedArgs = {
 };
 
 export type NewInventoryInput = {
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  itemId?: InputMaybe<Scalars['String']['input']>;
-  priceBought?: InputMaybe<Scalars['String']['input']>;
-  qtyBought?: InputMaybe<Scalars['String']['input']>;
-  sectionId?: InputMaybe<Scalars['String']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
+  hash?: InputMaybe<Scalars['String']['input']>;
+  items?: InputMaybe<Array<InputMaybe<InventoryItem>>>;
 };
 
 export type NewItemInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
   sku?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type NewOrderInput = {
-  customerEmail?: InputMaybe<Scalars['String']['input']>;
-  customerPhone?: InputMaybe<Scalars['String']['input']>;
+  guestEmail?: InputMaybe<Scalars['String']['input']>;
+  guestPhone?: InputMaybe<Scalars['String']['input']>;
   itemId?: InputMaybe<Scalars['String']['input']>;
   orderId?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['String']['input']>;
@@ -374,8 +436,8 @@ export type NewOrderItemInput = {
   hash?: InputMaybe<Scalars['String']['input']>;
   itemId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  priceSold?: InputMaybe<Scalars['String']['input']>;
-  qtySold?: InputMaybe<Scalars['String']['input']>;
+  priceSold?: InputMaybe<Scalars['Float']['input']>;
+  qtySold?: InputMaybe<Scalars['Int']['input']>;
   sku?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -421,24 +483,29 @@ export type NewUserInput = {
 
 export type Order = {
   __typename?: 'Order';
-  amount?: Maybe<Scalars['String']['output']>;
+  amount?: Maybe<Scalars['Float']['output']>;
+  bookings?: Maybe<Array<Maybe<Booking>>>;
+  cash?: Maybe<Scalars['Float']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
-  customerEmail?: Maybe<Scalars['String']['output']>;
-  customerPhone?: Maybe<Scalars['String']['output']>;
+  deleted?: Maybe<Scalars['Boolean']['output']>;
+  guestEmail?: Maybe<Scalars['String']['output']>;
+  guestName?: Maybe<Scalars['String']['output']>;
+  guestPhone?: Maybe<Scalars['String']['output']>;
+  hash?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
-  item?: Maybe<Array<Maybe<Item>>>;
   name: Scalars['String']['output'];
-  price?: Maybe<Scalars['String']['output']>;
-  qty?: Maybe<Scalars['String']['output']>;
+  pos?: Maybe<Scalars['Float']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
+  txfa?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['String']['output']>;
   user?: Maybe<User>;
 };
 
 export type OrderInput = {
-  customerEmail?: InputMaybe<Scalars['String']['input']>;
-  customerPhone?: InputMaybe<Scalars['String']['input']>;
+  guestEmail?: InputMaybe<Scalars['String']['input']>;
+  guestPhone?: InputMaybe<Scalars['String']['input']>;
   itemId?: InputMaybe<Scalars['String']['input']>;
   orderId?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['String']['input']>;
@@ -450,8 +517,8 @@ export type OrderItem = {
   id: Scalars['ID']['output'];
   items?: Maybe<Array<Maybe<Item>>>;
   order?: Maybe<Order>;
-  priceSold?: Maybe<Scalars['String']['output']>;
-  qtySold?: Maybe<Scalars['String']['output']>;
+  priceSold?: Maybe<Scalars['Float']['output']>;
+  qtySold?: Maybe<Scalars['Int']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -475,6 +542,7 @@ export type Query = {
   logout?: Maybe<Message>;
   mini_search?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Order>;
+  order_books?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   order_items?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   orders?: Maybe<Array<Maybe<Order>>>;
   role?: Maybe<Role>;
@@ -524,6 +592,11 @@ export type QueryOrderArgs = {
 };
 
 
+export type QueryOrdersArgs = {
+  date?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryRoleArgs = {
   id: Scalars['ID']['input'];
 };
@@ -569,23 +642,17 @@ export type RoleInput = {
 
 export type Room = {
   __typename?: 'Room';
-  bookDate?: Maybe<Scalars['String']['output']>;
+  booking?: Maybe<Booking>;
   createdAt?: Maybe<Scalars['String']['output']>;
   deleted?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
-  guestEmail?: Maybe<Scalars['String']['output']>;
-  guestName?: Maybe<Scalars['String']['output']>;
-  guestPhone?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
-  inDate?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
-  outDate?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Int']['output']>;
   sku?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
   type?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<User>;
 };
 
 export type RoomInput = {
@@ -683,7 +750,7 @@ export type User = {
   photoUrl?: Maybe<Scalars['String']['output']>;
   route?: Maybe<Route>;
   routeSlugs?: Maybe<Scalars['String']['output']>;
-  salary?: Maybe<Scalars['String']['output']>;
+  salary?: Maybe<Scalars['Float']['output']>;
   surname?: Maybe<Scalars['String']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
   token?: Maybe<Scalars['String']['output']>;
@@ -706,19 +773,34 @@ export type UserTokenInput = {
   token?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CancelBookingMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: { __typename?: 'Booking', id: string, amount?: number | null, days?: number | null, inDate?: string | null, outDate?: string | null, bookDate?: string | null, canceled?: boolean | null, syn?: boolean | null, rooms?: Array<{ __typename?: 'Room', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: string | null, price?: number | null, type?: string | null } | null> | null } | null };
+
+export type BookerMutationVariables = Exact<{
+  books?: InputMaybe<Array<BookingInput> | BookingInput>;
+  detail: DetailInput;
+}>;
+
+
+export type BookerMutation = { __typename?: 'Mutation', booker?: Array<{ __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null> | null };
+
 export type NewInventoryMutationVariables = Exact<{
   inventory: NewInventoryInput;
 }>;
 
 
-export type NewInventoryMutation = { __typename?: 'Mutation', newInventory?: { __typename?: 'Inventory', id: string, qtyBought?: string | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null };
+export type NewInventoryMutation = { __typename?: 'Mutation', newInventory?: Array<{ __typename?: 'Inventory', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
 
 export type EInventoryMutationVariables = Exact<{
   inventory: EInventoryInput;
 }>;
 
 
-export type EInventoryMutation = { __typename?: 'Mutation', eInventory?: { __typename?: 'Inventory', id: string, qtyBought?: string | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null } | null };
+export type EInventoryMutation = { __typename?: 'Mutation', eInventory?: { __typename?: 'Inventory', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null } | null };
 
 export type DInventoryMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -726,35 +808,35 @@ export type DInventoryMutationVariables = Exact<{
 }>;
 
 
-export type DInventoryMutation = { __typename?: 'Mutation', dInventory?: { __typename?: 'Inventory', id: string, qtyBought?: string | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null };
+export type DInventoryMutation = { __typename?: 'Mutation', dInventory?: { __typename?: 'Inventory', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null };
 
 export type InventoriesItemsQueryVariables = Exact<{
   date?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type InventoriesItemsQuery = { __typename?: 'Query', inventories?: Array<{ __typename?: 'Inventory', id: string, priceBought?: number | null, qtyBought?: string | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null, items?: Array<{ __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: string | null, description?: string | null, deleted?: boolean | null } | null> | null, dates?: Array<{ __typename?: 'InventoryDate', id: string, createdAt?: string | null } | null> | null };
+export type InventoriesItemsQuery = { __typename?: 'Query', inventories?: Array<{ __typename?: 'Inventory', id: string, priceBought?: number | null, qtyBought?: number | null, deleted?: boolean | null, createdAt?: string | null, userId?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: number | null, description?: string | null, qtyBought?: number | null, qtySold?: number | null, deleted?: boolean | null } | null } | null> | null, items?: Array<{ __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: number | null, description?: string | null, qtyBought?: number | null, qtySold?: number | null, deleted?: boolean | null } | null> | null, dates?: Array<{ __typename?: 'InventoryDate', id: string, createdAt?: string | null } | null> | null };
 
 export type InventoriesQueryVariables = Exact<{
   date?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type InventoriesQuery = { __typename?: 'Query', inventories?: Array<{ __typename?: 'Inventory', id: string, priceBought?: number | null, qtyBought?: string | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
+export type InventoriesQuery = { __typename?: 'Query', inventories?: Array<{ __typename?: 'Inventory', id: string, priceBought?: number | null, qtyBought?: number | null, deleted?: boolean | null, createdAt?: string | null, userId?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
 
 export type NewItemMutationVariables = Exact<{
   item: NewItemInput;
 }>;
 
 
-export type NewItemMutation = { __typename?: 'Mutation', newItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: string | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null } | null };
+export type NewItemMutation = { __typename?: 'Mutation', newItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null } | null };
 
 export type EItemMutationVariables = Exact<{
   item: ItemInput;
 }>;
 
 
-export type EItemMutation = { __typename?: 'Mutation', eItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: string | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null } | null };
+export type EItemMutation = { __typename?: 'Mutation', eItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null } | null };
 
 export type DItemMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -769,24 +851,24 @@ export type ItemPriceMutationVariables = Exact<{
 }>;
 
 
-export type ItemPriceMutation = { __typename?: 'Mutation', itemPrice?: { __typename?: 'Item', id: string, price?: string | null } | null };
+export type ItemPriceMutation = { __typename?: 'Mutation', itemPrice?: { __typename?: 'Item', id: string, price?: number | null } | null };
 
 export type ItemsChartQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ItemsChartQuery = { __typename?: 'Query', itemsChart?: Array<{ __typename?: 'Item', id: string, name: string, deleted?: boolean | null, qtyBought?: string | null } | null> | null };
+export type ItemsChartQuery = { __typename?: 'Query', itemsChart?: Array<{ __typename?: 'Item', id: string, name: string, deleted?: boolean | null, qtyBought?: number | null } | null> | null };
 
 export type ItemsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ItemsQuery = { __typename?: 'Query', items?: Array<{ __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: string | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null, qtyBought?: string | null } | null> | null };
+export type ItemsQuery = { __typename?: 'Query', items?: Array<{ __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null, qtyBought?: number | null } | null> | null };
 
 export type ItemQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type ItemQuery = { __typename?: 'Query', item?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: string | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null } | null };
+export type ItemQuery = { __typename?: 'Query', item?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: boolean | null } | null };
 
 export type NewOrderItemsMutationVariables = Exact<{
   orderItems?: InputMaybe<Array<NewOrderItemInput> | NewOrderItemInput>;
@@ -803,7 +885,7 @@ export type EOrderMutationVariables = Exact<{
 }>;
 
 
-export type EOrderMutation = { __typename?: 'Mutation', eOrder?: { __typename?: 'Order', id: string, price?: string | null, qty?: string | null, item?: Array<{ __typename?: 'Item', id: string, sku?: string | null, name: string } | null> | null } | null };
+export type EOrderMutation = { __typename?: 'Mutation', eOrder?: { __typename?: 'Order', id: string, price?: number | null } | null };
 
 export type DOrderMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -812,31 +894,33 @@ export type DOrderMutationVariables = Exact<{
 
 export type DOrderMutation = { __typename?: 'Mutation', dOrder?: { __typename?: 'Order', id: string } | null };
 
-export type OrdersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type OrdersQuery = { __typename?: 'Query', orders?: Array<{ __typename?: 'Order', id: string, price?: string | null, qty?: string | null, item?: Array<{ __typename?: 'Item', id: string, sku?: string | null, name: string } | null> | null } | null> | null };
-
 export type OrderQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, price?: string | null, qty?: string | null, item?: Array<{ __typename?: 'Item', id: string, sku?: string | null, name: string } | null> | null } | null };
+export type OrderQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, price?: number | null } | null };
+
+export type OrdersQueryVariables = Exact<{
+  date?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type OrdersQuery = { __typename?: 'Query', orders?: Array<{ __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null> | null };
 
 export type NewRoomMutationVariables = Exact<{
   room: NewRoomInput;
 }>;
 
 
-export type NewRoomMutation = { __typename?: 'Mutation', newRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, type?: string | null } | null };
+export type NewRoomMutation = { __typename?: 'Mutation', newRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
 
 export type ERoomMutationVariables = Exact<{
   room: RoomInput;
 }>;
 
 
-export type ERoomMutation = { __typename?: 'Mutation', eRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, type?: string | null } | null };
+export type ERoomMutation = { __typename?: 'Mutation', eRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
 
 export type DRoomMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -856,19 +940,19 @@ export type RoomPriceMutation = { __typename?: 'Mutation', roomPrice?: { __typen
 export type RoomsChartQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RoomsChartQuery = { __typename?: 'Query', roomsChart?: Array<{ __typename?: 'Room', id: string, name: string, deleted?: string | null, inDate?: string | null, outDate?: string | null, bookDate?: string | null, status?: string | null, type?: string | null } | null> | null };
+export type RoomsChartQuery = { __typename?: 'Query', roomsChart?: Array<{ __typename?: 'Room', id: string, name: string, price?: number | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null> | null };
 
 export type RoomsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type RoomsQuery = { __typename?: 'Query', rooms?: Array<{ __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, inDate?: string | null, outDate?: string | null, bookDate?: string | null, status?: string | null, type?: string | null } | null> | null };
+export type RoomsQuery = { __typename?: 'Query', rooms?: Array<{ __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null> | null };
 
 export type RoomQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type RoomQuery = { __typename?: 'Query', room?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, inDate?: string | null, outDate?: string | null, bookDate?: string | null, status?: string | null, type?: string | null } | null };
+export type RoomQuery = { __typename?: 'Query', room?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
 
 export type NewRouteMutationVariables = Exact<{
   route: NewRouteInput;
@@ -960,14 +1044,14 @@ export type VerifiedMutation = { __typename?: 'Mutation', verified?: { __typenam
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: string | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, section?: string | null, name: string, slug?: string | null } | null, deductions?: Array<{ __typename?: 'Deduction', id: string, amount?: string | null } | null> | null } | null> | null };
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, section?: string | null, name: string, slug?: string | null } | null, deductions?: Array<{ __typename?: 'Deduction', id: string, amount?: string | null } | null> | null } | null> | null };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: string | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null, deductions?: Array<{ __typename?: 'Deduction', id: string, amount?: string | null } | null> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null, deductions?: Array<{ __typename?: 'Deduction', id: string, amount?: string | null } | null> | null } | null };
 
 export type NewUserMutationVariables = Exact<{
   user: NewUserInput;
@@ -982,7 +1066,7 @@ export type SalaryMutationVariables = Exact<{
 }>;
 
 
-export type SalaryMutation = { __typename?: 'Mutation', salary?: { __typename?: 'User', id: string, salary?: string | null, routeSlugs?: string | null } | null };
+export type SalaryMutation = { __typename?: 'Mutation', salary?: { __typename?: 'User', id: string, salary?: number | null, routeSlugs?: string | null } | null };
 
 export type EditUserSlugsMutationVariables = Exact<{
   user: UserSlugInput;
@@ -1013,6 +1097,58 @@ export type RefreshCredentialsMutationVariables = Exact<{
 export type RefreshCredentialsMutation = { __typename?: 'Mutation', refreshToken?: { __typename?: 'User', id: string, token?: string | null } | null };
 
 
+export const CancelBookingDocument = gql`
+    mutation CancelBooking($id: ID!) {
+  cancelBooking(id: $id) {
+    id
+    amount
+    days
+    rooms {
+      id
+      name
+      description
+      createdAt
+      deleted
+      price
+      type
+    }
+    inDate
+    outDate
+    bookDate
+    canceled
+    syn
+  }
+}
+    `;
+
+export function useCancelBookingMutation() {
+  return Urql.useMutation<CancelBookingMutation, CancelBookingMutationVariables>(CancelBookingDocument);
+};
+export const BookerDocument = gql`
+    mutation Booker($books: [BookingInput!], $detail: DetailInput!) {
+  booker(books: $books, detail: $detail) {
+    id
+    name
+    description
+    price
+    sku
+    createdAt
+    deleted
+    status
+    type
+    booking {
+      id
+      inDate
+      outDate
+      canceled
+    }
+  }
+}
+    `;
+
+export function useBookerMutation() {
+  return Urql.useMutation<BookerMutation, BookerMutationVariables>(BookerDocument);
+};
 export const NewInventoryDocument = gql`
     mutation NewInventory($inventory: NewInventoryInput!) {
   newInventory(inventory: $inventory) {
@@ -1076,10 +1212,17 @@ export const InventoriesItemsDocument = gql`
     qtyBought
     deleted
     createdAt
+    userId
     item {
       id
       sku
+      type
       name
+      price
+      description
+      qtyBought
+      qtySold
+      deleted
     }
   }
   items {
@@ -1089,6 +1232,8 @@ export const InventoriesItemsDocument = gql`
     name
     price
     description
+    qtyBought
+    qtySold
     deleted
   }
   dates {
@@ -1109,6 +1254,7 @@ export const InventoriesDocument = gql`
     qtyBought
     deleted
     createdAt
+    userId
     item {
       id
       sku
@@ -1252,12 +1398,6 @@ export const EOrderDocument = gql`
   eOrder(order: $order) {
     id
     price
-    qty
-    item {
-      id
-      sku
-      name
-    }
   }
 }
     `;
@@ -1276,16 +1416,49 @@ export const DOrderDocument = gql`
 export function useDOrderMutation() {
   return Urql.useMutation<DOrderMutation, DOrderMutationVariables>(DOrderDocument);
 };
-export const OrdersDocument = gql`
-    query Orders {
-  orders {
+export const OrderDocument = gql`
+    query Order($id: ID!) {
+  order(id: $id) {
     id
     price
-    qty
-    item {
+  }
+}
+    `;
+
+export function useOrderQuery(options: Omit<Urql.UseQueryArgs<OrderQueryVariables>, 'query'>) {
+  return Urql.useQuery<OrderQuery, OrderQueryVariables>({ query: OrderDocument, ...options });
+};
+export const OrdersDocument = gql`
+    query Orders($date: String) {
+  orders(date: $date) {
+    id
+    amount
+    pos
+    cash
+    hash
+    txfa
+    guestName
+    guestPhone
+    guestEmail
+    user {
       id
-      sku
-      name
+      surname
+    }
+    bookings {
+      id
+      inDate
+      outDate
+      days
+      canceled
+      amount
+      bookDate
+      room {
+        id
+        name
+        price
+        type
+        deleted
+      }
     }
   }
 }
@@ -1293,24 +1466,6 @@ export const OrdersDocument = gql`
 
 export function useOrdersQuery(options?: Omit<Urql.UseQueryArgs<OrdersQueryVariables>, 'query'>) {
   return Urql.useQuery<OrdersQuery, OrdersQueryVariables>({ query: OrdersDocument, ...options });
-};
-export const OrderDocument = gql`
-    query Order($id: ID!) {
-  order(id: $id) {
-    id
-    price
-    qty
-    item {
-      id
-      sku
-      name
-    }
-  }
-}
-    `;
-
-export function useOrderQuery(options: Omit<Urql.UseQueryArgs<OrderQueryVariables>, 'query'>) {
-  return Urql.useQuery<OrderQuery, OrderQueryVariables>({ query: OrderDocument, ...options });
 };
 export const NewRoomDocument = gql`
     mutation NewRoom($room: NewRoomInput!) {
@@ -1322,7 +1477,14 @@ export const NewRoomDocument = gql`
     sku
     createdAt
     deleted
+    status
     type
+    booking {
+      id
+      inDate
+      outDate
+      canceled
+    }
   }
 }
     `;
@@ -1340,7 +1502,14 @@ export const ERoomDocument = gql`
     sku
     createdAt
     deleted
+    status
     type
+    booking {
+      id
+      inDate
+      outDate
+      canceled
+    }
   }
 }
     `;
@@ -1376,12 +1545,16 @@ export const RoomsChartDocument = gql`
   roomsChart {
     id
     name
+    price
     deleted
-    inDate
-    outDate
-    bookDate
     status
     type
+    booking {
+      id
+      inDate
+      outDate
+      canceled
+    }
   }
 }
     `;
@@ -1399,11 +1572,14 @@ export const RoomsDocument = gql`
     sku
     createdAt
     deleted
-    inDate
-    outDate
-    bookDate
     status
     type
+    booking {
+      id
+      inDate
+      outDate
+      canceled
+    }
   }
 }
     `;
@@ -1421,11 +1597,14 @@ export const RoomDocument = gql`
     sku
     createdAt
     deleted
-    inDate
-    outDate
-    bookDate
     status
     type
+    booking {
+      id
+      inDate
+      outDate
+      canceled
+    }
   }
 }
     `;

@@ -18,7 +18,7 @@ type Action = {
     | "OPEN_MONTHS"
     | "SET_CURRENT_DATE"
     | "CLOSE";
-  data: DatePickerState;
+  data?: DatePickerState;
 };
 
 export const reducer = (state: DatePickerState, action: Action) => {
