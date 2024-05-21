@@ -73,7 +73,7 @@ form div.btn button {
 }
 
 .link {
-  @apply no-underline border text-lg rounded-full px-3 py-1 outline-1 hover:text-black hover:bg-blue-300;
+  @apply no-underline border text-base rounded-full px-3 py-1 outline-1 hover:text-black hover:bg-slate-400;
 }
 
 form div.form-input input {
@@ -128,7 +128,7 @@ form {
 }
 
 .orderspan {
-  @apply flex-1 p-2;
+  @apply flex-1 cursor-text border-black flex w-12 m-auto justify-center items-center rounded-sm;
 }
 .icon {
   @apply text-sky-900;
@@ -165,10 +165,10 @@ table tr.bg-tr {
 table tr.bg-tr td {
   @apply !text-base;
 }
-.bwks {
+.naira {
   position: flex;
 }
-.bwks::before {
+.naira::before {
   content: "\20A6";
 }
 .bwk::after {
@@ -208,15 +208,15 @@ ul.ulist li {
   @apply h-[100vh] bg-gradient-to-b from-white via-fuchsia-50 to-fuchsia-300 bg-no-repeat;
 }
 .icon-span {
-  @apply mt-1 rounded-lg relative hover:border-gray-500 p-4 cursor-pointer inline-block border border-gray-300;
+  @apply mt-1 rounded-lg relative hover:border-gray-500 p-4 inline-block border border-gray-300;
 }
 
 .icon-span .ikon {
   @apply absolute right-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }
 
-#bee {
-  @apply m-0 text-center bg-transparent outline-[1px] rounded-sm outline-blue-200;
+.bee {
+  @apply m-0 pl-[2px] text-center border-y border-slate-500 bg-transparent outline-none w-10/12;
 }
 
 table tr.checkout td {
@@ -253,4 +253,28 @@ table tr.checkout td {
 }
 .pagination ul li {
   @apply w-7 h-7 cursor-pointer;
+}
+
+.tooltip {
+  @apply relative inline-block;
+}
+
+.tooltip-text {
+  @apply absolute text-sm bg-gray-500 text-white px-2 py-1 rounded shadow-md;
+}
+
+.tooltip-top {
+  @apply top-0 left-1/2 transform -translate-x-1/2;
+}
+
+.tooltip-bottom {
+  @apply bottom-0 left-1/2 transform -translate-x-1/2;
+}
+
+.tooltip-left {
+  @apply left-0 top-1/2 transform -translate-y-1/2;
+}
+
+.tooltip-right {
+  @apply right-0 top-1/2 transform -translate-y-1/2;
 }

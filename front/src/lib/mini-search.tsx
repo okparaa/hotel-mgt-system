@@ -3,7 +3,7 @@ import { useChest } from "../app-chest";
 
 export const MiniSearch = () => {
   const {
-    data: { mini_search },
+    data: { miniSearch },
     updateChest,
   } = useChest();
 
@@ -14,11 +14,11 @@ export const MiniSearch = () => {
           className="border w-full max-w-80 py-[1px] placeholder:text-gray-400 text-lg pr-4 pl-7 rounded-full"
           type="text"
           name="search"
-          value={mini_search || ""}
+          value={miniSearch || ""}
           placeholder="search..."
           onChange={(e) => {
             updateChest({
-              type: "mini_search",
+              type: "miniSearch",
               data: (e.target as HTMLInputElement)?.value,
             });
           }}

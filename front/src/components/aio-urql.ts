@@ -27,7 +27,6 @@ export type Booking = {
   inDate?: Maybe<Scalars['String']['output']>;
   outDate?: Maybe<Scalars['String']['output']>;
   room?: Maybe<Room>;
-  rooms?: Maybe<Array<Maybe<Room>>>;
   syn?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -163,6 +162,8 @@ export type Mutation = {
   assignRoute?: Maybe<User>;
   booker?: Maybe<Array<Maybe<Room>>>;
   cancelBooking?: Maybe<Booking>;
+  changeOrderRecov?: Maybe<Order>;
+  changeRecovery?: Maybe<User>;
   dInventory?: Maybe<Inventory>;
   dItem?: Maybe<Item>;
   dOrder?: Maybe<Order>;
@@ -170,6 +171,7 @@ export type Mutation = {
   dRoom?: Maybe<Room>;
   dRoute?: Maybe<Route>;
   dSection?: Maybe<Section>;
+  debitStaff?: Maybe<User>;
   deduct?: Maybe<Deduction>;
   eDeduct?: Maybe<Deduction>;
   eInventory?: Maybe<Inventory>;
@@ -195,7 +197,10 @@ export type Mutation = {
   newUser?: Maybe<User>;
   otherSlugs?: Maybe<Route>;
   parentRoute?: Maybe<Route>;
+  recover?: Maybe<Order>;
   refreshToken?: Maybe<User>;
+  removeOrderRecov?: Maybe<Order>;
+  removeRecovery?: Maybe<User>;
   roomPrice?: Maybe<Room>;
   salary?: Maybe<User>;
   signed?: Maybe<Session>;
@@ -216,6 +221,16 @@ export type MutationBookerArgs = {
 
 export type MutationCancelBookingArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationChangeOrderRecovArgs = {
+  recov?: InputMaybe<RecovInput>;
+};
+
+
+export type MutationChangeRecoveryArgs = {
+  debit?: InputMaybe<XRecoveryInput>;
 };
 
 
@@ -255,6 +270,11 @@ export type MutationDSectionArgs = {
 };
 
 
+export type MutationDebitStaffArgs = {
+  debit: XRecoveryInput;
+};
+
+
 export type MutationDeductArgs = {
   deduct: DeductInput;
 };
@@ -276,7 +296,7 @@ export type MutationEItemArgs = {
 
 
 export type MutationEOrderArgs = {
-  order?: InputMaybe<OrderInput>;
+  order: OrderInput;
 };
 
 
@@ -332,7 +352,7 @@ export type MutationNewItemArgs = {
 
 
 export type MutationNewOrderArgs = {
-  order?: InputMaybe<NewOrderInput>;
+  order: NewOrderInput;
 };
 
 
@@ -384,8 +404,23 @@ export type MutationParentRouteArgs = {
 };
 
 
+export type MutationRecoverArgs = {
+  recovery: RecoveryInput;
+};
+
+
 export type MutationRefreshTokenArgs = {
   user?: InputMaybe<UserTokenInput>;
+};
+
+
+export type MutationRemoveOrderRecovArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
+
+export type MutationRemoveRecoveryArgs = {
+  debitId: Scalars['ID']['input'];
 };
 
 
@@ -496,6 +531,7 @@ export type Order = {
   name: Scalars['String']['output'];
   pos?: Maybe<Scalars['Float']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  recoveries?: Maybe<Array<Maybe<Recovery>>>;
   status?: Maybe<Scalars['String']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
   txfa?: Maybe<Scalars['Float']['output']>;
@@ -540,10 +576,10 @@ export type Query = {
   itemsChart?: Maybe<Array<Maybe<Item>>>;
   loggedIn?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   logout?: Maybe<Message>;
-  mini_search?: Maybe<Scalars['String']['output']>;
+  miniSearch?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Order>;
+  orderItems?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   order_books?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  order_items?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   orders?: Maybe<Array<Maybe<Order>>>;
   role?: Maybe<Role>;
   roles?: Maybe<Array<Maybe<Role>>>;
@@ -619,6 +655,39 @@ export type QuerySectionArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type RecovInput = {
+  cash?: InputMaybe<Scalars['Float']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  pos?: InputMaybe<Scalars['Float']['input']>;
+  txfa?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type Recovery = {
+  __typename?: 'Recovery';
+  cash?: Maybe<Scalars['Float']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  debitAim?: Maybe<Scalars['String']['output']>;
+  debitAmt?: Maybe<Scalars['Float']['output']>;
+  debitedAt?: Maybe<Scalars['String']['output']>;
+  deleted?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  order?: Maybe<Order>;
+  pos?: Maybe<Scalars['Float']['output']>;
+  syn?: Maybe<Scalars['Boolean']['output']>;
+  txfa?: Maybe<Scalars['Float']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+};
+
+export type RecoveryInput = {
+  cash?: InputMaybe<Scalars['Float']['input']>;
+  hash?: InputMaybe<Scalars['String']['input']>;
+  orderId?: InputMaybe<Scalars['String']['input']>;
+  pos?: InputMaybe<Scalars['Float']['input']>;
+  txfa?: InputMaybe<Scalars['Float']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Role = {
@@ -741,13 +810,13 @@ export type User = {
   active?: Maybe<Scalars['Boolean']['output']>;
   address?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
-  deductions?: Maybe<Array<Maybe<Deduction>>>;
   firstname?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   lastname?: Maybe<Scalars['String']['output']>;
   message?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
   photoUrl?: Maybe<Scalars['String']['output']>;
+  recoveries?: Maybe<Array<Maybe<Recovery>>>;
   route?: Maybe<Route>;
   routeSlugs?: Maybe<Scalars['String']['output']>;
   salary?: Maybe<Scalars['Float']['output']>;
@@ -773,12 +842,21 @@ export type UserTokenInput = {
   token?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type XRecoveryInput = {
+  debitAim?: InputMaybe<Scalars['String']['input']>;
+  debitAmt?: InputMaybe<Scalars['Float']['input']>;
+  debitId?: InputMaybe<Scalars['String']['input']>;
+  debitedAt?: InputMaybe<Scalars['String']['input']>;
+  orderId?: InputMaybe<Scalars['String']['input']>;
+  staffId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CancelBookingMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: { __typename?: 'Booking', id: string, amount?: number | null, days?: number | null, inDate?: string | null, outDate?: string | null, bookDate?: string | null, canceled?: boolean | null, syn?: boolean | null, rooms?: Array<{ __typename?: 'Room', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: string | null, price?: number | null, type?: string | null } | null> | null } | null };
+export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking?: { __typename?: 'Booking', id: string, amount?: number | null, days?: number | null, inDate?: string | null, outDate?: string | null, bookDate?: string | null, canceled?: boolean | null, syn?: boolean | null, room?: { __typename?: 'Room', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: string | null, price?: number | null, type?: string | null } | null } | null };
 
 export type BookerMutationVariables = Exact<{
   books?: InputMaybe<Array<BookingInput> | BookingInput>;
@@ -894,6 +972,34 @@ export type DOrderMutationVariables = Exact<{
 
 export type DOrderMutation = { __typename?: 'Mutation', dOrder?: { __typename?: 'Order', id: string } | null };
 
+export type RecoverMutationVariables = Exact<{
+  recovery: RecoveryInput;
+}>;
+
+
+export type RecoverMutation = { __typename?: 'Mutation', recover?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null } | null };
+
+export type RemoveRecoveryMutationVariables = Exact<{
+  debitId: Scalars['ID']['input'];
+}>;
+
+
+export type RemoveRecoveryMutation = { __typename?: 'Mutation', removeRecovery?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+
+export type ChangeRecoveryMutationVariables = Exact<{
+  debit: XRecoveryInput;
+}>;
+
+
+export type ChangeRecoveryMutation = { __typename?: 'Mutation', changeRecovery?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+
+export type DebitStaffMutationVariables = Exact<{
+  debit: XRecoveryInput;
+}>;
+
+
+export type DebitStaffMutation = { __typename?: 'Mutation', debitStaff?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+
 export type OrderQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -906,7 +1012,21 @@ export type OrdersQueryVariables = Exact<{
 }>;
 
 
-export type OrdersQuery = { __typename?: 'Query', orders?: Array<{ __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null> | null };
+export type OrdersQuery = { __typename?: 'Query', orders?: Array<{ __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null> | null };
+
+export type ChangeOrderRecovMutationVariables = Exact<{
+  recov?: InputMaybe<RecovInput>;
+}>;
+
+
+export type ChangeOrderRecovMutation = { __typename?: 'Mutation', changeOrderRecov?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null };
+
+export type RemoveOrderRecovMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type RemoveOrderRecovMutation = { __typename?: 'Mutation', removeOrderRecov?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null };
 
 export type NewRoomMutationVariables = Exact<{
   room: NewRoomInput;
@@ -1044,14 +1164,14 @@ export type VerifiedMutation = { __typename?: 'Mutation', verified?: { __typenam
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, section?: string | null, name: string, slug?: string | null } | null, deductions?: Array<{ __typename?: 'Deduction', id: string, amount?: string | null } | null> | null } | null> | null };
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, section?: string | null, name: string, slug?: string | null } | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null> | null };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null, deductions?: Array<{ __typename?: 'Deduction', id: string, amount?: string | null } | null> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
 
 export type NewUserMutationVariables = Exact<{
   user: NewUserInput;
@@ -1103,7 +1223,7 @@ export const CancelBookingDocument = gql`
     id
     amount
     days
-    rooms {
+    room {
       id
       name
       description
@@ -1416,6 +1536,124 @@ export const DOrderDocument = gql`
 export function useDOrderMutation() {
   return Urql.useMutation<DOrderMutation, DOrderMutationVariables>(DOrderDocument);
 };
+export const RecoverDocument = gql`
+    mutation Recover($recovery: RecoveryInput!) {
+  recover(recovery: $recovery) {
+    id
+    amount
+    pos
+    cash
+    hash
+    txfa
+    guestName
+    guestPhone
+    guestEmail
+    recoveries {
+      id
+      pos
+      cash
+      txfa
+      debitAmt
+      deleted
+      debitAim
+      debitedAt
+    }
+    user {
+      id
+      surname
+    }
+  }
+}
+    `;
+
+export function useRecoverMutation() {
+  return Urql.useMutation<RecoverMutation, RecoverMutationVariables>(RecoverDocument);
+};
+export const RemoveRecoveryDocument = gql`
+    mutation RemoveRecovery($debitId: ID!) {
+  removeRecovery(debitId: $debitId) {
+    id
+    surname
+    firstname
+    lastname
+    phone
+    address
+    active
+    salary
+    username
+    photoUrl
+    createdAt
+    recoveries {
+      id
+      debitAmt
+      deleted
+      debitAim
+      debitedAt
+    }
+  }
+}
+    `;
+
+export function useRemoveRecoveryMutation() {
+  return Urql.useMutation<RemoveRecoveryMutation, RemoveRecoveryMutationVariables>(RemoveRecoveryDocument);
+};
+export const ChangeRecoveryDocument = gql`
+    mutation ChangeRecovery($debit: XRecoveryInput!) {
+  changeRecovery(debit: $debit) {
+    id
+    surname
+    firstname
+    lastname
+    phone
+    address
+    active
+    salary
+    username
+    photoUrl
+    createdAt
+    recoveries {
+      id
+      debitAmt
+      deleted
+      debitAim
+      debitedAt
+    }
+  }
+}
+    `;
+
+export function useChangeRecoveryMutation() {
+  return Urql.useMutation<ChangeRecoveryMutation, ChangeRecoveryMutationVariables>(ChangeRecoveryDocument);
+};
+export const DebitStaffDocument = gql`
+    mutation DebitStaff($debit: XRecoveryInput!) {
+  debitStaff(debit: $debit) {
+    id
+    surname
+    firstname
+    lastname
+    phone
+    address
+    active
+    salary
+    username
+    photoUrl
+    createdAt
+    routeSlugs
+    recoveries {
+      id
+      debitAmt
+      deleted
+      debitAim
+      debitedAt
+    }
+  }
+}
+    `;
+
+export function useDebitStaffMutation() {
+  return Urql.useMutation<DebitStaffMutation, DebitStaffMutationVariables>(DebitStaffDocument);
+};
 export const OrderDocument = gql`
     query Order($id: ID!) {
   order(id: $id) {
@@ -1440,6 +1678,15 @@ export const OrdersDocument = gql`
     guestName
     guestPhone
     guestEmail
+    recoveries {
+      id
+      pos
+      cash
+      txfa
+      debitAmt
+      debitAim
+      debitedAt
+    }
     user {
       id
       surname
@@ -1466,6 +1713,102 @@ export const OrdersDocument = gql`
 
 export function useOrdersQuery(options?: Omit<Urql.UseQueryArgs<OrdersQueryVariables>, 'query'>) {
   return Urql.useQuery<OrdersQuery, OrdersQueryVariables>({ query: OrdersDocument, ...options });
+};
+export const ChangeOrderRecovDocument = gql`
+    mutation ChangeOrderRecov($recov: RecovInput) {
+  changeOrderRecov(recov: $recov) {
+    id
+    amount
+    pos
+    cash
+    hash
+    txfa
+    guestName
+    guestPhone
+    guestEmail
+    recoveries {
+      id
+      pos
+      cash
+      txfa
+      debitAmt
+      debitAim
+      debitedAt
+    }
+    user {
+      id
+      surname
+    }
+    bookings {
+      id
+      inDate
+      outDate
+      days
+      canceled
+      amount
+      bookDate
+      room {
+        id
+        name
+        price
+        type
+        deleted
+      }
+    }
+  }
+}
+    `;
+
+export function useChangeOrderRecovMutation() {
+  return Urql.useMutation<ChangeOrderRecovMutation, ChangeOrderRecovMutationVariables>(ChangeOrderRecovDocument);
+};
+export const RemoveOrderRecovDocument = gql`
+    mutation RemoveOrderRecov($id: ID) {
+  removeOrderRecov(id: $id) {
+    id
+    amount
+    pos
+    cash
+    hash
+    txfa
+    guestName
+    guestPhone
+    guestEmail
+    recoveries {
+      id
+      pos
+      cash
+      txfa
+      debitAmt
+      debitAim
+      debitedAt
+    }
+    user {
+      id
+      surname
+    }
+    bookings {
+      id
+      inDate
+      outDate
+      days
+      canceled
+      amount
+      bookDate
+      room {
+        id
+        name
+        price
+        type
+        deleted
+      }
+    }
+  }
+}
+    `;
+
+export function useRemoveOrderRecovMutation() {
+  return Urql.useMutation<RemoveOrderRecovMutation, RemoveOrderRecovMutationVariables>(RemoveOrderRecovDocument);
 };
 export const NewRoomDocument = gql`
     mutation NewRoom($room: NewRoomInput!) {
@@ -1876,9 +2219,12 @@ export const UsersDocument = gql`
       name
       slug
     }
-    deductions {
+    recoveries {
       id
-      amount
+      debitAmt
+      deleted
+      debitAim
+      debitedAt
     }
   }
 }
@@ -1908,9 +2254,12 @@ export const UserDocument = gql`
       section
       slug
     }
-    deductions {
+    recoveries {
       id
-      amount
+      debitAmt
+      deleted
+      debitAim
+      debitedAt
     }
   }
 }

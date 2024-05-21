@@ -6,7 +6,7 @@ export const CANCEL_BOOKING = gql(`
       id
       amount
       days
-      rooms {
+      room {
         id
         name
         description

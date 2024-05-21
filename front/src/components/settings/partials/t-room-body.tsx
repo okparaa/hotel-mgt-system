@@ -1,7 +1,7 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { addInput, toCommas } from "../../../lib/utils";
 import { Fragment } from "react";
 import { useChest } from "../../../app-chest";
+import { AddInput } from "../../../lib/add-input";
 
 type TRoomBodyProps = {
   searchRooms?: any[];
@@ -9,6 +9,7 @@ type TRoomBodyProps = {
   deleteRoom: ({ variables }: any) => void;
   roomPrice: ({ variables }: any) => void;
   bookable: string[];
+  isBusy?: boolean;
 };
 
 export const TRoomBody = ({
@@ -17,6 +18,7 @@ export const TRoomBody = ({
   deleteRoom,
   roomPrice,
   bookable,
+  isBusy = false,
 }: TRoomBodyProps) => {
   const { updateChest } = useChest();
   return (
@@ -30,18 +32,20 @@ export const TRoomBody = ({
           <td>{room.sku}</td>
           <td className="!text-center">{room.status}</td>
           <td>
-            <span
-              className="bwks border-y cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
+            <span className="cursor-text flex h-8 m-auto justify-center items-center rounded-md">
+              <AddInput
+                id={room.id}
+                initialValue={room.price}
+                isBusy={isBusy}
+                action={(value) => {
+                  if (+value === +room.price) return;
+                  updateChest({ data: { id: room.id }, type: "row" });
                   roomPrice({
                     id: room.id,
-                    price: value,
+                    price: Number(value),
                   });
-                })
-              }
-            >
-              {toCommas(room.price)}
+                }}
+              />
             </span>
           </td>
           <td className="text-right !px-0">

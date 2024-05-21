@@ -14,10 +14,13 @@ const Items = lazy(() => import("./components/settings/items"));
 const Orders = lazy(() => import("./components/settings/orders"));
 const Inventory = lazy(() => import("./components/settings/inventory"));
 const Staff = lazy(() => import("./components/settings/staff"));
+const Debits = lazy(() => import("./components/settings/debits"));
 const StatsIndex = lazy(() => import("./components/stats/stats-index"));
 const ItemsStats = lazy(() => import("./components/stats/items-stats"));
 const Rooms = lazy(() => import("./components/settings/rooms"));
-const OrdersBookings = lazy(() => import("./components/orders/bookings"));
+const OrdersBookings = lazy(
+  () => import("./components/orders/orders-bookings")
+);
 const OrdersIndex = lazy(() => import("./components/orders/orders-index"));
 const StaffMgr = lazy(() => import("./components/settings/staff-mgr"));
 const RouteMgr = lazy(() => import("./components/settings/route-mgr"));
@@ -69,6 +72,7 @@ const App = () => {
           <Route path="/aio/settings/inventory" element={<Inventory />} />
           <Route path="/aio/settings/orders" element={<Orders />} />
           <Route path="/aio/settings/sections" element={<Sections />} />
+          <Route path="/aio/settings/debits" element={<Debits />} />
           <Route path="/aio/settings/staff" element={<Staff />} />
           <Route path="/aio/settings/routes" element={<Ruotes />} />
           <Route

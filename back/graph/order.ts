@@ -1,7 +1,10 @@
 import { eq, getTableColumns, sql } from "drizzle-orm";
 import { Context } from "../types/context";
-import { bookings, orders, users } from "../db/schemas";
+import { bookings, orders, recoveries, users } from "../db/schemas";
 import { createNewOrder } from "../resolvers/orders/new-order";
+import { recover } from "../resolvers/orders/recover";
+import { changeOrderRecov } from "../resolvers/orders/change-recov";
+import { removeOrderRecov } from "../resolvers/orders/remove-recov";
 
 export const typeDef = /* GraphQL */ `
   type Order {
@@ -21,6 +24,7 @@ export const typeDef = /* GraphQL */ `
     hash: String
     status: String
     bookings: [Booking]
+    recoveries: [Recovery]
     createdAt: String
     updatedAt: String
   }
@@ -28,12 +32,31 @@ export const typeDef = /* GraphQL */ `
   type Query {
     order(id: ID!): Order
     orders(date: String): [Order]
-    mini_search: String
+    miniSearch: String
   }
+
   type Mutation {
-    newOrder(order: NewOrderInput): Order
-    eOrder(order: OrderInput): Order
+    newOrder(order: NewOrderInput!): Order
+    eOrder(order: OrderInput!): Order
     dOrder(id: ID!): Order
+    recover(recovery: RecoveryInput!): Order
+    changeOrderRecov(recov: RecovInput): Order
+    removeOrderRecov(id: ID): Order
+  }
+  input RecovInput {
+    id: ID
+    pos: Float
+    cash: Float
+    txfa: Float
+  }
+
+  input RecoveryInput {
+    pos: Float
+    cash: Float
+    txfa: Float
+    hash: String
+    orderId: String
+    userId: String
   }
 
   input NewOrderInput {
@@ -72,6 +95,15 @@ export const resolvers = {
       console.log(args);
       return await createNewOrder(parent, args, ctx);
     },
+    recover: async (parent: any, args: any, ctx: Context) => {
+      return await recover(parent, args, ctx);
+    },
+    changeOrderRecov: async (parent: any, args: any, ctx: Context) => {
+      return await changeOrderRecov(parent, args, ctx);
+    },
+    removeOrderRecov: async (parent: any, args: any, ctx: Context) => {
+      return await removeOrderRecov(parent, args, ctx);
+    },
   },
   Order: {
     user: async (parent: any, args: any, ctx: Context) => {
@@ -86,6 +118,12 @@ export const resolvers = {
         .select()
         .from(bookings)
         .where(eq(bookings.orderId, parent.id));
+    },
+    recoveries: async (parent: any, args: any, ctx: Context) => {
+      return await ctx.db
+        .select()
+        .from(recoveries)
+        .where(eq(recoveries.orderId, parent.id));
     },
   },
 };

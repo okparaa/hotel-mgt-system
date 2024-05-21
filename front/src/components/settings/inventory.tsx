@@ -22,7 +22,7 @@ const Inventory = () => {
   });
 
   if (inventoriesItemsRes.error || !inventoriesItemsRes.data) {
-    return <QueryResult result={inventoriesItemsRes} />;
+    return <QueryResult response={inventoriesItemsRes} />;
   }
 
   const {

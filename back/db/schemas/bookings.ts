@@ -3,7 +3,6 @@ import {
   date,
   decimal,
   pgTable,
-  primaryKey,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";

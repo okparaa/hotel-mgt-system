@@ -142,29 +142,24 @@ export const addInput = (e: any, prxy: (value: number) => void) => {
   let td = e.target as HTMLElement;
   let revert = "innerText" in td ? td.innerText + "" : "";
   let input = document.createElement("input");
-
   input.setAttribute("type", "text");
-  input.setAttribute("size", "4");
   input.setAttribute("id", "bee");
-
   input.addEventListener("blur", (e: Event) => {
     e.preventDefault();
     input.disabled = true;
     if (e.type == "blur" && input.value === "") {
-      td.innerHTML = revert;
+      td.innerText = revert;
     } else if (e.type == "blur") {
       td.innerHTML = "";
       prxy(+input.value);
     }
   });
-
   input.addEventListener("keyup", (e: KeyboardEvent) => {
     e.preventDefault();
     if (e.key === "Enter") {
       input.blur();
     }
   });
-
   td.innerHTML = "";
   td.appendChild(input);
   input.focus();
@@ -258,7 +253,7 @@ export const getDateFromTimestamp = (
   const date = timestamp ? new Date(timestamp) : new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = date.getDate();
+  const day = String(date.getDate()).padStart(2, "0");
   let ndate = `${year}-${month}-${day}`;
   switch (format) {
     case "y-m-d":
@@ -273,6 +268,9 @@ export const getDateFromTimestamp = (
     case "d-msh-y":
       ndate = `${day} ${months[+month - 1]}/${year}`;
       break;
+    case "d-ms-y":
+      ndate = `${day}/${months[+month - 1]}`;
+      break;
     default:
       ndate = `${year}-${month}-${day}`;
       break;
@@ -282,7 +280,7 @@ export const getDateFromTimestamp = (
 
 export const toCommas = (value: number | string | null | undefined) => {
   if (value) {
-    return Number(value).toLocaleString();
+    return Number(Number(value).toFixed(2)).toLocaleString();
   }
   return "0";
 };

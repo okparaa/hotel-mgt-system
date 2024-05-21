@@ -13,7 +13,7 @@ export const typeDef = /* GraphQL */ `
     syn: Boolean
   }
   type Query {
-    order_items: [String]
+    orderItems: [String]
   }
   type Mutation {
     eOrderItem(id: ID): OrderItem

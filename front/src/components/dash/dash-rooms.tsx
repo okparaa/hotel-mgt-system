@@ -19,7 +19,7 @@ import { bookable } from "../../config";
 const DashRooms = () => {
   const [roomsRes] = useRoomsQuery();
   if (roomsRes.error || roomsRes.fetching) {
-    return <QueryResult result={roomsRes} />;
+    return <QueryResult response={roomsRes} />;
   }
 
   const {
@@ -54,7 +54,7 @@ const DashRooms = () => {
       >
         Are you sure?
       </Modal>
-      <div className="w-full md:w-6/12 ml:w-7/12 lg:w-8/12 ">
+      <div className="w-8/12">
         <div className="flex flex-wrap">
           <Search hasBtn={false} />
           {roomSearch?.map((room: Room) => {
@@ -150,7 +150,7 @@ const DashRooms = () => {
           })}
         </div>
       </div>
-      <div className="w-full md:w-7/12 lg:w-4/12 min-w-[317px]">
+      <div className="w-[460px]">
         <div className="mb-4 bg-gradient-to-b to-slate-200 from-slate-400 rounded-md shadow-2xl p-2">
           <Booker />
           <BookingCheckout />

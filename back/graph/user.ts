@@ -2,12 +2,15 @@ import { Context } from "../types/context";
 import { PubSub } from "graphql-subscriptions";
 const pubsub = new PubSub();
 import { asc, eq } from "drizzle-orm";
-import { deductions, routes, sections, users } from "../db/schemas";
+import { recoveries, routes, users } from "../db/schemas";
 import { registerUser } from "../resolvers/users/new-user";
 import { signedUser } from "../resolvers/users/signed";
 import { logoutUser } from "../resolvers/users/logout";
 import { verifiedUser } from "../resolvers/users/verified";
 import { updateRouteSlugs, assignRoute } from "../resolvers/users/edit-user";
+import { debitStaff } from "../resolvers/orders/debit-staff";
+import { changeDebit } from "../resolvers/orders/change-debit";
+import { removeDebit } from "../resolvers/orders/remove-debit";
 
 let currentNumber = 0;
 
@@ -30,7 +33,7 @@ export const typeDef = /* GraphQL */ `
     route: Route
     routeSlugs: String
     syn: Boolean
-    deductions: [Deduction]
+    recoveries: [Recovery]
   }
   type CurUser {
     id: ID
@@ -58,9 +61,21 @@ export const typeDef = /* GraphQL */ `
     eUserSlugs(user: UserSlugInput): User
     assignRoute(user: UserInput): User
     refreshToken(user: UserTokenInput): User
+    debitStaff(debit: XRecoveryInput!): User
+    removeRecovery(debitId: ID!): User
+    changeRecovery(debit: XRecoveryInput): User
   }
+
   type Subscription {
     numberIncremented: Int
+  }
+  input XRecoveryInput {
+    orderId: String
+    debitId: String
+    debitAmt: Float
+    staffId: String
+    debitAim: String
+    debitedAt: String
   }
   type Message {
     message: String
@@ -120,11 +135,11 @@ export const resolvers = {
         .where(eq(routes.id, parent.routeId));
       return route;
     },
-    deductions: async (parent: any, args: any, ctx: Context) => {
+    recoveries: async (parent: any, args: any, ctx: Context) => {
       return await ctx.db
         .select()
-        .from(deductions)
-        .where(eq(deductions.userId, parent.id));
+        .from(recoveries)
+        .where(eq(recoveries.staffId, parent.id));
     },
   },
   Subscription: {
@@ -144,6 +159,9 @@ export const resolvers = {
     newUser: async (parent: any, args: any, ctx: Context) => {
       return await registerUser(parent, args, ctx);
     },
+    debitStaff: async (parent: any, args: any, ctx: Context) => {
+      return await debitStaff(parent, args, ctx);
+    },
     salary: async (parent: any, args: any, ctx: Context) => {
       const [user] = await ctx.db
         .update(users)
@@ -157,6 +175,12 @@ export const resolvers = {
     },
     eUserSlugs: async (parent: any, args: any, ctx: Context) => {
       return await updateRouteSlugs(parent, args, ctx);
+    },
+    changeRecovery: async (parent: any, args: any, ctx: Context) => {
+      return await changeDebit(parent, args, ctx);
+    },
+    removeRecovery: async (parent: any, args: any, ctx: Context) => {
+      return await removeDebit(parent, args, ctx);
     },
   },
 };

@@ -47,15 +47,18 @@ export const GET_USERS = gql(`
             name
             slug
         }
-        deductions{
+        recoveries{
             id
-            amount
+            debitAmt
+            deleted
+            debitAim
+            debitedAt
         }
     }
   }
 `);
 
-export const GET_USER = gql(`
+export const USERS = gql(`
   query User($id: ID!) {
     user(id: $id) {
         id
@@ -76,9 +79,12 @@ export const GET_USER = gql(`
             section
             slug
         }
-        deductions{
+        recoveries{
             id
-            amount
+            debitAmt
+            deleted
+            debitAim
+            debitedAt
         }
     }
   }

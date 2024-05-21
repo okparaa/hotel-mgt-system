@@ -13,9 +13,11 @@ const Port = () => {
 
   return (
     <div className="w-11/12 mx-auto bg-gray-50">
-      <Navbar />
+      <div className="mr-2">
+        <Navbar />
+      </div>
       <SideColBar />
-      <div className="ml-[90px]">
+      <div className="ml-[90px] mr-6">
         <Outlet />
       </div>
     </div>

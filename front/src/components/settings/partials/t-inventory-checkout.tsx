@@ -1,4 +1,4 @@
-import { addInput, toCommas } from "../../../lib/utils";
+import { toCommas } from "../../../lib/utils";
 import { useChest } from "../../../app-chest";
 import { Trash2 } from "lucide-react";
 import DatePicker, { DatePickerOptions } from "../../calendar/date-picker";
@@ -6,6 +6,7 @@ import { useLazyQuery } from "../../../lib/useLazyQuery";
 import { InventoriesQuery } from "../../aio-urql";
 import { GET_INVENTORIES } from "../../queries/inventory-queries";
 import { ChestBookItem, ChestInventory } from "../../../lib/types";
+import { AddInput } from "../../../lib/add-input";
 
 type TInventoryCheckoutProps = {
   options: DatePickerOptions;
@@ -49,15 +50,16 @@ export const TInventoryCheckout = ({ options }: TInventoryCheckoutProps) => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const selectedDate = `${year}-${month}-${day}`;
-    updateChest({ type: "store", data: { prev_date: selectedDate } });
+    updateChest({ type: "store", data: { prevDate: selectedDate } });
     getInventories({ date: selectedDate });
   };
 
   return (
     <div className="flex flex-col w-full px-2">
       <div className="bg-slate-600 p-2 text-center my-2 rounded-md border-2 flex justify-between">
-        <span className="text-xl font-semibold text-white pl-6">
-          Sales: <span className="bwks">{toCommas(inventory.total || "")}</span>
+        <span className="text-xl font-semibold text-white flex items-center pl-3">
+          <span>Purchase: </span>
+          <span className="naira ml-2">{toCommas(inventory.total || "")}</span>
         </span>
         <span className="bg-slate-400 flex items-center p-2 rounded-md">
           <DatePicker options={options} onSelectDate={dateSelect} />
@@ -79,10 +81,11 @@ export const TInventoryCheckout = ({ options }: TInventoryCheckoutProps) => {
               <span className="orderspan">{item.sku}</span>
               <span className="orderspan">{item.name}</span>
               <span className="orderspan">
-                <span
-                  className="bwks border-y border-black cursor-text flex w-14 m-auto justify-center items-center rounded-sm"
-                  onClick={(e) =>
-                    addInput(e, (value) => {
+                <span className="border-black cursor-text flex m-auto justify-center items-center rounded-sm w-full">
+                  <AddInput
+                    id={item.itemId}
+                    initialValue={item.priceBought || "0"}
+                    action={(value) => {
                       const itm = {
                         itemId: item.itemId,
                         priceBought: value,
@@ -115,17 +118,17 @@ export const TInventoryCheckout = ({ options }: TInventoryCheckoutProps) => {
                           items: updatedItems,
                         },
                       });
-                    })
-                  }
-                >
-                  {toCommas(item.priceBought || "")}
+                    }}
+                  />
                 </span>
               </span>
               <span className="orderspan">
-                <span
-                  className="cursor-text border-y border-black flex w-12 m-auto justify-center items-center rounded-sm"
-                  onClick={(e) =>
-                    addInput(e, (value) => {
+                <span className="cursor-text border-black flex w-full m-auto justify-center items-center rounded-sm">
+                  <AddInput
+                    id={item.itemId}
+                    isCurrency={false}
+                    initialValue={item.qtyBought || "0"}
+                    action={(value) => {
                       const bought = {
                         itemId: item.itemId,
                         priceBought: item.priceBought,
@@ -156,10 +159,8 @@ export const TInventoryCheckout = ({ options }: TInventoryCheckoutProps) => {
                           items: updatedItems,
                         },
                       });
-                    })
-                  }
-                >
-                  {item.qtyBought}
+                    }}
+                  />
                 </span>
               </span>
               <span className="p-2 flex items-center">

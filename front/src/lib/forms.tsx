@@ -178,10 +178,12 @@ export function Select({ register, name, options, ...rest }: any) {
 export function Button({
   status,
   title,
+  onClick,
   ...rest
 }: {
   title: string;
   status: boolean;
+  onClick?: () => void;
 }) {
   return (
     <div className="mt-2">
@@ -189,6 +191,11 @@ export function Button({
         disabled={status}
         type="submit"
         {...rest}
+        onClick={() => {
+          if (typeof onClick === "function") {
+            onClick();
+          }
+        }}
         className="bg-blue-200 working text-black flex"
       >
         <div>{title}</div>

@@ -6,11 +6,13 @@ import { DatePickerOptions } from "./date-picker";
 type RenderCalendarProps = {
   onSelectDate: (date: Date) => void;
   options: DatePickerOptions;
+  prevDate?: string;
 };
 
 export const RenderCalendar = ({
   onSelectDate,
   options,
+  prevDate,
 }: RenderCalendarProps) => {
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const {
@@ -87,7 +89,9 @@ export const RenderCalendar = ({
         {dates.map((current) => {
           const date = current.date;
           const today = getDateFromTimestamp(new Date().toDateString());
-          const cur_date = getDateFromTimestamp(date?.toDateString() || "");
+          const cur_date = date
+            ? getDateFromTimestamp(date.toDateString())
+            : "";
           const in_date = getDateFromTimestamp(options.inDate || "");
           const is_active = options.checkIn
             ? new Date(cur_date) >= new Date(today)
@@ -104,7 +108,9 @@ export const RenderCalendar = ({
                 className={`rounded-md flex justify-center items-center pb-[2px] ${
                   date ? "hover:border-fuchsia-600 border cursor-pointer" : ""
                 } ${current.today ? "bg-fuchsia-400" : ""} ${
-                  current.event && !current.today ? "bg-fuchsia-200" : ""
+                  current.event && !current.today ? "bg-fuchsia-200 evt" : ""
+                } ${
+                  prevDate === cur_date && cur_date ? "bg-fuchsia-200 cur" : ""
                 }`}
               >
                 {date ? date.getDate() : ""}
@@ -125,7 +131,7 @@ export const RenderCalendar = ({
                   : "bg-gray-100 opacity-40 cursor-default"
               } ${current.today ? "bg-fuchsia-400" : ""} ${
                 current.event && !current.today ? "bg-fuchsia-200" : ""
-              }`}
+              } ${prevDate === cur_date && cur_date ? "bg-fuchsia-200" : ""}`}
             >
               {date ? date.getDate() : ""}
             </div>

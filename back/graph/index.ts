@@ -19,6 +19,7 @@ import {
 } from "./order-item";
 import { typeDef as Role, resolvers as roleResolver } from "./roles";
 import { typeDef as Route, resolvers as routeResolver } from "./routes";
+import { typeDef as Recovery, resolvers as recoveryResolver } from "./recovery";
 import {
   typeDef as OrderBooking,
   resolvers as ordersBookingResolver,
@@ -47,6 +48,7 @@ const schema = makeExecutableSchema({
     Role,
     Route,
     OrderBooking,
+    Recovery,
   ],
   resolvers: merge(
     sectionResolvers,
@@ -60,7 +62,8 @@ const schema = makeExecutableSchema({
     deductionResolvers,
     roomResolvers,
     roleResolver,
-    routeResolver
+    routeResolver,
+    recoveryResolver
   ),
 });
 

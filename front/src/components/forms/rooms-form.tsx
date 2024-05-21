@@ -11,7 +11,7 @@ type RoomsFormProps = {
   defaultValues: any;
   eRoom: ({ variables }: any) => Promise<any>;
   bookable: string[];
-  closeModal: () => void;
+  onClose: () => void;
 };
 
 const RoomsForm = forwardRef(
@@ -22,7 +22,7 @@ const RoomsForm = forwardRef(
       defaultValues,
       eRoom,
       bookable,
-      closeModal,
+      onClose,
     }: RoomsFormProps,
     ref: any
   ) => {
@@ -56,7 +56,7 @@ const RoomsForm = forwardRef(
                       description: data.description,
                     },
                   });
-                  closeModal();
+                  onClose();
                 } else {
                   await newRoom({
                     room: {
@@ -66,7 +66,7 @@ const RoomsForm = forwardRef(
                       type: data.type,
                     },
                   });
-                  closeModal();
+                  onClose();
                 }
               } catch (error) {}
             }}

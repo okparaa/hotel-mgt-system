@@ -316,6 +316,48 @@
       "when": 1715321035682,
       "tag": "0044_broad_senator_kelly",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "5",
+      "when": 1715532858777,
+      "tag": "0045_colorful_dragon_lord",
+      "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "5",
+      "when": 1715538595203,
+      "tag": "0046_short_maddog",
+      "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "5",
+      "when": 1715597238042,
+      "tag": "0047_spooky_vector",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "5",
+      "when": 1716031858097,
+      "tag": "0048_lethal_wonder_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "5",
+      "when": 1716044539676,
+      "tag": "0049_goofy_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "5",
+      "when": 1716046383648,
+      "tag": "0050_magical_morlun",
+      "breakpoints": true
     }
   ]
 }

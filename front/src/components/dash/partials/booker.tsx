@@ -78,9 +78,10 @@ export const Booker = ({}: TOrderBodyProps) => {
   };
 
   return (
-    <div>
+    <div className="min-w-[360px]">
       <div className="font-extrabold bg-slate-600 text-white p-2 text-center text-xl mb-3 rounded-md border-2">
-        Sales: @{toCommas(booker.total)}
+        <span className="mr-2">Sales:</span>{" "}
+        <span className="naira">{toCommas(booker.total)}</span>
       </div>
       {booker.bookables?.map((book) => {
         return (

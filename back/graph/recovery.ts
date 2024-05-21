@@ -1,7 +1,6 @@
 import { eq } from "drizzle-orm";
 import { Context } from "../types/context";
 import { orders, users } from "../db/schemas";
-import { recover } from "../resolvers/recoveries/recover";
 
 export const typeDef = /* GraphQL */ `
   type Recovery {
@@ -15,30 +14,16 @@ export const typeDef = /* GraphQL */ `
     cash: Float
     createdAt: String
     updatedAt: String
-  }
-
-  type Query {}
-  type Mutation {
-    recover(recovery: RecoveryInput): Order
-  }
-
-  input RecoveryInput {
-    pos: Float
-    cash: Float
-    txfa: Float
-    orderId: String
-    userId: String
+    debitAmt: Float
+    debitedAt: String
+    debitAim: String
   }
 `;
 
 export const resolvers = {
   Query: {},
-  Mutation: {
-    recover: async (parent: any, args: any, ctx: Context) => {
-      return await recover(parent, args, ctx);
-    },
-  },
-  Order: {
+  Mutation: {},
+  Recovery: {
     user: async (parent: any, args: any, ctx: Context) => {
       const [user] = await ctx.db
         .select()

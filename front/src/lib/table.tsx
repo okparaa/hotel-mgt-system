@@ -10,8 +10,9 @@ type TableProps = {
   tBody: JSX.Element;
   open?: boolean;
   onClose?: () => void;
+  className?: string;
   Searche?: JSX.Element;
-  tOrder?: JSX.Element;
+  Info?: JSX.Element;
 };
 
 export const Table = ({
@@ -19,23 +20,23 @@ export const Table = ({
   tHead,
   remove,
   tBody,
-  tOrder,
   open = false,
   onClose = () => null,
   deleting = false,
   Searche,
+  className,
+  Info,
 }: TableProps) => {
   if (fetching) return <Loading />;
-
   return (
     <>
-      <table className="btab">
-        <caption className="uppercase">{Searche ? Searche : <></>}</caption>
+      <table className={`btab ${className}`}>
+        <caption className="uppercase">
+          {Searche ? Searche : <></>}
+          {Info ? Info : <></>}
+        </caption>
         <thead>{tHead}</thead>
-        <tbody>
-          {tBody}
-          {tOrder}
-        </tbody>
+        <tbody>{tBody}</tbody>
       </table>
       <Modal loading={deleting} onClose={onClose} action={remove} isOpen={open}>
         Are you sure?

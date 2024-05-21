@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { addInput, toCommas } from "../../../lib/utils";
 import { Fragment } from "react";
+import { AddInput } from "../../../lib/add-input";
 type TItemBodyProps = {
   currInventories?: any[];
   searchItems?: any[];
@@ -24,18 +24,17 @@ export const TStaffBody = ({ searchItems, editItem }: TItemBodyProps) => {
             {user.username}
           </td>
           <td>
-            <span
-              className="bwks bwk cursor-text border-gray-400 flex h-8 m-auto justify-start items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
+            <span className="pl-1 w-32 cursor-text border-slate-300 flex h-8 justify-start items-center rounded-sm">
+              <AddInput
+                id={user.id}
+                initialValue={user.salary}
+                action={(value) => {
                   editItem({
                     id: user.id,
                     salary: value,
                   });
-                })
-              }
-            >
-              {toCommas(user.salary)}
+                }}
+              />
             </span>
           </td>
           <td>{user.section && user.section.name}</td>

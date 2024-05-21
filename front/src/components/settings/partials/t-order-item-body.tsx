@@ -11,7 +11,7 @@ type TItemBodyProps = {
 
 export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
   const {
-    data: { order_items: order, session },
+    data: { orderItems: order, session },
     updateChest,
   } = useChest();
 
@@ -50,7 +50,7 @@ export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
                 const total = Number(order.total) + Number(item.price);
 
                 updateChest({
-                  type: "order_items",
+                  type: "orderItems",
                   data: {
                     hash: hashRef.current,
                     total,

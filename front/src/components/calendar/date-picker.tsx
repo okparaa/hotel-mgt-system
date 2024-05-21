@@ -18,9 +18,10 @@ export type DatePickerOptions = {
 interface DatePickerProps {
   onSelectDate: (date: Date) => void;
   options: DatePickerOptions;
+  prevDate?: string;
 }
 
-const DatePicker = ({ onSelectDate, options }: DatePickerProps) => {
+const DatePicker = ({ onSelectDate, options, prevDate }: DatePickerProps) => {
   const initialDateState = {
     isCalendar: false,
     isMonths: false,
@@ -49,7 +50,11 @@ const DatePicker = ({ onSelectDate, options }: DatePickerProps) => {
           className="cursor-pointer"
         />
         {data.isCalendar && (
-          <RenderCalendar options={options} onSelectDate={onSelectDate} />
+          <RenderCalendar
+            options={options}
+            prevDate={prevDate}
+            onSelectDate={onSelectDate}
+          />
         )}
         {data.isMonths && <RenderMonths options={options} />}
       </div>

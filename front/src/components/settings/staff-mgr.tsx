@@ -29,7 +29,7 @@ const StaffMgr = () => {
     routesRes.error ||
     routesRes.fetching
   ) {
-    return <QueryResult result={userRes} />;
+    return <QueryResult response={userRes} />;
   }
 
   const imageUrl = `${baseUrl}/${rest}/${image}/${userRes.data?.user?.photoUrl}`;

@@ -15,7 +15,7 @@ const Staff = () => {
   const [usersRes] = useUsersQuery();
 
   if (usersRes.error || usersRes.fetching) {
-    return <QueryResult result={usersRes} />;
+    return <QueryResult response={usersRes} />;
   }
 
   const tHead = (

@@ -5,16 +5,17 @@ import { Item, useItemsQuery, useNewOrderItemsMutation } from "../aio-urql";
 import { useChest } from "../../app-chest";
 import QueryResult from "../../lib/query-result";
 import { Search } from "../../lib/search";
-import { addInput, errorMsgHandler, toCommas, ucwords } from "../../lib/utils";
+import { errorMsgHandler, toCommas, ucwords } from "../../lib/utils";
 import { Check, RotateCcw, Save, X } from "lucide-react";
 import { useState } from "react";
+import { AddInput } from "../../lib/add-input";
 
 const Orders = () => {
   const [result] = useItemsQuery();
   const { data: dataItems, error } = result;
-  if (error || !dataItems) return <QueryResult result={result} />;
+  if (error || !dataItems) return <QueryResult response={result} />;
   const {
-    data: { search, order_items: order },
+    data: { search, orderItems: order },
     updateChest,
   } = useChest();
 
@@ -43,7 +44,7 @@ const Orders = () => {
 
   return (
     <div className="flex">
-      <div className="basis-6/12 overflow-x-auto">
+      <div className="w-full overflow-x-auto">
         <Table
           tHead={tItemHead}
           tBody={tItemBody}
@@ -51,17 +52,18 @@ const Orders = () => {
         />
       </div>
       <div className="w-6 mx-1 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200"></div>
-      <div className="w-5/12 rounded-md bg-gradient-to-b from-slate-400 to-slate-600">
+      <div className="w-[360px] rounded-md bg-gradient-to-b from-slate-200 to-slate-500">
         <TOrderCheckout />
-        <div className="flex justify-around border-2 p-3 m-2 rounded-md">
+        <div className="flex justify-around border-2 p-1 m-1 rounded-md">
           <div className="flex flex-col items-center">
             <span>Cash</span>
-            <span
-              className="bwks border-y border-slate-300 cursor-text flex w-16 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
+            <span className="border-y border-slate-300 cursor-text flex w-20 h-8 m-auto justify-center items-center rounded-md">
+              <AddInput
+                id={order.hash}
+                initialValue={order.cash}
+                action={(value) => {
                   updateChest({
-                    type: "order_items",
+                    type: "orderItems",
                     data: {
                       cash: +value,
                       txfa: order.txfa,
@@ -71,20 +73,19 @@ const Orders = () => {
                       hash: order.hash,
                     },
                   });
-                })
-              }
-            >
-              {toCommas(order.cash)}
+                }}
+              />
             </span>
           </div>
           <div className="flex flex-col items-center">
             <span>POS</span>
-            <span
-              className="bwks border-y border-slate-300 cursor-text flex w-16 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
+            <span className="border-y border-slate-300 cursor-text flex w-20 h-8 m-auto justify-center items-center rounded-md">
+              <AddInput
+                id={order.hash}
+                initialValue={order.pos}
+                action={(value) => {
                   updateChest({
-                    type: "order_items",
+                    type: "orderItems",
                     data: {
                       cash: order.cash,
                       txfa: order.txfa,
@@ -94,20 +95,19 @@ const Orders = () => {
                       hash: order.hash,
                     },
                   });
-                })
-              }
-            >
-              {toCommas(order.pos)}
+                }}
+              />
             </span>
           </div>
           <div className="flex flex-col items-center">
             <span>Txfer</span>
-            <span
-              className="bwks border-y border-slate-300 cursor-tex flex w-16 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
+            <span className="border-y border-slate-300 cursor-tex flex w-20 h-8 m-auto justify-center items-center rounded-md">
+              <AddInput
+                id={order.hash}
+                initialValue={order.txfa}
+                action={(value) => {
                   updateChest({
-                    type: "order_items",
+                    type: "orderItems",
                     data: {
                       cash: order.cash,
                       txfa: +value,
@@ -117,15 +117,13 @@ const Orders = () => {
                       hash: order.hash,
                     },
                   });
-                })
-              }
-            >
-              {toCommas(order.txfa)}
+                }}
+              />
             </span>
           </div>
           <div className="flex flex-col items-center">
             <span>Total</span>
-            <span className="bwks relative bg-slate-600 border-2 text-white flex w-16 h-8 m-auto justify-center items-center rounded-md">
+            <span className="naira relative bg-slate-600 border-2 text-white flex w-20 h-8 m-auto justify-center items-center rounded-md">
               {toCommas(denom)}
               {denom !== order.total ? (
                 <X className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
@@ -139,7 +137,7 @@ const Orders = () => {
           <button
             onClick={() => {
               updateChest({
-                type: "order_items",
+                type: "orderItems",
                 data: {
                   cash: 0,
                   pos: 0,

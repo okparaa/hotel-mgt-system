@@ -15,28 +15,35 @@ import {
   useRoomPriceMutation,
   useRoomsQuery,
 } from "../aio-urql";
+import { bookable } from "../../config";
+import QueryResult from "../../lib/query-result";
 
 const Rooms = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [{ fetching: creating, error: newError, data: newData }, newRoom] =
-    useNewRoomMutation();
-  if (!newError && newData) {
+  const [newRoomRes, newRoom] = useNewRoomMutation();
+
+  // { fetching: creating, error: newError, data: newData }
+  if (!newRoomRes.error && newRoomRes.data) {
     formRef.current?.reset();
     setOpen(false);
-  } else if (newError) {
+  } else if (newRoomRes.error) {
     setOpen(false);
-    errorHandler(newError, formRef.current);
+    errorHandler(newRoomRes.error, formRef.current);
   }
 
   const {
     data: { search },
     updateChest,
   } = useChest();
-  const [{}, roomPrice] = useRoomPriceMutation();
+  const [roomPriceRes, roomPrice] = useRoomPriceMutation();
 
-  const [{ data: roomData, fetching: loading }] = useRoomsQuery();
+  const [roomsRes] = useRoomsQuery();
+
+  if (roomsRes.error || roomsRes.fetching) {
+    return <QueryResult response={roomsRes} />;
+  }
 
   const deleteRoom = (room: Room) => {
     updateChest({
@@ -53,8 +60,6 @@ const Rooms = () => {
     setOpen(true);
   };
 
-  const bookable = ["room", "hall", "pool", "other"];
-
   const tHead = (
     <tr>
       <th className="w-auto">Name</th>
@@ -68,7 +73,7 @@ const Rooms = () => {
     </tr>
   );
 
-  const searchItems = roomData?.rooms?.filter((item: any) => {
+  const searchItems = roomsRes.data?.rooms?.filter((item: any) => {
     const str = Object.values(item).join(" ").toLowerCase();
     const searche = search || "";
     return str.includes(searche.toLowerCase());
@@ -78,15 +83,16 @@ const Rooms = () => {
     <TRoomBody
       searchRooms={searchItems}
       editRoom={editRoom}
+      isBusy={roomPriceRes.fetching}
       deleteRoom={deleteRoom}
       roomPrice={roomPrice}
       bookable={bookable}
     />
   );
 
-  const [{ fetching: updating }, eRoom] = useERoomMutation();
+  const [eRoomRes, eRoom] = useERoomMutation();
 
-  const [{ fetching: deleting }, dRoom] = useDRoomMutation();
+  const [dRoomRes, dRoom] = useDRoomMutation();
 
   const defaultValues = {
     name: "",
@@ -103,23 +109,23 @@ const Rooms = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <RoomsForm
-          fetching={creating || updating}
+          fetching={eRoomRes.fetching || newRoomRes.fetching}
           newRoom={newRoom}
           eRoom={eRoom}
           ref={formRef}
           bookable={bookable}
-          closeModal={() => setOpen(false)}
+          onClose={() => setOpen(false)}
           defaultValues={defaultValues}
         />
       </FormModal>
-      {roomData?.rooms && (
+      {roomsRes.data?.rooms && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
             Searche={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
-            fetching={loading}
-            deleting={deleting}
+            fetching={roomsRes.fetching}
+            deleting={dRoomRes.fetching}
             remove={dRoom}
             open={openDel}
             onClose={() => setOpenDel(false)}

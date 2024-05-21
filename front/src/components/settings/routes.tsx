@@ -24,7 +24,7 @@ const Ruotes = () => {
   const [routesRes] = useRoutesQuery();
 
   if (routesRes.error || routesRes.fetching) {
-    return <QueryResult result={routesRes} />;
+    return <QueryResult response={routesRes} />;
   }
 
   const [routeNewRes, newRoute] = useNewRouteMutation();

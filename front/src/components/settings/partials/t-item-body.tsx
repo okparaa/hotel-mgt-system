@@ -31,7 +31,7 @@ export const TItemBody = ({
           </td>
           <td>
             <span
-              className="bwks cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
+              className="naira cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
               onClick={(e) =>
                 addInput(e, (value) => {
                   itemPrice({

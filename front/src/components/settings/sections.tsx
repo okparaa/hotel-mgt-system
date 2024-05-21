@@ -23,7 +23,7 @@ const Sections = () => {
   const [sectionNewRes, newSection] = useNewSectionMutation();
 
   if (sectionNewRes.error || sectionNewRes.fetching) {
-    return <QueryResult result={sectionNewRes} />;
+    return <QueryResult response={sectionNewRes} />;
   }
 
   if (!sectionNewRes.error && sectionNewRes.data) {

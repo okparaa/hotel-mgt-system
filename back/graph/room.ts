@@ -2,7 +2,7 @@ import { desc, eq } from "drizzle-orm";
 import { bookings, rooms, users } from "../db/schemas";
 import { createNewRoom } from "../resolvers/rooms/new-room";
 import { Context } from "../types/context";
-import { updateRoom, updateRoomPrice } from "../resolvers/rooms/edit-room";
+import { updateRoom, roomPrice } from "../resolvers/rooms/edit-room";
 import { roomColumns, sleep } from "../helpers";
 export const typeDef = /* GraphQL */ `
   type Room {
@@ -70,7 +70,7 @@ export const resolvers = {
       return await updateRoom(parent, args, ctx);
     },
     roomPrice: async (parent: any, args: any, ctx: Context) => {
-      return await updateRoomPrice(parent, args, ctx);
+      return await roomPrice(parent, args, ctx);
     },
   },
 

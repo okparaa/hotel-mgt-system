@@ -90,7 +90,7 @@ const ItemStats = () => {
   );
 
   if (itemsChartRes.error || itemsChartRes.fetching) {
-    return <QueryResult result={itemsChartRes} />;
+    return <QueryResult response={itemsChartRes} />;
   }
 
   return (

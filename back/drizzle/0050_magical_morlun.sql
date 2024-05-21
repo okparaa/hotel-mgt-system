@@ -1,0 +1,1 @@
+ALTER TABLE "recoveries" RENAME COLUMN "recovered_for" TO "recovered_at";

@@ -39,9 +39,14 @@ export type ChestStore = {
   open?: boolean;
   name?: string;
   neu?: boolean;
-  prev_date?: string;
+  value?: string | number;
+  prevDate?: string;
   delMsg?: string;
   __typename?: string;
+};
+
+export type ChestDebit = Omit<ChestStore, "neu"> & {
+  staffId?: string;
 };
 
 export type ChestOrderItem = {
@@ -80,6 +85,7 @@ export type ChestBooker = {
   txfa: number;
   pos: number;
   total: number;
+  orderId?: string;
   guestName?: string;
   guestPhone?: string;
   guestEmail?: string;
@@ -98,13 +104,20 @@ export type ChestSession = {
   exp: string;
 };
 
+export type ChestRow = {
+  id: string;
+  __typename: string;
+};
+
 export interface ChestAppState {
   user: ChestUser;
   store: ChestStore;
-  order_items: ChestOrderItems;
+  debit: ChestDebit;
+  orderItems: ChestOrderItems;
   search: ChestSearch;
-  mini_search: ChestMiniSearch;
+  miniSearch: ChestMiniSearch;
   session: ChestSession;
   booker: ChestBooker;
   inventory: ChestInventory;
+  row: ChestRow;
 }

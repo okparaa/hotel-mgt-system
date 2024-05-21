@@ -13,7 +13,7 @@ export const Search = ({ onOpen, hasBtn = true }: SearchProps) => {
   } = useChest();
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full mx-auto flex justify-center">
       <div className="w-full border-2 mb-1 p-2 flex justify-between">
         <div className="relative lg:w-6/12 md:w-8/12 w-8/12">
           <input

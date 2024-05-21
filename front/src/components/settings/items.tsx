@@ -23,7 +23,7 @@ const Items = () => {
   const [result, newItem] = useNewItemMutation();
   const { error, fetching: creatingItem } = result;
 
-  if (error || creatingItem) return <QueryResult result={result} />;
+  if (error || creatingItem) return <QueryResult response={result} />;
 
   const [{}, itemPrice] = useItemPriceMutation();
 

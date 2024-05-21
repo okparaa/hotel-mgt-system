@@ -3,9 +3,11 @@ import { createContext, useContext, useReducer } from "react";
 import {
   ChestAppState,
   ChestBooker,
+  ChestDebit,
   ChestInventory,
   ChestMiniSearch,
   ChestOrderItems,
+  ChestRow,
   ChestSearch,
   ChestSession,
   ChestStore,
@@ -18,15 +20,19 @@ type Ops = {
     | "booker"
     | "user"
     | "store"
-    | "order_items"
+    | "orderItems"
     | "search"
-    | "mini_search"
+    | "miniSearch"
     | "session"
-    | "inventory";
+    | "inventory"
+    | "row"
+    | "debit";
   data:
     | ChestInventory
     | ChestUser
     | ChestStore
+    | ChestDebit
+    | ChestRow
     | ChestOrderItems
     | ChestSearch
     | ChestMiniSearch
@@ -51,6 +57,12 @@ export const reducer = (state: ChestAppState, payload: Ops) => {
         store: { ...state.store, ...(data as ChestStore) },
       };
       break;
+    case "debit":
+      newState = {
+        ...state,
+        debit: { ...state.debit, ...(data as ChestDebit) },
+      };
+      break;
     case "session":
       newState = {
         ...state,
@@ -63,16 +75,22 @@ export const reducer = (state: ChestAppState, payload: Ops) => {
         user: { ...state.user, ...(data as ChestUser) },
       };
       break;
+    case "row":
+      newState = {
+        ...state,
+        row: { ...state.row, ...(data as ChestRow) },
+      };
+      break;
     case "inventory":
       newState = {
         ...state,
         inventory: { ...state.inventory, ...(data as ChestInventory) },
       };
       break;
-    case "order_items":
+    case "orderItems":
       newState = {
         ...state,
-        order_items: { ...state.order_items, ...(data as ChestOrderItems) },
+        orderItems: { ...state.orderItems, ...(data as ChestOrderItems) },
       };
       break;
     case "booker":
@@ -87,10 +105,10 @@ export const reducer = (state: ChestAppState, payload: Ops) => {
         search: data as ChestSearch,
       };
       break;
-    case "mini_search":
+    case "miniSearch":
       newState = {
         ...state,
-        mini_search: data as ChestMiniSearch,
+        miniSearch: data as ChestMiniSearch,
       };
       break;
     default:
@@ -141,24 +159,31 @@ export const initOrderItems = {
   total: 0.0,
   items: [],
 };
+const store = {
+  id: "",
+  open: false,
+  name: "",
+  neu: false,
+  prevDate: "",
+  __typename: "",
+};
+const row = {
+  id: "",
+  __typename: "",
+};
 const AppProvider: FunctionalComponent<any> = ({ children }) => {
   const initalState = {
-    store: {
-      id: "",
-      open: false,
-      name: "",
-      neu: false,
-      prev_date: "",
-      __typename: "",
-    },
+    store,
+    debit: { ...store },
     inventory: {
       total: 0,
       hash: "",
       items: [],
     },
+    row,
     search: "",
-    mini_search: "",
-    order_items: initOrderItems,
+    miniSearch: "",
+    orderItems: initOrderItems,
     booker: initBooking,
     session: { id: "", auth: "", vfy: "", iat: "", exp: "" },
     user: {

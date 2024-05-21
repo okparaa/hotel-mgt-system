@@ -1,0 +1,1 @@
+ALTER TABLE "recoveries" ALTER COLUMN "debited_at" SET DATA TYPE date;

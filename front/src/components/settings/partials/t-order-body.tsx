@@ -9,7 +9,7 @@ type TOrderBodyProps = {
 
 export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
   const {
-    data: { order_items: order },
+    data: { orderItems: order },
     updateChest,
   } = useChest();
 
@@ -21,7 +21,7 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
           <td>{item.name}</td>
           <td>
             <span
-              className="bwks border-y cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
+              className="naira border-y cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
               onClick={(e) =>
                 addInput(e, (value) => {
                   const orda = {
@@ -45,7 +45,7 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                   );
 
                   updateChest({
-                    type: "order_items",
+                    type: "orderItems",
                     data: {
                       cash: order.cash,
                       pos: order.pos,
@@ -86,7 +86,7 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                     0
                   );
                   updateChest({
-                    type: "order_items",
+                    type: "orderItems",
                     data: {
                       cash: order.cash,
                       pos: order.pos,
@@ -114,7 +114,7 @@ export const TOrderBody = ({ pickedItems }: TOrderBodyProps) => {
                   return acc + Number(item.priceSold) * Number(item.qtySold);
                 }, 0);
                 updateChest({
-                  type: "order_items",
+                  type: "orderItems",
                   data: {
                     cash: order.cash,
                     pos: order.pos,

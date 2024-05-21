@@ -1,4 +1,9 @@
-import { Order, OrdersQuery, useCancelBookingMutation } from "../aio-urql";
+import {
+  Order,
+  OrdersQuery,
+  useCancelBookingMutation,
+  useOrdersQuery,
+} from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { Search } from "../../lib/search";
 import { useChest } from "../../app-chest";
@@ -11,7 +16,6 @@ import {
 } from "../../lib/utils";
 import { useState } from "react";
 import Modal from "../../lib/modal";
-import { BookingCheckout } from "../dash/partials/booking-checkout";
 import { Table } from "../../lib/table";
 import DatePicker from "../calendar/date-picker";
 import { bookable, options } from "../../config";
@@ -20,14 +24,28 @@ import { Trash2 } from "lucide-react";
 import { OrdersBody } from "./partials/orders-body";
 import { useLazyQuery } from "../../lib/useLazyQuery";
 import { ORDERS } from "../queries/orders-queries";
+import { OrdersCheckout } from "./partials/orders-checkout";
 
 const OrdersBookings = () => {
-  const [ordersRes, getBookings] = useLazyQuery<OrdersQuery>({
+  const {
+    data: { search, booker, store },
+    updateChest,
+  } = useChest();
+
+  const today =
+    store.prevDate || getDateFromTimestamp(new Date().toDateString());
+  const [ordersRes1] = useOrdersQuery({
+    variables: {
+      date: today,
+    },
+  });
+
+  const [ordersRes2, getBookings] = useLazyQuery<OrdersQuery>({
     query: ORDERS,
   });
 
-  if (ordersRes.error || ordersRes.fetching) {
-    return <QueryResult result={ordersRes} />;
+  if (ordersRes1.error || ordersRes1.fetching) {
+    return <QueryResult response={ordersRes1} />;
   }
 
   const dateSelect = (date: Date) => {
@@ -35,14 +53,9 @@ const OrdersBookings = () => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const selectedDate = `${year}-${month}-${day}`;
-    updateChest({ type: "store", data: { prev_date: selectedDate } });
+    updateChest({ type: "store", data: { prevDate: selectedDate } });
     getBookings({ date: selectedDate });
   };
-
-  const {
-    data: { search, booker },
-    updateChest,
-  } = useChest();
 
   if (booker.hash === "") {
     updateChest({
@@ -55,11 +68,20 @@ const OrdersBookings = () => {
     <tr>
       <th className="">NAME</th>
       <th className="!text-center">Room(s)</th>
-      <th className="!text-center">Day(s)</th>
       <th className="!text-center">AMOUNT</th>
-      <th className="!text-center w-20">PICK</th>
+      <th className="!text-center">HIST</th>
+      <th className="!text-center w-20">DEDUCT</th>
+      <th className="!text-center w-20">RECOV</th>
     </tr>
   );
+
+  let ordersRes;
+  if (ordersRes2.data?.orders && ordersRes2.data?.orders.length > 0) {
+    ordersRes = ordersRes2;
+  } else {
+    ordersRes = ordersRes1;
+  }
+
   const searchOrders = ordersRes.data?.orders?.filter((order) => {
     const str = order?.bookings?.reduce((acc, booking) => {
       return acc + "room " + booking?.room?.name;
@@ -68,7 +90,7 @@ const OrdersBookings = () => {
     return str?.includes(searche.toLowerCase());
   }) as Order[];
 
-  const tBody = <OrdersBody searchOrders={searchOrders} />;
+  const TOrdersBody = <OrdersBody searchOrders={searchOrders} />;
 
   const [openDel, setOpenDel] = useState(false); //for delete modal
 
@@ -88,7 +110,7 @@ const OrdersBookings = () => {
         <div className="flex flex-wrap">
           <Table
             tHead={OrderBookingHead}
-            tBody={tBody}
+            tBody={TOrdersBody}
             Searche={<Search hasBtn={false} />}
           />
         </div>
@@ -98,10 +120,15 @@ const OrdersBookings = () => {
           <div>
             <div className="bg-slate-600 p-2 text-center my-2 rounded-md border-2 flex justify-between">
               <span className="text-xl flex items-center font-semibold text-white pl-3">
-                Sales: <span className="bwks">{toCommas(booker.total)}</span>
+                <span className="mr-2">Balance: </span>
+                <span className="naira">{toCommas(booker.total)}</span>
               </span>
               <span className="bg-slate-400 flex items-center p-2 rounded-md">
-                <DatePicker options={options} onSelectDate={dateSelect} />
+                <DatePicker
+                  options={options}
+                  prevDate={store.prevDate}
+                  onSelectDate={dateSelect}
+                />
               </span>
             </div>
             {booker.bookables?.map((book) => {
@@ -160,7 +187,7 @@ const OrdersBookings = () => {
               );
             })}
           </div>
-          <BookingCheckout />
+          <OrdersCheckout />
         </div>
       </div>
     </div>

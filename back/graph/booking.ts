@@ -3,6 +3,7 @@ import { Context } from "../types/context";
 import { bookings, orders, rooms } from "../db/schemas";
 import { newBooking } from "../resolvers/booking/new-booking";
 import { cancelBooking } from "../resolvers/booking/cancel-booking";
+import { sleep } from "../helpers";
 
 export const typeDef = /* GraphQL */ `
   type Booking {

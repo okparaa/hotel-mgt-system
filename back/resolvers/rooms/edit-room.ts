@@ -43,7 +43,7 @@ const roomPriceSchema = yup.object({
   id: yup.string().required("value is required"),
 });
 
-export const updateRoomPrice = async (parent: any, args: any, ctx: Context) => {
+export const roomPrice = async (parent: any, args: any, ctx: Context) => {
   try {
     await roomPriceSchema.validate({ ...args }, { abortEarly: false });
   } catch ({ inner }: any) {

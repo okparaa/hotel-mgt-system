@@ -25,11 +25,11 @@ export const TInventoryItemBody = ({ searchItems }: TItemBodyProps) => {
           <td className="text-center">{item.sku}</td>
           <td className="text-center">{item.qtyBought}</td>
           <td className="text-center">{item.type}</td>
-          <td className="text-center bwks">{toCommas(item.price)}</td>
+          <td className="text-center naira">{toCommas(item.price)}</td>
           <td className="text-center">
             <span
               id={`${item.id}`}
-              className="icon-span"
+              className="icon-span cursor-pointer"
               onClick={(e) => {
                 const id = e.currentTarget.id;
                 const createdAt = getDateFromTimestamp();
