@@ -1,8 +1,8 @@
 import { gql } from "@urql/preact";
 
 export const CREATE_ROOM = gql(`
-  mutation NewRoom($room: NewRoomInput!) {
-    newRoom(room: $room) {
+  mutation CreateRoom($room: NewRoomInput!) {
+    createRoom(room: $room) {
       id
       name
       description
@@ -23,9 +23,9 @@ export const CREATE_ROOM = gql(`
   }
 `);
 
-export const EDIT_ROOM = gql(`
-  mutation ERoom($room: RoomInput!) {
-    eRoom(room: $room) {
+export const UPDATE_ROOM = gql(`
+  mutation UpdateRoom($room: RoomInput!) {
+    updateRoom(room: $room) {
       id
       name
       description
@@ -46,9 +46,9 @@ export const EDIT_ROOM = gql(`
   }
 `);
 
-export const DEL_ROOM = gql(`
-  mutation DRoom($id: ID!) {
-    dRoom(id: $id) {
+export const REMOVE_ROOM = gql(`
+  mutation RemoveRoom($id: ID!) {
+    removeRoom(id: $id) {
       id
     }
   }
@@ -82,7 +82,7 @@ export const GET_ROOMS_CHART = gql(`
   }
 `);
 
-export const GET_ROOMS = gql(`
+export const ROOMS = gql(`
   query Rooms {
     rooms {
       id
@@ -105,7 +105,7 @@ export const GET_ROOMS = gql(`
   }
 `);
 
-export const GET_ROOM = gql(`
+export const ROOM = gql(`
   query Room($id: ID!) {
     room (id: $id) {
       id

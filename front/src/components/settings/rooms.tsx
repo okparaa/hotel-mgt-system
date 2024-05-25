@@ -9,11 +9,11 @@ import RoomsForm from "../forms/rooms-form";
 import { useChest } from "../../app-chest";
 import {
   Room,
-  useDRoomMutation,
-  useERoomMutation,
-  useNewRoomMutation,
+  useCreateRoomMutation,
+  useRemoveRoomMutation,
   useRoomPriceMutation,
   useRoomsQuery,
+  useUpdateRoomMutation,
 } from "../aio-urql";
 import { bookable } from "../../config";
 import QueryResult from "../../lib/query-result";
@@ -22,7 +22,7 @@ const Rooms = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [newRoomRes, newRoom] = useNewRoomMutation();
+  const [newRoomRes, newRoom] = useCreateRoomMutation();
 
   // { fetching: creating, error: newError, data: newData }
   if (!newRoomRes.error && newRoomRes.data) {
@@ -90,9 +90,9 @@ const Rooms = () => {
     />
   );
 
-  const [eRoomRes, eRoom] = useERoomMutation();
+  const [eRoomRes, eRoom] = useUpdateRoomMutation();
 
-  const [dRoomRes, dRoom] = useDRoomMutation();
+  const [dRoomRes, dRoom] = useRemoveRoomMutation();
 
   const defaultValues = {
     name: "",

@@ -11,11 +11,7 @@ const changeRecovSchema = yup.object({
   txfa: yup.number().required("debit id is required"),
 });
 
-export const changeOrderRecov = async (
-  parent: any,
-  args: any,
-  ctx: Context
-) => {
+export const updateRecov = async (parent: any, args: any, ctx: Context) => {
   try {
     await changeRecovSchema.validate({ ...args.recov }, { abortEarly: false });
   } catch ({ inner }: any) {

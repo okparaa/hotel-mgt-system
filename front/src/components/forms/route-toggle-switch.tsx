@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Working from "../../lib/working";
-import { useEditOtherSlugMutation } from "../aio-urql";
+import { useUpdateOtherSlugMutation } from "../aio-urql";
 
 type RouteToggleSwitchProps = {
   id: string;
@@ -15,7 +15,7 @@ export const RouteToggleSwitch = ({
   status,
 }: RouteToggleSwitchProps) => {
   const [isChecked, setIsChecked] = useState(status);
-  const [{ fetching: loading }, mutation] = useEditOtherSlugMutation();
+  const [{ fetching: loading }, mutation] = useUpdateOtherSlugMutation();
 
   const toggleSwitch = () => {
     setIsChecked(!isChecked);

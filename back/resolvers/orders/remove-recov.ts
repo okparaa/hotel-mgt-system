@@ -8,11 +8,7 @@ const changeSchema = yup.object({
   id: yup.string().required("value is required"),
 });
 
-export const removeOrderRecov = async (
-  parent: any,
-  args: any,
-  ctx: Context
-) => {
+export const removeRecov = async (parent: any, args: any, ctx: Context) => {
   try {
     await changeSchema.validate({ ...args }, { abortEarly: false });
   } catch ({ inner }: any) {

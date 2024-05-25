@@ -1,7 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import {
   boolean,
-  date,
   decimal,
   pgTable,
   serial,
@@ -10,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
-import { inventories, ordersItems } from ".";
+import { purchases, ordersItems } from ".";
 
 export const items = pgTable("items", {
   id: varchar("id", { length: 128 })
@@ -31,9 +30,9 @@ export const items = pgTable("items", {
 
 export const itemsRelation = relations(items, ({ one, many }) => ({
   ordersItems: many(ordersItems),
-  inventory: one(inventories, {
+  inventory: one(purchases, {
     fields: [items.id],
-    references: [inventories.itemId],
+    references: [purchases.itemId],
   }),
 }));
 

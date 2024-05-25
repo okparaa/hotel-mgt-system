@@ -3,10 +3,10 @@ import { useChest } from "../../../app-chest";
 import { Trash2 } from "lucide-react";
 import DatePicker, { DatePickerOptions } from "../../calendar/date-picker";
 import { useLazyQuery } from "../../../lib/useLazyQuery";
-import { InventoriesQuery } from "../../aio-urql";
-import { GET_INVENTORIES } from "../../queries/inventory-queries";
-import { ChestBookItem, ChestInventory } from "../../../lib/types";
+import { ChestBookItem, ChestPurchase } from "../../../lib/types";
 import { AddInput } from "../../../lib/add-input";
+import { PurchasesQuery } from "../../aio-urql";
+import { PURCHASES } from "../../queries/purchases-queries";
 
 type PurchasesCheckoutProps = {
   options: DatePickerOptions;
@@ -14,34 +14,34 @@ type PurchasesCheckoutProps = {
 
 export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
   const {
-    data: { inventory },
+    data: { purchase },
     updateChest,
   } = useChest();
 
-  const [inventoryRes, getInventories] = useLazyQuery<InventoriesQuery>({
-    query: GET_INVENTORIES,
+  const [inventoryRes, getInventories] = useLazyQuery<PurchasesQuery>({
+    query: PURCHASES,
   });
 
   if (inventoryRes.data && !inventoryRes.error) {
-    const items = inventoryRes.data?.inventories?.map((inventory) => {
+    const items = inventoryRes.data?.purchases?.map((purchase) => {
       return {
-        priceBought: inventory?.priceBought,
-        qtyBought: inventory?.qtyBought,
+        priceBought: purchase?.priceBought,
+        qtyBought: purchase?.qtyBought,
         itemId: "",
-        userId: inventory?.userId,
-        name: inventory?.item?.name,
-        sku: inventory?.item?.sku,
+        userId: purchase?.userId,
+        name: purchase?.item?.name,
+        sku: purchase?.item?.sku,
       };
     });
-    const inventory = {
+    const purchase = {
       total: 0,
       items: items,
       hash: "",
-    } as ChestInventory;
+    } as ChestPurchase;
 
     updateChest({
-      data: { ...inventory },
-      type: "inventory",
+      data: { ...purchase },
+      type: "purchase",
     });
   }
 
@@ -59,7 +59,7 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
       <div className="bg-slate-600 p-2 text-center my-2 rounded-md border-2 flex justify-between">
         <span className="text-xl font-semibold text-white flex items-center pl-3">
           <span>Purchase: </span>
-          <span className="naira ml-2">{toCommas(inventory.total || "")}</span>
+          <span className="naira ml-2">{toCommas(purchase.total || "")}</span>
         </span>
         <span className="bg-slate-400 flex items-center p-2 rounded-md">
           <DatePicker options={options} onSelectDate={dateSelect} />
@@ -74,7 +74,7 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
           <span>Del</span>
         </span>
       </div>
-      {inventory.items?.map((item) => {
+      {purchase.items?.map((item) => {
         return (
           <>
             <div className="order">
@@ -91,7 +91,7 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
                         priceBought: value,
                         qtyBought: item.qtyBought,
                       };
-                      const updatedItems: any = inventory.items.map(
+                      const updatedItems: any = purchase.items.map(
                         (item: any) => {
                           if (item.itemId === itm.itemId) {
                             return { ...item, ...itm };
@@ -111,9 +111,9 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
                       );
 
                       updateChest({
-                        type: "inventory",
+                        type: "purchase",
                         data: {
-                          hash: inventory.hash,
+                          hash: purchase.hash,
                           total,
                           items: updatedItems,
                         },
@@ -134,7 +134,7 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
                         priceBought: item.priceBought,
                         qtyBought: value,
                       };
-                      const updatedItems: any = inventory.items.map(
+                      const updatedItems: any = purchase.items.map(
                         (item: any) => {
                           if (item.itemId === bought.itemId) {
                             return { ...item, ...bought };
@@ -152,9 +152,9 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
                         0
                       );
                       updateChest({
-                        type: "inventory",
+                        type: "purchase",
                         data: {
-                          hash: inventory.hash,
+                          hash: purchase.hash,
                           total,
                           items: updatedItems,
                         },
@@ -168,7 +168,7 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
                   className="cursor-pointer"
                   id={item.itemId}
                   onClick={() => {
-                    const updatedItems: any = inventory.items.filter(
+                    const updatedItems: any = purchase.items.filter(
                       (bought: any) => bought.itemId !== item.itemId
                     );
                     const total = updatedItems.reduce(
@@ -181,9 +181,9 @@ export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
                       0
                     );
                     updateChest({
-                      type: "inventory",
+                      type: "purchase",
                       data: {
-                        hash: inventory.hash,
+                        hash: purchase.hash,
                         total,
                         items: updatedItems,
                       },

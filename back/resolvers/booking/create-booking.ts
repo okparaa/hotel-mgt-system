@@ -24,7 +24,7 @@ const newOrderRoomSchema = yup.object({
   ),
 });
 
-export const newBooking = async (parent: any, args: any, ctx: Context) => {
+export const createBooking = async (parent: any, args: any, ctx: Context) => {
   try {
     await newOrderRoomSchema.validate({ ...args }, { abortEarly: false });
   } catch ({ inner }: any) {

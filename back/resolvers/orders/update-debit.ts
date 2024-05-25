@@ -11,7 +11,7 @@ const changeSchema = yup.object({
   debitedAt: yup.string().required("debited at is required"),
 });
 
-export const changeDebit = async (parent: any, args: any, ctx: Context) => {
+export const updateDebit = async (parent: any, args: any, ctx: Context) => {
   try {
     await changeSchema.validate({ ...args.debit }, { abortEarly: false });
   } catch ({ inner }: any) {

@@ -1,9 +1,9 @@
 import { Context } from "../types/context";
-import { inventories, items, orders } from "../db/schemas";
+import { purchases, items, orders } from "../db/schemas";
 import { eq, desc, sql } from "drizzle-orm";
-import { createNewItem } from "../resolvers/items/new-item";
-import { updateItem } from "../resolvers/items/edit-item";
+import { updateItem } from "../resolvers/items/update-item";
 import { itemColumns } from "../helpers";
+import { createItem } from "../resolvers/items/create-item";
 
 export const typeDef = /* GraphQL */ `
   type Item {
@@ -20,7 +20,7 @@ export const typeDef = /* GraphQL */ `
     deleted: Boolean
     qtyBought: Int
     qtySold: Int
-    inventories: [Inventory]
+    purchases: [Purchase]
   }
   type Query {
     item(id: ID!): Item
@@ -30,9 +30,9 @@ export const typeDef = /* GraphQL */ `
     store: [String]
   }
   type Mutation {
-    newItem(item: NewItemInput!): Item
-    eItem(item: ItemInput!): Item
-    dItem(id: ID!): Item
+    createItem(item: NewItemInput!): Item
+    updateItem(item: ItemInput!): Item
+    removeItem(id: ID!): Item
     itemPrice(id: ID, price: String): Item
   }
   input NewItemInput {
@@ -75,13 +75,13 @@ export const resolvers = {
     },
   },
   Mutation: {
-    eItem: async (parent: any, args: any, ctx: Context) => {
+    updateItem: async (parent: any, args: any, ctx: Context) => {
       return await updateItem(parent, args, ctx);
     },
-    newItem: async (parent: any, args: any, ctx: Context) => {
-      return await createNewItem(parent, args, ctx);
+    createItem: async (parent: any, args: any, ctx: Context) => {
+      return await createItem(parent, args, ctx);
     },
-    dItem: async (parent: any, args: any, ctx: Context) => {
+    removeItem: async (parent: any, args: any, ctx: Context) => {
       const [data] = await ctx.db
         .update(items)
         .set({ deleted: true })
@@ -102,11 +102,11 @@ export const resolvers = {
     orders: async (parent: any, args: any, ctx: Context) => {
       return await ctx.db.select().from(orders).where(eq(parent.id, orders.id));
     },
-    inventories: async (parent: any, args: any, ctx: Context) => {
+    purchases: async (parent: any, args: any, ctx: Context) => {
       return await ctx.db
         .select()
-        .from(inventories)
-        .where(eq(parent.id, inventories.itemId));
+        .from(purchases)
+        .where(eq(parent.id, purchases.itemId));
     },
   },
 };

@@ -2,8 +2,8 @@ import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
 import { useChest } from "../../app-chest";
 import {
-  useChangeRecoveryMutation,
   useRemoveRecoveryMutation,
+  useUpdateRecoveryMutation,
   useUsersQuery,
 } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
@@ -38,7 +38,7 @@ const Debits = () => {
 
   const [usersRes] = useUsersQuery();
   const [removeDebitRes, removeDebit] = useRemoveRecoveryMutation();
-  const [changeDebitRes, changeDebit] = useChangeRecoveryMutation();
+  const [changeDebitRes, changeDebit] = useUpdateRecoveryMutation();
 
   if (usersRes.error || usersRes.fetching) {
     return <QueryResult response={usersRes} />;
@@ -79,7 +79,7 @@ const Debits = () => {
         <FormModal
           isOpen={open}
           onClose={() => setOpen(false)}
-          className="p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45 w-[375px] min-h-[306px]"
+          className="p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45 w-[375px] h-[400px]"
         >
           <div className="flex flex-col">
             <span className="flex items-center justify-between gap-3">
@@ -95,7 +95,7 @@ const Debits = () => {
                 Debit:
               </label>
               <span
-                className={`border naira cursor-text border-gray-400 flex w-24 h-8 rounded-md items-center ${
+                className={`cursor-text flex border-y h-7 w-20 items-center naira ${
                   changeDebitRes.fetching || removeDebitRes.fetching
                     ? "opacity-25"
                     : ""
@@ -107,7 +107,7 @@ const Debits = () => {
                   <input
                     type="text"
                     id="debit-aim"
-                    className="w-11/12 outline-none focus:border-slate-600 focus:border-y-[1px]"
+                    className="w-11/12 outline-none focus:border-slate-600 border-y-2 focus:border-y-2 h-7"
                     value={debit?.value}
                     onChange={(e) => {
                       const value = (e.target as HTMLInputElement).value;

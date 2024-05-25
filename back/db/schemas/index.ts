@@ -2,7 +2,7 @@ export * from "./users";
 export * from "./enums";
 export * from "./users";
 export * from "./sections";
-export * from "./inventories";
+export * from "./purchases";
 export * from "./orders";
 export * from "./payments";
 export * from "./pins";

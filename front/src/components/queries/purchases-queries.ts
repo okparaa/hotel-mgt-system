@@ -1,8 +1,8 @@
 import { gql } from "@urql/preact";
 
 export const CREATE_INVENTORY = gql(`
-  mutation NewInventory($inventory: NewInventoryInput!) {
-    newInventory(inventory: $inventory) {
+  mutation CreatePurchase($purchase: NewPurchaseInput!) {
+    createPurchase(purchase: $purchase) {
       id
       qtyBought
       priceBought
@@ -16,9 +16,9 @@ export const CREATE_INVENTORY = gql(`
     }
   }
 `);
-export const EDIT_INVENTORY = gql(`
-  mutation EInventory($inventory: EInventoryInput!) {
-    eInventory(inventory: $inventory) {
+export const UPDATE_INVENTORY = gql(`
+  mutation UpdatePurchase($purchase: EPurchaseInput!) {
+    updatePurchase(purchase: $purchase) {
       id
       qtyBought
       priceBought
@@ -27,9 +27,9 @@ export const EDIT_INVENTORY = gql(`
     }
   }
 `);
-export const DEL_INVENTORY = gql(`
-  mutation DInventory($id: ID!, $itemId: String) {
-    dInventory(id: $id, itemId: $itemId) {
+export const REMOVE_INVENTORY = gql(`
+  mutation RemovePurchase($id: ID!, $itemId: String) {
+    removePurchase(id: $id, itemId: $itemId) {
       id
       qtyBought
       priceBought
@@ -44,9 +44,9 @@ export const DEL_INVENTORY = gql(`
   }
 `);
 
-export const GET_ITEM_INVENTORIES = gql(`
-  query InventoriesItems($date: String) {
-    inventories(date: $date){
+export const ITEM_PURCHASES = gql(`
+  query PurchasesItems($date: String) {
+    purchases(date: $date){
       id
       priceBought
       qtyBought
@@ -83,9 +83,9 @@ export const GET_ITEM_INVENTORIES = gql(`
   }
 `);
 
-export const GET_INVENTORIES = gql(`
-  query Inventories($date: String) {
-    inventories(date: $date){
+export const PURCHASES = gql(`
+  query Purchases($date: String) {
+    purchases(date: $date){
       id
       priceBought
       qtyBought

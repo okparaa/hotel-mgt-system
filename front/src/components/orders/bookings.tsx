@@ -52,10 +52,12 @@ const OrdersBookings = () => {
   const OrderBookingHead = (
     <tr>
       <th className="">NAME</th>
-      <th className="!text-center">Room(s)</th>
+      <th>PAYMENT</th>
+      <th>AMOUNT</th>
+      <th className="!text-center">RECOVD</th>
       <th className="!text-center">BALANCE</th>
-      <th className="!text-center">HIST</th>
-      <th className="!text-center w-20">DEDUCT</th>
+      <th className="!text-center">ROOM(S)</th>
+      <th className="!text-center w-20">ACTION</th>
     </tr>
   );
 

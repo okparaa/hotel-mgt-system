@@ -26,7 +26,7 @@ const kodeSchema = yup.object({
   kode: yup.string().required("value is required"),
 });
 
-export const registerUser = async (parent: any, args: any, ctx: Context) => {
+export const createUser = async (parent: any, args: any, ctx: Context) => {
   try {
     await userSchema.validate(args.user, { abortEarly: false });
   } catch ({ inner }: any) {

@@ -9,11 +9,11 @@ import Pagination from "../../lib/pagination";
 import { Search } from "../../lib/search";
 import { useChest } from "../../app-chest";
 import {
-  useDelRouteMutation,
-  useEditRouteMutation,
   useRoutesQuery,
-  useNewRouteMutation,
   Route,
+  useCreateRouteMutation,
+  useUpdateRouteMutation,
+  useRemoveRouteMutation,
 } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 
@@ -27,7 +27,7 @@ const Ruotes = () => {
     return <QueryResult response={routesRes} />;
   }
 
-  const [routeNewRes, newRoute] = useNewRouteMutation();
+  const [routeNewRes, newRoute] = useCreateRouteMutation();
 
   const {
     data: { search },
@@ -93,9 +93,9 @@ const Ruotes = () => {
     />
   );
 
-  const [routeERes, eRoute] = useEditRouteMutation();
+  const [routeERes, eRoute] = useUpdateRouteMutation();
 
-  const [routeDRes, dRoute] = useDelRouteMutation();
+  const [routeDRes, dRoute] = useRemoveRouteMutation();
 
   const defaultValues = {
     name: "",

@@ -10,7 +10,7 @@ const itemSchema = yup.object({
   type: yup.string().required("value is required"),
 });
 
-export const createNewItem = async (parent: any, args: any, ctx: Context) => {
+export const createItem = async (parent: any, args: any, ctx: Context) => {
   // await sleep(8000);
   try {
     await itemSchema.validate({ ...args.item }, { abortEarly: false });

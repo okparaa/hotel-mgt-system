@@ -3,14 +3,14 @@ import { PubSub } from "graphql-subscriptions";
 const pubsub = new PubSub();
 import { asc, eq } from "drizzle-orm";
 import { recoveries, routes, users } from "../db/schemas";
-import { registerUser } from "../resolvers/users/new-user";
+import { createUser } from "../resolvers/users/create-user";
 import { signedUser } from "../resolvers/users/signed";
 import { logoutUser } from "../resolvers/users/logout";
 import { verifiedUser } from "../resolvers/users/verified";
-import { updateRouteSlugs, assignRoute } from "../resolvers/users/edit-user";
+import { updateRouteSlugs, assignRoute } from "../resolvers/users/update-user";
 import { debitStaff } from "../resolvers/orders/debit-staff";
-import { changeDebit } from "../resolvers/orders/change-debit";
 import { removeDebit } from "../resolvers/orders/remove-debit";
+import { updateDebit } from "../resolvers/orders/update-debit";
 
 let currentNumber = 0;
 
@@ -57,15 +57,15 @@ export const typeDef = /* GraphQL */ `
   }
   type Mutation {
     verified(kode: String!): User
-    newUser(user: NewUserInput!): User
+    createUser(user: NewUserInput!): User
     signed(user: LoggedUserInput!): Session
     salary(id: ID!, salary: Int): User
-    eUserSlugs(user: UserSlugInput): User
+    updateUserSlugs(user: UserSlugInput): User
     assignRoute(user: UserInput): User
     refreshToken(user: UserTokenInput): User
     debitStaff(debit: XRecoveryInput!): User
     removeRecovery(debitId: ID!): User
-    changeRecovery(debit: XRecoveryInput): User
+    updateRecovery(debit: XRecoveryInput): User
   }
 
   type Subscription {
@@ -158,8 +158,8 @@ export const resolvers = {
     signed: async (parent: any, args: any, ctx: Context) => {
       return await signedUser(parent, args, ctx);
     },
-    newUser: async (parent: any, args: any, ctx: Context) => {
-      return await registerUser(parent, args, ctx);
+    createUser: async (parent: any, args: any, ctx: Context) => {
+      return await createUser(parent, args, ctx);
     },
     debitStaff: async (parent: any, args: any, ctx: Context) => {
       return await debitStaff(parent, args, ctx);
@@ -175,11 +175,11 @@ export const resolvers = {
     assignRoute: async (parent: any, args: any, ctx: Context) => {
       return await assignRoute(parent, args, ctx);
     },
-    eUserSlugs: async (parent: any, args: any, ctx: Context) => {
+    updateUserSlugs: async (parent: any, args: any, ctx: Context) => {
       return await updateRouteSlugs(parent, args, ctx);
     },
-    changeRecovery: async (parent: any, args: any, ctx: Context) => {
-      return await changeDebit(parent, args, ctx);
+    updateRecovery: async (parent: any, args: any, ctx: Context) => {
+      return await updateDebit(parent, args, ctx);
     },
     removeRecovery: async (parent: any, args: any, ctx: Context) => {
       return await removeDebit(parent, args, ctx);

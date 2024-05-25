@@ -8,12 +8,12 @@ type PurchasesItemBodyProps = {
 
 export const PurchasesItemBody = ({ searchItems }: PurchasesItemBodyProps) => {
   const {
-    data: { inventory, user },
+    data: { purchase, user },
     updateChest,
   } = useChest();
 
   const hashRef = useRef("");
-  if (inventory.hash === "") {
+  if (purchase.hash === "") {
     hashRef.current = getKey() + getKey() + getKey() + getKey();
   }
 
@@ -34,14 +34,14 @@ export const PurchasesItemBody = ({ searchItems }: PurchasesItemBodyProps) => {
                 const id = e.currentTarget.id;
                 const createdAt = getDateFromTimestamp();
                 if (
-                  inventory.items.some((it) => {
+                  purchase.items.some((it) => {
                     return it.sku === item.sku;
                   })
                 ) {
                   return;
                 }
 
-                inventory.items.push({
+                purchase.items.push({
                   priceBought: 0,
                   qtyBought: 1,
                   itemId: id,
@@ -53,10 +53,10 @@ export const PurchasesItemBody = ({ searchItems }: PurchasesItemBodyProps) => {
 
                 updateChest({
                   data: {
-                    items: inventory.items,
+                    items: purchase.items,
                     hash: hashRef.current,
                   },
-                  type: "inventory",
+                  type: "purchase",
                 });
               }}
             >

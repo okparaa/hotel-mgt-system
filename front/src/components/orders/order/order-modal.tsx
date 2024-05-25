@@ -30,9 +30,9 @@ export const OrderModal = ({
       className="p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45 w-[425px]"
     >
       <div className="font-semibold p-0">
-        Recover: <span className="naira">{toCommas(balance)}</span>
+        Receive: <span className="naira">{toCommas(balance)}</span>
       </div>
-      <span className="">{ucwords(guest)}</span>
+      from <span className="">{ucwords(guest)}</span>
       <div className="flex border-2 border-slate-600 py-2 mt-2 rounded-md">
         <div className="flex-1 text-center checkout">
           <span>Cash</span>
@@ -100,7 +100,6 @@ export const OrderModal = ({
           </span>
         </div>
       </div>
-
       <div className="p-1 text-[16px] gap-10 flex justify-center mt-3">
         <button
           onClick={async () => {

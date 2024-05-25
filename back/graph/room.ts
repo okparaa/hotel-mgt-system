@@ -1,8 +1,8 @@
 import { desc, eq } from "drizzle-orm";
 import { bookings, rooms, users } from "../db/schemas";
-import { createNewRoom } from "../resolvers/rooms/new-room";
+import { createRoom } from "../resolvers/rooms/create-room";
 import { Context } from "../types/context";
-import { updateRoom, roomPrice } from "../resolvers/rooms/edit-room";
+import { updateRoom, roomPrice } from "../resolvers/rooms/update-room";
 import { roomColumns, sleep } from "../helpers";
 export const typeDef = /* GraphQL */ `
   type Room {
@@ -27,9 +27,9 @@ export const typeDef = /* GraphQL */ `
   }
 
   type Mutation {
-    eRoom(room: RoomInput): Room
-    newRoom(room: NewRoomInput): Room
-    dRoom(id: ID!): Room
+    updateRoom(room: RoomInput): Room
+    createRoom(room: NewRoomInput): Room
+    removeRoom(id: ID!): Room
     roomPrice(id: ID!, price: Int): Room
   }
 
@@ -68,10 +68,10 @@ export const resolvers = {
   },
 
   Mutation: {
-    newRoom: async (parent: any, args: any, ctx: Context) => {
-      return await createNewRoom(parent, args, ctx);
+    createRoom: async (parent: any, args: any, ctx: Context) => {
+      return await createRoom(parent, args, ctx);
     },
-    eRoom: async (parent: any, args: any, ctx: Context) => {
+    updateRoom: async (parent: any, args: any, ctx: Context) => {
       return await updateRoom(parent, args, ctx);
     },
     roomPrice: async (parent: any, args: any, ctx: Context) => {

@@ -56,6 +56,7 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
 
         const recovd =
           order.recoveries?.reduce((tot, recov) => {
+            if (recov?.deleted) return tot;
             return (
               tot +
               (recov?.cash || 0) +
@@ -65,60 +66,48 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
             );
           }, 0) || 0;
 
-        const TRecov = order.recoveries?.map((recov) => {
+        const TotalRecov = order.recoveries?.map((recov) => {
+          if (recov?.deleted) return null;
           const total =
             (recov?.cash ? recov?.cash : 0) +
             (recov?.pos ? recov?.pos : 0) +
             (recov?.txfa ? recov?.txfa : 0) +
             (recov?.debitAmt ? recov?.debitAmt : 0);
+
           return (
             <span
               id={recov?.id}
-              className="bg-slate-300 rounded-md p-1 cursor-pointer naira"
+              className="bg-green-600 rounded-md p-1 cursor-pointer naira text-gray-100"
             >
               {toCommas(total)}
             </span>
           );
         });
 
-        const recvd =
-          (order?.cash || 0) + (order?.pos || 0) + (order?.txfa || 0) + recovd;
-        const isOk = total === recvd;
-        const isOver = total < recvd;
+        const deposit =
+          (order?.cash || 0) + (order?.pos || 0) + (order?.txfa || 0);
+        const isOk = total === deposit + recovd;
+        const isOver = total < deposit + recovd;
 
         return (
           <tr key={order.id} id={order.id} className="bg-tr">
-            <td className="">{ucwords(order.guestName)}</td>
-            <td className="text-center">
-              {order.bookings?.map((booking) => {
-                const { days } = getDays({
-                  inDate: booking?.inDate!,
-                  outDate: booking?.outDate!,
-                });
-                return (
-                  <Tooltip
-                    text={
-                      bookable[Number(booking?.room?.type)] +
-                      " " +
-                      booking?.room?.name
-                    }
-                  >
-                    <div className="flex flex-col divide-y-2">
-                      <span>
-                        checkin:{" "}
-                        {getDateFromTimestamp(booking?.inDate, "d-ms-y")}
-                      </span>
-                      <span>
-                        checkout:{" "}
-                        {getDateFromTimestamp(booking?.outDate, "d-ms-y")}
-                      </span>
-                      <span className="naira ">
-                        {toCommas(booking?.room?.price! * days)}
-                      </span>
-                    </div>
-                  </Tooltip>
-                );
-              })}
+            <td>
+              <div className="flex flex-col">
+                <span>{ucwords(order.guestName)}</span>
+              </div>
+            </td>
+            <td className="">
+              <span className="text-base flex naira">{toCommas(deposit)}</span>
+            </td>
+            <td className="">
+              <span className="text-base flex naira">
+                {toCommas(order.amount)}
+              </span>
+            </td>
+            <td>
+              <div className="flex flex-wrap gap-1 justify-center text-sm">
+                {TotalRecov}
+              </div>
             </td>
             <td className="text-center">
               <div className="flex justify-center">
@@ -132,7 +121,7 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
                       txfa: 0,
                       hash: booker.hash,
                       orderId: order.id,
-                      total: total - recvd,
+                      total: total - deposit - recovd,
                       guestName: order.guestName!,
                       guestEmail: order.guestEmail!,
                       guestPhone: order.guestPhone!,
@@ -160,7 +149,9 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
                       : "bg-red-400 cursor-pointer naira"
                   }`}
                 >
-                  <span>{!isOk && toCommas(Math.abs(total - recvd))}</span>
+                  <span>
+                    {!isOk && toCommas(Math.abs(total - deposit - recovd))}
+                  </span>
                   {isOk ? (
                     <CheckCheck size={20} className="ikon" />
                   ) : isOver ? (
@@ -171,16 +162,56 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
                 </span>
               </div>
             </td>
-            <td className="">
-              <span className="text-xs flex flex-wrap gap-1">{TRecov}</span>
+
+            <td className="text-center">
+              <div className="flex justify-center flex-wrap">
+                {order.bookings?.map((booking) => {
+                  const { days } = getDays({
+                    inDate: booking?.inDate!,
+                    outDate: booking?.outDate!,
+                  });
+                  return (
+                    <div className="w-32">
+                      <Tooltip
+                        text={
+                          bookable[Number(booking?.room?.type)] +
+                          " " +
+                          booking?.room?.name
+                        }
+                      >
+                        <div className="flex flex-col divide-y-2">
+                          <span>
+                            In:
+                            <span className="ml-1">
+                              {getDateFromTimestamp(booking?.inDate, "d-ms-y")}
+                            </span>
+                          </span>
+                          <span>
+                            Out:
+                            <span className="ml-1">
+                              {getDateFromTimestamp(booking?.outDate, "d-ms-y")}
+                            </span>
+                          </span>
+                          <span>
+                            Price:
+                            <span className="naira ml-1">
+                              {toCommas(booking?.price! * days)}
+                            </span>
+                          </span>
+                        </div>
+                      </Tooltip>
+                    </div>
+                  );
+                })}
+              </div>
             </td>
             <td className="text-center">
               <span
                 id={`${order.id}`}
                 className={
                   !isOk && !isOver
-                    ? `icon-span cursor-pointer`
-                    : `icon-span border-none`
+                    ? `icon-span`
+                    : `icon-span border-none !cursor-default`
                 }
                 onClick={() => {
                   updateChest({
@@ -188,11 +219,11 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
                       id: order.id,
                       __typename: "Order",
                       name: "debits",
-                      value: total - recvd,
+                      value: total - deposit - recovd,
                     },
                     type: "store",
                   });
-                  !isOk && !isOver && navigate("/aio/settings/debits");
+                  !isOk && !isOver && navigate("/aio/debits/debits");
                 }}
               >
                 {isOk || isOver ? (

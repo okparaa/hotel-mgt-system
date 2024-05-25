@@ -1,11 +1,12 @@
 import {
+  BoxesIcon,
   Key,
   PackageOpen,
   Receipt,
   ShoppingCart,
   Split,
+  Store,
   UsersRound,
-  Warehouse,
 } from "lucide-react";
 import { Lynk } from "../../lib/lynk";
 import { useRoutesQuery } from "../aio-urql";
@@ -27,9 +28,9 @@ const SettingsIndex = () => {
         <Lynk
           routes={routesRes.data?.routes}
           className="link-btn-dash"
-          to="aio/settings/inventory"
+          to="aio/settings/purchases"
         >
-          <ShoppingCart className="font-bold w-7 h-7" /> <div>Inventory</div>
+          <ShoppingCart className="font-bold w-7 h-7" /> <div>Purchases</div>
         </Lynk>
         <Lynk
           routes={routesRes.data?.routes}
@@ -75,7 +76,15 @@ const SettingsIndex = () => {
           className="link-btn-dash"
           to="aio/settings/items"
         >
-          <Warehouse className="font-bold w-7 h-7" />
+          <BoxesIcon className="font-bold w-7 h-7" />
+          <div>Items</div>
+        </Lynk>
+        <Lynk
+          routes={routesRes.data?.routes}
+          className="link-btn-dash"
+          to="aio/settings/items"
+        >
+          <Store className="font-bold w-7 h-7" />
           <div>Store</div>
         </Lynk>
       </div>

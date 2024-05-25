@@ -1,5 +1,5 @@
 import { and, eq, sql } from "drizzle-orm";
-import { inventories, items } from "../../db/schemas";
+import { purchases, items } from "../../db/schemas";
 import throwError, { getErrors, ErrorTypes } from "../../helpers/errors";
 import { Context } from "../../types/context";
 import * as yup from "yup";
@@ -11,7 +11,7 @@ const inventorySchema = yup.object({
   itemId: yup.string().required("value is required"),
   createdAt: yup.string().required("value is required"),
 });
-export const editInventory = async (parent: any, args: any, ctx: Context) => {
+export const updatePurchase = async (parent: any, args: any, ctx: Context) => {
   try {
     await inventorySchema.validate(
       { ...args.inventory },
@@ -30,11 +30,11 @@ export const editInventory = async (parent: any, args: any, ctx: Context) => {
     return await ctx.db.transaction(async (tx) => {
       const [ventory] = await tx
         .select()
-        .from(inventories)
+        .from(purchases)
         .where(
           and(
-            eq(inventories.itemId, args.inventory.itemId),
-            eq(inventories.createdAt, args.inventory.createdAt)
+            eq(purchases.itemId, args.inventory.itemId),
+            eq(purchases.createdAt, args.inventory.createdAt)
           )
         );
 
@@ -46,12 +46,12 @@ export const editInventory = async (parent: any, args: any, ctx: Context) => {
         .where(eq(items.id, args.inventory.itemId));
 
       const [result] = await ctx.db
-        .update(inventories)
+        .update(purchases)
         .set({
           priceBought: args.inventory.priceBought,
           qtyBought: args.inventory.qtyBought,
         })
-        .where(eq(inventories.id, args.inventory.id))
+        .where(eq(purchases.id, args.inventory.id))
         .returning();
       return result;
     });

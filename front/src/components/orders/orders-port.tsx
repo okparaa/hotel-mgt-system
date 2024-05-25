@@ -21,7 +21,7 @@ const OrdersIndex = () => {
   const [routesRes] = useRoutesQuery();
   return (
     <>
-      <div className="bg-slate-50 bg-gradient-to-b from-slate-200 to-slate-400 font-extrabold text-2xl p-2 text-center rounded-md">
+      <div className="bg-gradient-to-b from-slate-500 to-slate-700 font-extrabold text-2xl text-white pb-1 text-center rounded-md">
         Sales/Bookings
       </div>
       <div className="h-fit flex flex-wrap gap-5 py-5 justify-evenly items-center link-btn-dash-container">

@@ -29,10 +29,10 @@ export const typeDef = /* GraphQL */ `
     routes: [Route]
   }
   type Mutation {
-    newRoute(route: NewRouteInput): Route
-    eRoute(route: RouteInput): Route
-    dRoute(id: ID): Route
-    otherSlugs(route: RouteSlugInput): Route
+    createRoute(route: NewRouteInput): Route
+    updateRoute(route: RouteInput): Route
+    removeRoute(id: ID): Route
+    updateOtherSlugs(route: RouteSlugInput): Route
     parentRoute(route: ParentRouteInput): Route
   }
   input NewRouteInput {
@@ -75,13 +75,13 @@ export const resolvers = {
     },
   },
   Mutation: {
-    newRoute: async (parent: any, args: any, ctx: Context) => {
+    createRoute: async (parent: any, args: any, ctx: Context) => {
       return await createRoute(parent, args, ctx);
     },
-    eRoute: async (parent: any, args: any, ctx: Context) => {
+    updateRoute: async (parent: any, args: any, ctx: Context) => {
       return await updateRoute(parent, args, ctx);
     },
-    otherSlugs: async (parent: any, args: any, ctx: Context) => {
+    updateOtherSlugs: async (parent: any, args: any, ctx: Context) => {
       return await updateOtherSlugs(parent, args, ctx);
     },
     parentRoute: async (parent: any, args: any, ctx: Context) => {

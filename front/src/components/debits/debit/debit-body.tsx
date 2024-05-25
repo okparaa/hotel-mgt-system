@@ -43,30 +43,38 @@ export const DebitBody = ({ searchUsers, onOpen }: DebitBodyProps) => {
             <td>
               <div className="flex justify-center flex-wrap gap-2">
                 {user?.recoveries?.map((debt) => {
-                  if (debt?.deleted) return null;
-                  return (
-                    <span
-                      onClick={() => {
-                        updateChest({
-                          data: {
-                            id: debt?.id,
-                            value: debt?.debitAmt!,
-                            staffId: user.id,
-                            prevDate: getDateFromTimestamp(
-                              new Date().toDateString()
-                            ),
-                            __typename: "Recovery",
-                          },
-                          type: "debit",
-                        });
-                        onOpen();
-                      }}
-                      className="naira link cursor-pointer !py-0 bg-slate-200 flex"
-                    >
-                      {toCommas(debt?.debitAmt)}
-                    </span>
-                  );
+                  if (debt?.deleted === false) {
+                    return (
+                      <span
+                        onClick={() => {
+                          updateChest({
+                            data: {
+                              id: debt?.id,
+                              value: debt?.debitAmt!,
+                              staffId: user.id,
+                              prevDate: getDateFromTimestamp(
+                                new Date().toDateString()
+                              ),
+                              __typename: "Recovery",
+                            },
+                            type: "debit",
+                          });
+                          onOpen();
+                        }}
+                        className="naira link cursor-pointer !py-0 bg-slate-200 flex"
+                      >
+                        {toCommas(debt?.debitAmt)}
+                      </span>
+                    );
+                  }
                 })}
+                {debits === 0 ? (
+                  <span className="text-base lnk">
+                    No debit for this month yet
+                  </span>
+                ) : (
+                  ""
+                )}
               </div>
             </td>
             <td>

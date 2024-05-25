@@ -4,7 +4,7 @@ import {
   ChestAppState,
   ChestBooker,
   ChestDebit,
-  ChestInventory,
+  ChestPurchase,
   ChestMiniSearch,
   ChestOrderItems,
   ChestRow,
@@ -24,11 +24,11 @@ type Ops = {
     | "search"
     | "miniSearch"
     | "session"
-    | "inventory"
+    | "purchase"
     | "row"
     | "debit";
   data:
-    | ChestInventory
+    | ChestPurchase
     | ChestUser
     | ChestStore
     | ChestDebit
@@ -81,10 +81,10 @@ export const reducer = (state: ChestAppState, payload: Ops) => {
         row: { ...state.row, ...(data as ChestRow) },
       };
       break;
-    case "inventory":
+    case "purchase":
       newState = {
         ...state,
-        inventory: { ...state.inventory, ...(data as ChestInventory) },
+        purchase: { ...state.purchase, ...(data as ChestPurchase) },
       };
       break;
     case "orderItems":
@@ -175,7 +175,7 @@ const AppProvider: FunctionalComponent<any> = ({ children }) => {
   const initalState = {
     store,
     debit: { ...store },
-    inventory: {
+    purchase: {
       total: 0,
       hash: "",
       items: [],
@@ -195,6 +195,7 @@ const AppProvider: FunctionalComponent<any> = ({ children }) => {
       usr: "",
       slg: "",
       rut: "",
+      rol: "",
     },
   };
 

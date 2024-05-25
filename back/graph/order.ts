@@ -1,10 +1,10 @@
 import { eq, getTableColumns, sql } from "drizzle-orm";
 import { Context } from "../types/context";
 import { bookings, orders, recoveries, users } from "../db/schemas";
-import { createNewOrder } from "../resolvers/orders/new-order";
+import { createOrder } from "../resolvers/orders/create-order";
 import { recover } from "../resolvers/orders/recover";
-import { changeOrderRecov } from "../resolvers/orders/change-recov";
-import { removeOrderRecov } from "../resolvers/orders/remove-recov";
+import { updateRecov } from "../resolvers/orders/update-recov";
+import { removeRecov } from "../resolvers/orders/remove-recov";
 
 export const typeDef = /* GraphQL */ `
   type Order {
@@ -36,12 +36,12 @@ export const typeDef = /* GraphQL */ `
   }
 
   type Mutation {
-    newOrder(order: NewOrderInput!): Order
-    eOrder(order: OrderInput!): Order
-    dOrder(id: ID!): Order
+    createOrder(order: NewOrderInput!): Order
+    updateOrder(order: OrderInput!): Order
+    removeOrder(id: ID!): Order
     recover(recovery: RecoveryInput!): Order
-    changeOrderRecov(recov: RecovInput): Order
-    removeOrderRecov(id: ID): Order
+    updateRecov(recov: RecovInput): Order
+    removeRecov(id: ID): Order
   }
   input RecovInput {
     id: ID
@@ -91,18 +91,18 @@ export const resolvers = {
     },
   },
   Mutation: {
-    newOrder: async (parent: any, args: any, ctx: Context) => {
+    createOrder: async (parent: any, args: any, ctx: Context) => {
       console.log(args);
-      return await createNewOrder(parent, args, ctx);
+      return await createOrder(parent, args, ctx);
     },
     recover: async (parent: any, args: any, ctx: Context) => {
       return await recover(parent, args, ctx);
     },
-    changeOrderRecov: async (parent: any, args: any, ctx: Context) => {
-      return await changeOrderRecov(parent, args, ctx);
+    updateRecov: async (parent: any, args: any, ctx: Context) => {
+      return await updateRecov(parent, args, ctx);
     },
-    removeOrderRecov: async (parent: any, args: any, ctx: Context) => {
-      return await removeOrderRecov(parent, args, ctx);
+    removeRecov: async (parent: any, args: any, ctx: Context) => {
+      return await removeRecov(parent, args, ctx);
     },
   },
   Order: {

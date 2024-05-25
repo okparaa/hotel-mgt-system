@@ -27,7 +27,7 @@ export const ACCESS_KODE = gql(`
     }
 `);
 
-export const GET_USERS = gql(`
+export const USERS = gql(`
   query Users {
     users {
         id
@@ -59,7 +59,7 @@ export const GET_USERS = gql(`
   }
 `);
 
-export const USERS = gql(`
+export const USER = gql(`
   query User($id: ID!) {
     user(id: $id) {
         id
@@ -92,8 +92,8 @@ export const USERS = gql(`
 `);
 
 export const CREATE_USER = gql(`
-  mutation NewUser($user: NewUserInput!) {
-    newUser(user: $user) {
+  mutation CreateUser($user: NewUserInput!) {
+    createUser(user: $user) {
       id
       surname
       token
@@ -120,9 +120,9 @@ export const SALARY = gql(`
   }
 `);
 
-export const EDIT_USER_SLUGS = gql(`
-  mutation EditUserSlugs($user: UserSlugInput!) {
-    eUserSlugs(user: $user) {
+export const UPDATE_USER_SLUGS = gql(`
+  mutation UpdateUserSlugs($user: UserSlugInput!) {
+    updateUserSlugs(user: $user) {
       id
       routeSlugs
     }

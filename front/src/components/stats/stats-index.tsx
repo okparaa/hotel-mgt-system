@@ -12,7 +12,7 @@ const StatsIndex = () => {
 
   return (
     <>
-      <div className="bg-slate-50 bg-gradient-to-b from-slate-200 via-slate-200 to-slate-400 font-extrabold text-2xl p-2 text-center rounded-md">
+      <div className="bg-gradient-to-b from-slate-500 to-slate-700 font-extrabold text-2xl text-white pb-1 text-center rounded-md">
         Performance and Statistics
       </div>
       <div className="h-fit flex flex-wrap gap-6 lg:gap-7 py-5 justify-evenly items-center">

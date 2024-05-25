@@ -8,8 +8,10 @@ const NoMatch = () => {
   const loc = params["*"];
 
   return (
-    <div className="w-10/12 mx-auto">
-      <Navbar />
+    <div className="w-11/12 mx-auto">
+      <div className="mr-2">
+        <Navbar />
+      </div>
       <SideColBar />
       <div className="flex flex-col h-80 flex-1 justify-center items-center">
         <WorkflowIcon className="w-32 h-32 mb-4 border-8 bg-blue-200 p-4 rounded-3xl" />

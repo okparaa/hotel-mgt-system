@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { Context } from "../types/context";
-import { bookings, orders, rooms } from "../db/schemas";
-import { newBooking } from "../resolvers/booking/new-booking";
+import { rooms } from "../db/schemas";
+import { createBooking } from "../resolvers/booking/create-booking";
 import { cancelBooking } from "../resolvers/booking/cancel-booking";
 import { sleep } from "../helpers";
 
@@ -22,7 +22,7 @@ export const typeDef = /* GraphQL */ `
     order_books: [String]
   }
   type Mutation {
-    eOrderBook(id: ID!): Booking
+    updateOrderBook(id: ID!): Booking
     booker(books: [BookingInput!], detail: DetailInput): [Room]
     cancelBooking(id: ID!): Booking
   }
@@ -53,7 +53,7 @@ export const resolvers = {
   Query: {},
   Mutation: {
     booker: async (parent: any, args: any, ctx: Context) => {
-      return await newBooking(parent, args, ctx);
+      return await createBooking(parent, args, ctx);
     },
     cancelBooking: async (parent: any, args: any, ctx: Context) => {
       const room = await cancelBooking(parent, args, ctx);

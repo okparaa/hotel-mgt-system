@@ -1,8 +1,8 @@
 import { gql } from "@urql/preact";
 
 export const CREATE_ITEM = gql(`
-  mutation NewItem($item: NewItemInput!) {
-    newItem(item: $item) {
+  mutation CreateItem($item: NewItemInput!) {
+    createItem(item: $item) {
       id
       name
       description
@@ -16,9 +16,9 @@ export const CREATE_ITEM = gql(`
   }
 `);
 
-export const EDIT_ITEM = gql(`
-  mutation EItem($item: ItemInput!) {
-    eItem(item: $item) {
+export const UPDATE_ITEM = gql(`
+  mutation UpdateItem($item: ItemInput!) {
+    updateItem(item: $item) {
       id
       name
       description
@@ -32,9 +32,9 @@ export const EDIT_ITEM = gql(`
   }
 `);
 
-export const DEL_ITEM = gql(`
-  mutation DItem($id: ID!) {
-    dItem(id: $id) {
+export const REMOVE_ITEM = gql(`
+  mutation RemoveItem($id: ID!) {
+    removeItem(id: $id) {
       id
     }
   }

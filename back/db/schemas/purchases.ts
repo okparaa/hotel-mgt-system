@@ -11,7 +11,7 @@ import {
 import { users, sections, items, routes } from ".";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 
-export const inventories = pgTable(
+export const purchases = pgTable(
   "inventories",
   {
     id: varchar("id", { length: 128 })
@@ -32,16 +32,16 @@ export const inventories = pgTable(
   })
 );
 
-export const inventoryRelation = relations(inventories, ({ one, many }) => ({
+export const inventoryRelation = relations(purchases, ({ one, many }) => ({
   user: one(users, {
-    fields: [inventories.userId],
+    fields: [purchases.userId],
     references: [users.id],
   }),
   item: one(items, {
-    fields: [inventories.itemId],
+    fields: [purchases.itemId],
     references: [items.id],
   }),
 }));
 
-export type InventoriesSelect = InferSelectModel<typeof inventories>;
-export type InventoriesInsert = InferInsertModel<typeof inventories>;
+export type PurchasesSelect = InferSelectModel<typeof purchases>;
+export type PurchasesInsert = InferInsertModel<typeof purchases>;

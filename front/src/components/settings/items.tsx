@@ -6,11 +6,11 @@ import { Table } from "../../lib/table";
 import { ItemBody } from "./items/item-body";
 import {
   Item,
-  useDItemMutation,
-  useEItemMutation,
+  useCreateItemMutation,
   useItemPriceMutation,
   useItemsQuery,
-  useNewItemMutation,
+  useRemoveItemMutation,
+  useUpdateItemMutation,
 } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { useChest } from "../../app-chest";
@@ -20,7 +20,7 @@ const Items = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [result, newItem] = useNewItemMutation();
+  const [result, newItem] = useCreateItemMutation();
   const { error, fetching: creatingItem } = result;
 
   if (error || creatingItem) return <QueryResult response={result} />;
@@ -80,9 +80,9 @@ const Items = () => {
     />
   );
 
-  const [{ fetching: updatingItem }, eItem] = useEItemMutation();
+  const [{ fetching: updatingItem }, eItem] = useUpdateItemMutation();
 
-  const [{ fetching: deleting }, dItem] = useDItemMutation();
+  const [{ fetching: deleting }, dItem] = useRemoveItemMutation();
 
   const defaultValues = {
     name: "",

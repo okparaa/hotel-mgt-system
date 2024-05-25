@@ -3,12 +3,13 @@ import { typeDef as Section, resolvers as sectionResolvers } from "./section";
 import { typeDef as User, resolvers as userResolvers } from "./user";
 import { typeDef as Session, resolvers as sessionResolvers } from "./session";
 import { typeDef as Order, resolvers as orderResolvers } from "./order";
+import { typeDef as Store, resolvers as storeResolvers } from "./order";
 
 import { typeDef as Room, resolvers as roomResolvers } from "./room";
 import {
-  typeDef as Inventory,
-  resolvers as inventoryResolvers,
-} from "./inventory";
+  typeDef as Purchase,
+  resolvers as purchaseResolvers,
+} from "./purchase";
 import { typeDef as Item, resolvers as itemResolvers } from "./item";
 import {
   typeDef as OrdersItems,
@@ -38,10 +39,11 @@ const schema = makeExecutableSchema({
     Session,
     Item,
     Order,
-    Inventory,
+    Purchase,
     OrdersItems,
     Room,
     Role,
+    Store,
     Route,
     OrderBooking,
     Recovery,
@@ -52,7 +54,8 @@ const schema = makeExecutableSchema({
     sessionResolvers,
     ordersBookingResolver,
     orderResolvers,
-    inventoryResolvers,
+    storeResolvers,
+    purchaseResolvers,
     itemResolvers,
     ordersItemsResolvers,
     roomResolvers,

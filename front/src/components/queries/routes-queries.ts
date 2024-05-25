@@ -1,8 +1,8 @@
 import { gql } from "urql";
 
 export const CREATE_ROUTE = gql(`
-  mutation NewRoute($route: NewRouteInput!) {
-    newRoute(route: $route) {
+  mutation CreateRoute($route: NewRouteInput!) {
+    createRoute(route: $route) {
       id
       name
       description
@@ -16,9 +16,9 @@ export const CREATE_ROUTE = gql(`
   }
 `);
 
-export const EDIT_ROUTE = gql(`
-  mutation EditRoute($route: RouteInput!) {
-    eRoute(route: $route) {
+export const UPDATE_ROUTE = gql(`
+  mutation UpdateRoute($route: RouteInput!) {
+    updateRoute(route: $route) {
       id
       name
       description
@@ -32,9 +32,9 @@ export const EDIT_ROUTE = gql(`
   }
 `);
 
-export const EDIT_OTHER_SLUG = gql(`
-  mutation EditOtherSlug ($route: RouteSlugInput!) {
-    otherSlugs(route: $route) {
+export const UPDATE_OTHER_SLUG = gql(`
+  mutation UpdateOtherSlug ($route: RouteSlugInput!) {
+    updateOtherSlugs(route: $route) {
       id
       name
       description
@@ -63,15 +63,15 @@ export const PARENT_ROUTE = gql(`
     }
 `);
 
-export const DEL_ROUTE = gql(`
-  mutation DelRoute($id: ID!) {
-    dRoute(id: $id) {
+export const REMOVE_ROUTE = gql(`
+  mutation RemoveRoute($id: ID!) {
+    removeRoute(id: $id) {
       id
     }
   }
 `);
 
-export const GET_ROUTES = gql(`
+export const ROUTES = gql(`
   query Routes {
     routes {
       id
@@ -91,7 +91,7 @@ export const GET_ROUTES = gql(`
   }
 `);
 
-export const GET_ROUTE = gql(`
+export const ROUTE = gql(`
   query Route($id: ID!) {
     route(id: $id) {
       id

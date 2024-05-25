@@ -36,7 +36,7 @@ export type ChestBookItem = {
   name?: string;
 };
 
-export type ChestInventory = {
+export type ChestPurchase = {
   total?: number;
   hash: string;
   items: Array<ChestBookItem>;
@@ -126,6 +126,6 @@ export interface ChestAppState {
   miniSearch: ChestMiniSearch;
   session: ChestSession;
   booker: ChestBooker;
-  inventory: ChestInventory;
+  purchase: ChestPurchase;
   row: ChestRow;
 }

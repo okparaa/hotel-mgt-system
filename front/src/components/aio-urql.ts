@@ -67,41 +67,12 @@ export type DetailInput = {
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type EInventoryInput = {
+export type EPurchaseInput = {
   createdAt?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   itemId?: InputMaybe<Scalars['String']['input']>;
   priceBought?: InputMaybe<Scalars['Float']['input']>;
   qtyBought?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type Inventory = {
-  __typename?: 'Inventory';
-  createdAt?: Maybe<Scalars['String']['output']>;
-  deleted?: Maybe<Scalars['Boolean']['output']>;
-  id: Scalars['ID']['output'];
-  item?: Maybe<Item>;
-  priceBought?: Maybe<Scalars['Float']['output']>;
-  qtyBought?: Maybe<Scalars['Float']['output']>;
-  section?: Maybe<Section>;
-  syn?: Maybe<Scalars['Boolean']['output']>;
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  user?: Maybe<User>;
-  userId?: Maybe<Scalars['String']['output']>;
-};
-
-export type InventoryDate = {
-  __typename?: 'InventoryDate';
-  createdAt?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-};
-
-export type InventoryItem = {
-  createdAt?: InputMaybe<Scalars['String']['input']>;
-  itemId?: InputMaybe<Scalars['String']['input']>;
-  priceBought?: InputMaybe<Scalars['Float']['input']>;
-  qtyBought?: InputMaybe<Scalars['Float']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Item = {
@@ -110,10 +81,10 @@ export type Item = {
   deleted?: Maybe<Scalars['Boolean']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
-  inventories?: Maybe<Array<Maybe<Inventory>>>;
   name: Scalars['String']['output'];
   orders?: Maybe<Array<Maybe<Order>>>;
   price?: Maybe<Scalars['Float']['output']>;
+  purchases?: Maybe<Array<Maybe<Purchase>>>;
   qtyBought?: Maybe<Scalars['Int']['output']>;
   qtySold?: Maybe<Scalars['Int']['output']>;
   sku?: Maybe<Scalars['String']['output']>;
@@ -146,46 +117,46 @@ export type Mutation = {
   assignRoute?: Maybe<User>;
   booker?: Maybe<Array<Maybe<Room>>>;
   cancelBooking?: Maybe<Booking>;
-  changeOrderRecov?: Maybe<Order>;
-  changeRecovery?: Maybe<User>;
-  dInventory?: Maybe<Inventory>;
-  dItem?: Maybe<Item>;
-  dOrder?: Maybe<Order>;
+  createItem?: Maybe<Item>;
+  createOrder?: Maybe<Order>;
+  createPurchase?: Maybe<Array<Maybe<Purchase>>>;
+  createRoom?: Maybe<Room>;
+  createRoute?: Maybe<Route>;
+  createUser?: Maybe<User>;
   dRole?: Maybe<Role>;
-  dRoom?: Maybe<Room>;
-  dRoute?: Maybe<Route>;
   dSection?: Maybe<Section>;
   debitStaff?: Maybe<User>;
-  eInventory?: Maybe<Inventory>;
-  eItem?: Maybe<Item>;
-  eOrder?: Maybe<Order>;
-  eOrderBook?: Maybe<Booking>;
   eOrderItem?: Maybe<OrderItem>;
   eRole?: Maybe<Role>;
-  eRoom?: Maybe<Room>;
-  eRoute?: Maybe<Route>;
   eSection?: Maybe<Section>;
-  eUserSlugs?: Maybe<User>;
   itemPrice?: Maybe<Item>;
-  newInventory?: Maybe<Array<Maybe<Inventory>>>;
-  newItem?: Maybe<Item>;
-  newOrder?: Maybe<Order>;
   newOrderItems?: Maybe<Array<Maybe<OrderItem>>>;
   newRole?: Maybe<Role>;
-  newRoom?: Maybe<Room>;
-  newRoute?: Maybe<Route>;
   newSection?: Maybe<Section>;
   newSession?: Maybe<Session>;
-  newUser?: Maybe<User>;
-  otherSlugs?: Maybe<Route>;
   parentRoute?: Maybe<Route>;
   recover?: Maybe<Order>;
   refreshToken?: Maybe<User>;
-  removeOrderRecov?: Maybe<Order>;
+  removeItem?: Maybe<Item>;
+  removeOrder?: Maybe<Order>;
+  removePurchase?: Maybe<Purchase>;
+  removeRecov?: Maybe<Order>;
   removeRecovery?: Maybe<User>;
+  removeRoom?: Maybe<Room>;
+  removeRoute?: Maybe<Route>;
   roomPrice?: Maybe<Room>;
   salary?: Maybe<User>;
   signed?: Maybe<Session>;
+  updateItem?: Maybe<Item>;
+  updateOrder?: Maybe<Order>;
+  updateOrderBook?: Maybe<Booking>;
+  updateOtherSlugs?: Maybe<Route>;
+  updatePurchase?: Maybe<Purchase>;
+  updateRecov?: Maybe<Order>;
+  updateRecovery?: Maybe<User>;
+  updateRoom?: Maybe<Room>;
+  updateRoute?: Maybe<Route>;
+  updateUserSlugs?: Maybe<User>;
   verified?: Maybe<User>;
 };
 
@@ -206,44 +177,38 @@ export type MutationCancelBookingArgs = {
 };
 
 
-export type MutationChangeOrderRecovArgs = {
-  recov?: InputMaybe<RecovInput>;
+export type MutationCreateItemArgs = {
+  item: NewItemInput;
 };
 
 
-export type MutationChangeRecoveryArgs = {
-  debit?: InputMaybe<XRecoveryInput>;
+export type MutationCreateOrderArgs = {
+  order: NewOrderInput;
 };
 
 
-export type MutationDInventoryArgs = {
-  id: Scalars['ID']['input'];
-  itemId?: InputMaybe<Scalars['String']['input']>;
+export type MutationCreatePurchaseArgs = {
+  purchase?: InputMaybe<NewPurchaseInput>;
 };
 
 
-export type MutationDItemArgs = {
-  id: Scalars['ID']['input'];
+export type MutationCreateRoomArgs = {
+  room?: InputMaybe<NewRoomInput>;
 };
 
 
-export type MutationDOrderArgs = {
-  id: Scalars['ID']['input'];
+export type MutationCreateRouteArgs = {
+  route?: InputMaybe<NewRouteInput>;
+};
+
+
+export type MutationCreateUserArgs = {
+  user: NewUserInput;
 };
 
 
 export type MutationDRoleArgs = {
   id: Scalars['ID']['input'];
-};
-
-
-export type MutationDRoomArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDRouteArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -257,26 +222,6 @@ export type MutationDebitStaffArgs = {
 };
 
 
-export type MutationEInventoryArgs = {
-  inventory?: InputMaybe<EInventoryInput>;
-};
-
-
-export type MutationEItemArgs = {
-  item: ItemInput;
-};
-
-
-export type MutationEOrderArgs = {
-  order: OrderInput;
-};
-
-
-export type MutationEOrderBookArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
 export type MutationEOrderItemArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
@@ -287,44 +232,14 @@ export type MutationERoleArgs = {
 };
 
 
-export type MutationERoomArgs = {
-  room?: InputMaybe<RoomInput>;
-};
-
-
-export type MutationERouteArgs = {
-  route?: InputMaybe<RouteInput>;
-};
-
-
 export type MutationESectionArgs = {
   section?: InputMaybe<SectionInput>;
-};
-
-
-export type MutationEUserSlugsArgs = {
-  user?: InputMaybe<UserSlugInput>;
 };
 
 
 export type MutationItemPriceArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
   price?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationNewInventoryArgs = {
-  inventory?: InputMaybe<NewInventoryInput>;
-};
-
-
-export type MutationNewItemArgs = {
-  item: NewItemInput;
-};
-
-
-export type MutationNewOrderArgs = {
-  order: NewOrderInput;
 };
 
 
@@ -341,16 +256,6 @@ export type MutationNewRoleArgs = {
 };
 
 
-export type MutationNewRoomArgs = {
-  room?: InputMaybe<NewRoomInput>;
-};
-
-
-export type MutationNewRouteArgs = {
-  route?: InputMaybe<NewRouteInput>;
-};
-
-
 export type MutationNewSectionArgs = {
   section?: InputMaybe<NewSectionInput>;
 };
@@ -358,16 +263,6 @@ export type MutationNewSectionArgs = {
 
 export type MutationNewSessionArgs = {
   name?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type MutationNewUserArgs = {
-  user: NewUserInput;
-};
-
-
-export type MutationOtherSlugsArgs = {
-  route?: InputMaybe<RouteSlugInput>;
 };
 
 
@@ -386,13 +281,39 @@ export type MutationRefreshTokenArgs = {
 };
 
 
-export type MutationRemoveOrderRecovArgs = {
+export type MutationRemoveItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationRemoveOrderArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationRemovePurchaseArgs = {
+  id: Scalars['ID']['input'];
+  itemId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationRemoveRecovArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
 export type MutationRemoveRecoveryArgs = {
   debitId: Scalars['ID']['input'];
+};
+
+
+export type MutationRemoveRoomArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationRemoveRouteArgs = {
+  id?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -413,13 +334,58 @@ export type MutationSignedArgs = {
 };
 
 
-export type MutationVerifiedArgs = {
-  kode: Scalars['String']['input'];
+export type MutationUpdateItemArgs = {
+  item: ItemInput;
 };
 
-export type NewInventoryInput = {
-  hash?: InputMaybe<Scalars['String']['input']>;
-  items?: InputMaybe<Array<InputMaybe<InventoryItem>>>;
+
+export type MutationUpdateOrderArgs = {
+  order: OrderInput;
+};
+
+
+export type MutationUpdateOrderBookArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateOtherSlugsArgs = {
+  route?: InputMaybe<RouteSlugInput>;
+};
+
+
+export type MutationUpdatePurchaseArgs = {
+  purchase?: InputMaybe<EPurchaseInput>;
+};
+
+
+export type MutationUpdateRecovArgs = {
+  recov?: InputMaybe<RecovInput>;
+};
+
+
+export type MutationUpdateRecoveryArgs = {
+  debit?: InputMaybe<XRecoveryInput>;
+};
+
+
+export type MutationUpdateRoomArgs = {
+  room?: InputMaybe<RoomInput>;
+};
+
+
+export type MutationUpdateRouteArgs = {
+  route?: InputMaybe<RouteInput>;
+};
+
+
+export type MutationUpdateUserSlugsArgs = {
+  user?: InputMaybe<UserSlugInput>;
+};
+
+
+export type MutationVerifiedArgs = {
+  kode: Scalars['String']['input'];
 };
 
 export type NewItemInput = {
@@ -447,6 +413,11 @@ export type NewOrderItemInput = {
   qtySold?: InputMaybe<Scalars['Int']['input']>;
   sku?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NewPurchaseInput = {
+  hash?: InputMaybe<Scalars['String']['input']>;
+  items?: InputMaybe<Array<InputMaybe<PurchaseItem>>>;
 };
 
 export type NewRoleInput = {
@@ -537,13 +508,40 @@ export type ParentRouteInput = {
   routeId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Purchase = {
+  __typename?: 'Purchase';
+  createdAt?: Maybe<Scalars['String']['output']>;
+  deleted?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['ID']['output'];
+  item?: Maybe<Item>;
+  priceBought?: Maybe<Scalars['Float']['output']>;
+  qtyBought?: Maybe<Scalars['Float']['output']>;
+  section?: Maybe<Section>;
+  syn?: Maybe<Scalars['Boolean']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type PurchaseDate = {
+  __typename?: 'PurchaseDate';
+  createdAt?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+};
+
+export type PurchaseItem = {
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  itemId?: InputMaybe<Scalars['String']['input']>;
+  priceBought?: InputMaybe<Scalars['Float']['input']>;
+  qtyBought?: InputMaybe<Scalars['Float']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   curUser?: Maybe<CurUser>;
   currentNumber?: Maybe<Scalars['Int']['output']>;
-  dates?: Maybe<Array<Maybe<InventoryDate>>>;
-  inventories?: Maybe<Array<Maybe<Inventory>>>;
-  inventory?: Maybe<Inventory>;
+  dates?: Maybe<Array<Maybe<PurchaseDate>>>;
   item?: Maybe<Item>;
   items?: Maybe<Array<Maybe<Item>>>;
   itemsChart?: Maybe<Array<Maybe<Item>>>;
@@ -554,6 +552,8 @@ export type Query = {
   orderItems?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   order_books?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   orders?: Maybe<Array<Maybe<Order>>>;
+  purchase?: Maybe<Purchase>;
+  purchases?: Maybe<Array<Maybe<Purchase>>>;
   role?: Maybe<Role>;
   roles?: Maybe<Array<Maybe<Role>>>;
   room?: Maybe<Room>;
@@ -568,16 +568,6 @@ export type Query = {
   store?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
-};
-
-
-export type QueryInventoriesArgs = {
-  date?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryInventoryArgs = {
-  id: Scalars['ID']['input'];
 };
 
 
@@ -597,6 +587,16 @@ export type QueryOrderArgs = {
 
 
 export type QueryOrdersArgs = {
+  date?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryPurchaseArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPurchasesArgs = {
   date?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -781,22 +781,22 @@ export type User = {
   active?: Maybe<Scalars['Boolean']['output']>;
   address?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['String']['output']>;
-  firstname: Scalars['String']['output'];
+  firstname?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
-  lastname: Scalars['String']['output'];
+  lastname?: Maybe<Scalars['String']['output']>;
   message?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
-  photoUrl: Scalars['String']['output'];
+  photoUrl?: Maybe<Scalars['String']['output']>;
   recoveries?: Maybe<Array<Maybe<Recovery>>>;
-  role: Scalars['String']['output'];
-  route: Route;
-  routeSlugs: Scalars['String']['output'];
+  role?: Maybe<Scalars['String']['output']>;
+  route?: Maybe<Route>;
+  routeSlugs?: Maybe<Scalars['String']['output']>;
   salary?: Maybe<Scalars['Float']['output']>;
-  surname: Scalars['String']['output'];
+  surname?: Maybe<Scalars['String']['output']>;
   syn?: Maybe<Scalars['Boolean']['output']>;
   token?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['String']['output']>;
-  username: Scalars['String']['output'];
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserInput = {
@@ -845,62 +845,26 @@ export type BookerMutationVariables = Exact<{
 
 export type BookerMutation = { __typename?: 'Mutation', booker?: Array<{ __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null> | null };
 
-export type NewInventoryMutationVariables = Exact<{
-  inventory: NewInventoryInput;
-}>;
-
-
-export type NewInventoryMutation = { __typename?: 'Mutation', newInventory?: Array<{ __typename?: 'Inventory', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
-
-export type EInventoryMutationVariables = Exact<{
-  inventory: EInventoryInput;
-}>;
-
-
-export type EInventoryMutation = { __typename?: 'Mutation', eInventory?: { __typename?: 'Inventory', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null } | null };
-
-export type DInventoryMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  itemId?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type DInventoryMutation = { __typename?: 'Mutation', dInventory?: { __typename?: 'Inventory', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null };
-
-export type InventoriesItemsQueryVariables = Exact<{
-  date?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type InventoriesItemsQuery = { __typename?: 'Query', inventories?: Array<{ __typename?: 'Inventory', id: string, priceBought?: number | null, qtyBought?: number | null, deleted?: boolean | null, createdAt?: string | null, userId?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: number | null, description?: string | null, qtyBought?: number | null, qtySold?: number | null, deleted?: boolean | null } | null } | null> | null, items?: Array<{ __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: number | null, description?: string | null, qtyBought?: number | null, qtySold?: number | null, deleted?: boolean | null } | null> | null, dates?: Array<{ __typename?: 'InventoryDate', id: string, createdAt?: string | null } | null> | null };
-
-export type InventoriesQueryVariables = Exact<{
-  date?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type InventoriesQuery = { __typename?: 'Query', inventories?: Array<{ __typename?: 'Inventory', id: string, priceBought?: number | null, qtyBought?: number | null, deleted?: boolean | null, createdAt?: string | null, userId?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
-
-export type NewItemMutationVariables = Exact<{
+export type CreateItemMutationVariables = Exact<{
   item: NewItemInput;
 }>;
 
 
-export type NewItemMutation = { __typename?: 'Mutation', newItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, updatedAt?: string | null, deleted?: boolean | null } | null };
+export type CreateItemMutation = { __typename?: 'Mutation', createItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, updatedAt?: string | null, deleted?: boolean | null } | null };
 
-export type EItemMutationVariables = Exact<{
+export type UpdateItemMutationVariables = Exact<{
   item: ItemInput;
 }>;
 
 
-export type EItemMutation = { __typename?: 'Mutation', eItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, updatedAt?: string | null, deleted?: boolean | null } | null };
+export type UpdateItemMutation = { __typename?: 'Mutation', updateItem?: { __typename?: 'Item', id: string, name: string, description?: string | null, type?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, updatedAt?: string | null, deleted?: boolean | null } | null };
 
-export type DItemMutationVariables = Exact<{
+export type RemoveItemMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type DItemMutation = { __typename?: 'Mutation', dItem?: { __typename?: 'Item', id: string } | null };
+export type RemoveItemMutation = { __typename?: 'Mutation', removeItem?: { __typename?: 'Item', id: string } | null };
 
 export type ItemPriceMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -937,47 +901,47 @@ export type NewOrderItemsMutationVariables = Exact<{
 
 export type NewOrderItemsMutation = { __typename?: 'Mutation', newOrderItems?: Array<{ __typename?: 'OrderItem', items?: Array<{ __typename?: 'Item', id: string } | null> | null, order?: { __typename?: 'Order', id: string } | null } | null> | null };
 
-export type EOrderMutationVariables = Exact<{
+export type UpdateOrderMutationVariables = Exact<{
   order: OrderInput;
 }>;
 
 
-export type EOrderMutation = { __typename?: 'Mutation', eOrder?: { __typename?: 'Order', id: string, price?: number | null } | null };
+export type UpdateOrderMutation = { __typename?: 'Mutation', updateOrder?: { __typename?: 'Order', id: string, price?: number | null } | null };
 
-export type DOrderMutationVariables = Exact<{
+export type RemoveOrderMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type DOrderMutation = { __typename?: 'Mutation', dOrder?: { __typename?: 'Order', id: string } | null };
+export type RemoveOrderMutation = { __typename?: 'Mutation', removeOrder?: { __typename?: 'Order', id: string } | null };
 
 export type RecoverMutationVariables = Exact<{
   recovery: RecoveryInput;
 }>;
 
 
-export type RecoverMutation = { __typename?: 'Mutation', recover?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname: string } | null } | null };
+export type RecoverMutation = { __typename?: 'Mutation', recover?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null } | null };
 
 export type RemoveRecoveryMutationVariables = Exact<{
   debitId: Scalars['ID']['input'];
 }>;
 
 
-export type RemoveRecoveryMutation = { __typename?: 'Mutation', removeRecovery?: { __typename?: 'User', id: string, surname: string, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username: string, photoUrl: string, createdAt?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+export type RemoveRecoveryMutation = { __typename?: 'Mutation', removeRecovery?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
 
-export type ChangeRecoveryMutationVariables = Exact<{
+export type UpdateRecoveryMutationVariables = Exact<{
   debit: XRecoveryInput;
 }>;
 
 
-export type ChangeRecoveryMutation = { __typename?: 'Mutation', changeRecovery?: { __typename?: 'User', id: string, surname: string, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username: string, photoUrl: string, createdAt?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+export type UpdateRecoveryMutation = { __typename?: 'Mutation', updateRecovery?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
 
 export type DebitStaffMutationVariables = Exact<{
   debit: XRecoveryInput;
 }>;
 
 
-export type DebitStaffMutation = { __typename?: 'Mutation', debitStaff?: { __typename?: 'User', id: string, surname: string, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username: string, photoUrl: string, createdAt?: string | null, routeSlugs: string, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+export type DebitStaffMutation = { __typename?: 'Mutation', debitStaff?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
 
 export type OrderQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -991,42 +955,78 @@ export type OrdersQueryVariables = Exact<{
 }>;
 
 
-export type OrdersQuery = { __typename?: 'Query', orders?: Array<{ __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname: string } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null> | null };
+export type OrdersQuery = { __typename?: 'Query', orders?: Array<{ __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null, deleted?: boolean | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, price?: number | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null> | null };
 
-export type ChangeOrderRecovMutationVariables = Exact<{
+export type UpdateRecovMutationVariables = Exact<{
   recov?: InputMaybe<RecovInput>;
 }>;
 
 
-export type ChangeOrderRecovMutation = { __typename?: 'Mutation', changeOrderRecov?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname: string } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null };
+export type UpdateRecovMutation = { __typename?: 'Mutation', updateRecov?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, price?: number | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null };
 
-export type RemoveOrderRecovMutationVariables = Exact<{
+export type RemoveRecovMutationVariables = Exact<{
   id?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type RemoveOrderRecovMutation = { __typename?: 'Mutation', removeOrderRecov?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname: string } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null };
+export type RemoveRecovMutation = { __typename?: 'Mutation', removeRecov?: { __typename?: 'Order', id: string, amount?: number | null, pos?: number | null, cash?: number | null, hash?: string | null, txfa?: number | null, guestName?: string | null, guestPhone?: string | null, guestEmail?: string | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, pos?: number | null, cash?: number | null, txfa?: number | null, debitAmt?: number | null, debitAim?: string | null, debitedAt?: string | null } | null> | null, user?: { __typename?: 'User', id: string, surname?: string | null } | null, bookings?: Array<{ __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, days?: number | null, canceled?: boolean | null, amount?: number | null, bookDate?: string | null, price?: number | null, room?: { __typename?: 'Room', id: string, name: string, price?: number | null, type?: string | null, deleted?: string | null } | null } | null> | null } | null };
 
-export type NewRoomMutationVariables = Exact<{
+export type CreatePurchaseMutationVariables = Exact<{
+  purchase: NewPurchaseInput;
+}>;
+
+
+export type CreatePurchaseMutation = { __typename?: 'Mutation', createPurchase?: Array<{ __typename?: 'Purchase', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
+
+export type UpdatePurchaseMutationVariables = Exact<{
+  purchase: EPurchaseInput;
+}>;
+
+
+export type UpdatePurchaseMutation = { __typename?: 'Mutation', updatePurchase?: { __typename?: 'Purchase', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null } | null };
+
+export type RemovePurchaseMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  itemId?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type RemovePurchaseMutation = { __typename?: 'Mutation', removePurchase?: { __typename?: 'Purchase', id: string, qtyBought?: number | null, priceBought?: number | null, deleted?: boolean | null, createdAt?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null };
+
+export type PurchasesItemsQueryVariables = Exact<{
+  date?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PurchasesItemsQuery = { __typename?: 'Query', purchases?: Array<{ __typename?: 'Purchase', id: string, priceBought?: number | null, qtyBought?: number | null, deleted?: boolean | null, createdAt?: string | null, userId?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: number | null, description?: string | null, qtyBought?: number | null, qtySold?: number | null, deleted?: boolean | null } | null } | null> | null, items?: Array<{ __typename?: 'Item', id: string, sku?: string | null, type?: string | null, name: string, price?: number | null, description?: string | null, qtyBought?: number | null, qtySold?: number | null, deleted?: boolean | null } | null> | null, dates?: Array<{ __typename?: 'PurchaseDate', id: string, createdAt?: string | null } | null> | null };
+
+export type PurchasesQueryVariables = Exact<{
+  date?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type PurchasesQuery = { __typename?: 'Query', purchases?: Array<{ __typename?: 'Purchase', id: string, priceBought?: number | null, qtyBought?: number | null, deleted?: boolean | null, createdAt?: string | null, userId?: string | null, item?: { __typename?: 'Item', id: string, sku?: string | null, name: string } | null } | null> | null };
+
+export type CreateRoomMutationVariables = Exact<{
   room: NewRoomInput;
 }>;
 
 
-export type NewRoomMutation = { __typename?: 'Mutation', newRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, reason?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
+export type CreateRoomMutation = { __typename?: 'Mutation', createRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, reason?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
 
-export type ERoomMutationVariables = Exact<{
+export type UpdateRoomMutationVariables = Exact<{
   room: RoomInput;
 }>;
 
 
-export type ERoomMutation = { __typename?: 'Mutation', eRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, reason?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
+export type UpdateRoomMutation = { __typename?: 'Mutation', updateRoom?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, reason?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
 
-export type DRoomMutationVariables = Exact<{
+export type RemoveRoomMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type DRoomMutation = { __typename?: 'Mutation', dRoom?: { __typename?: 'Room', id: string } | null };
+export type RemoveRoomMutation = { __typename?: 'Mutation', removeRoom?: { __typename?: 'Room', id: string } | null };
 
 export type RoomPriceMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1053,26 +1053,26 @@ export type RoomQueryVariables = Exact<{
 
 export type RoomQuery = { __typename?: 'Query', room?: { __typename?: 'Room', id: string, name: string, description?: string | null, price?: number | null, sku?: string | null, createdAt?: string | null, deleted?: string | null, status?: string | null, type?: string | null, booking?: { __typename?: 'Booking', id: string, inDate?: string | null, outDate?: string | null, canceled?: boolean | null } | null } | null };
 
-export type NewRouteMutationVariables = Exact<{
+export type CreateRouteMutationVariables = Exact<{
   route: NewRouteInput;
 }>;
 
 
-export type NewRouteMutation = { __typename?: 'Mutation', newRoute?: { __typename?: 'Route', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: boolean | null, slug?: string | null, section?: string | null, isSxn?: boolean | null, otherSlugs?: string | null } | null };
+export type CreateRouteMutation = { __typename?: 'Mutation', createRoute?: { __typename?: 'Route', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: boolean | null, slug?: string | null, section?: string | null, isSxn?: boolean | null, otherSlugs?: string | null } | null };
 
-export type EditRouteMutationVariables = Exact<{
+export type UpdateRouteMutationVariables = Exact<{
   route: RouteInput;
 }>;
 
 
-export type EditRouteMutation = { __typename?: 'Mutation', eRoute?: { __typename?: 'Route', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: boolean | null, section?: string | null, slug?: string | null, isSxn?: boolean | null, otherSlugs?: string | null } | null };
+export type UpdateRouteMutation = { __typename?: 'Mutation', updateRoute?: { __typename?: 'Route', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: boolean | null, section?: string | null, slug?: string | null, isSxn?: boolean | null, otherSlugs?: string | null } | null };
 
-export type EditOtherSlugMutationVariables = Exact<{
+export type UpdateOtherSlugMutationVariables = Exact<{
   route: RouteSlugInput;
 }>;
 
 
-export type EditOtherSlugMutation = { __typename?: 'Mutation', otherSlugs?: { __typename?: 'Route', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: boolean | null, section?: string | null, slug?: string | null, isSxn?: boolean | null, otherSlugs?: string | null } | null };
+export type UpdateOtherSlugMutation = { __typename?: 'Mutation', updateOtherSlugs?: { __typename?: 'Route', id: string, name: string, description?: string | null, createdAt?: string | null, deleted?: boolean | null, section?: string | null, slug?: string | null, isSxn?: boolean | null, otherSlugs?: string | null } | null };
 
 export type ParentRouteMutationVariables = Exact<{
   route: ParentRouteInput;
@@ -1081,12 +1081,12 @@ export type ParentRouteMutationVariables = Exact<{
 
 export type ParentRouteMutation = { __typename?: 'Mutation', parentRoute?: { __typename?: 'Route', id: string, otherSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null } | null };
 
-export type DelRouteMutationVariables = Exact<{
+export type RemoveRouteMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type DelRouteMutation = { __typename?: 'Mutation', dRoute?: { __typename?: 'Route', id: string } | null };
+export type RemoveRouteMutation = { __typename?: 'Mutation', removeRoute?: { __typename?: 'Route', id: string } | null };
 
 export type RoutesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1138,26 +1138,26 @@ export type VerifiedMutationVariables = Exact<{
 }>;
 
 
-export type VerifiedMutation = { __typename?: 'Mutation', verified?: { __typename?: 'User', id: string, surname: string, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, token?: string | null, username: string, photoUrl: string, createdAt?: string | null, message?: string | null, routeSlugs: string, role: string, route: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } } | null };
+export type VerifiedMutation = { __typename?: 'Mutation', verified?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, token?: string | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, message?: string | null, routeSlugs?: string | null, role?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null } | null };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, surname: string, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username: string, photoUrl: string, createdAt?: string | null, routeSlugs: string, route: { __typename?: 'Route', id: string, section?: string | null, name: string, slug?: string | null }, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null> | null };
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, section?: string | null, name: string, slug?: string | null } | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null> | null };
 
 export type UserQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, surname: string, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username: string, photoUrl: string, createdAt?: string | null, routeSlugs: string, route: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null }, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: string, surname?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, salary?: number | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null, recoveries?: Array<{ __typename?: 'Recovery', id: string, debitAmt?: number | null, deleted?: boolean | null, debitAim?: string | null, debitedAt?: string | null } | null> | null } | null };
 
-export type NewUserMutationVariables = Exact<{
+export type CreateUserMutationVariables = Exact<{
   user: NewUserInput;
 }>;
 
 
-export type NewUserMutation = { __typename?: 'Mutation', newUser?: { __typename?: 'User', id: string, surname: string, token?: string | null, firstname: string, lastname: string, phone?: string | null, address?: string | null, active?: boolean | null, username: string, photoUrl: string, createdAt?: string | null, updatedAt?: string | null, routeSlugs: string } | null };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser?: { __typename?: 'User', id: string, surname?: string | null, token?: string | null, firstname?: string | null, lastname?: string | null, phone?: string | null, address?: string | null, active?: boolean | null, username?: string | null, photoUrl?: string | null, createdAt?: string | null, updatedAt?: string | null, routeSlugs?: string | null } | null };
 
 export type SalaryMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1165,14 +1165,14 @@ export type SalaryMutationVariables = Exact<{
 }>;
 
 
-export type SalaryMutation = { __typename?: 'Mutation', salary?: { __typename?: 'User', id: string, salary?: number | null, routeSlugs: string } | null };
+export type SalaryMutation = { __typename?: 'Mutation', salary?: { __typename?: 'User', id: string, salary?: number | null, routeSlugs?: string | null } | null };
 
-export type EditUserSlugsMutationVariables = Exact<{
+export type UpdateUserSlugsMutationVariables = Exact<{
   user: UserSlugInput;
 }>;
 
 
-export type EditUserSlugsMutation = { __typename?: 'Mutation', eUserSlugs?: { __typename?: 'User', id: string, routeSlugs: string } | null };
+export type UpdateUserSlugsMutation = { __typename?: 'Mutation', updateUserSlugs?: { __typename?: 'User', id: string, routeSlugs?: string | null } | null };
 
 export type LoginMutationVariables = Exact<{
   user: LoggedUserInput;
@@ -1186,7 +1186,7 @@ export type AssignRouteMutationVariables = Exact<{
 }>;
 
 
-export type AssignRouteMutation = { __typename?: 'Mutation', assignRoute?: { __typename?: 'User', id: string, routeSlugs: string, route: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } } | null };
+export type AssignRouteMutation = { __typename?: 'Mutation', assignRoute?: { __typename?: 'User', id: string, routeSlugs?: string | null, route?: { __typename?: 'Route', id: string, name: string, section?: string | null, slug?: string | null } | null } | null };
 
 
 export const RefreshCredentialsDocument = gql`
@@ -1253,127 +1253,9 @@ export const BookerDocument = gql`
 export function useBookerMutation() {
   return Urql.useMutation<BookerMutation, BookerMutationVariables>(BookerDocument);
 };
-export const NewInventoryDocument = gql`
-    mutation NewInventory($inventory: NewInventoryInput!) {
-  newInventory(inventory: $inventory) {
-    id
-    qtyBought
-    priceBought
-    deleted
-    createdAt
-    item {
-      id
-      sku
-      name
-    }
-  }
-}
-    `;
-
-export function useNewInventoryMutation() {
-  return Urql.useMutation<NewInventoryMutation, NewInventoryMutationVariables>(NewInventoryDocument);
-};
-export const EInventoryDocument = gql`
-    mutation EInventory($inventory: EInventoryInput!) {
-  eInventory(inventory: $inventory) {
-    id
-    qtyBought
-    priceBought
-    deleted
-    createdAt
-  }
-}
-    `;
-
-export function useEInventoryMutation() {
-  return Urql.useMutation<EInventoryMutation, EInventoryMutationVariables>(EInventoryDocument);
-};
-export const DInventoryDocument = gql`
-    mutation DInventory($id: ID!, $itemId: String) {
-  dInventory(id: $id, itemId: $itemId) {
-    id
-    qtyBought
-    priceBought
-    deleted
-    createdAt
-    item {
-      id
-      sku
-      name
-    }
-  }
-}
-    `;
-
-export function useDInventoryMutation() {
-  return Urql.useMutation<DInventoryMutation, DInventoryMutationVariables>(DInventoryDocument);
-};
-export const InventoriesItemsDocument = gql`
-    query InventoriesItems($date: String) {
-  inventories(date: $date) {
-    id
-    priceBought
-    qtyBought
-    deleted
-    createdAt
-    userId
-    item {
-      id
-      sku
-      type
-      name
-      price
-      description
-      qtyBought
-      qtySold
-      deleted
-    }
-  }
-  items {
-    id
-    sku
-    type
-    name
-    price
-    description
-    qtyBought
-    qtySold
-    deleted
-  }
-  dates {
-    id
-    createdAt
-  }
-}
-    `;
-
-export function useInventoriesItemsQuery(options?: Omit<Urql.UseQueryArgs<InventoriesItemsQueryVariables>, 'query'>) {
-  return Urql.useQuery<InventoriesItemsQuery, InventoriesItemsQueryVariables>({ query: InventoriesItemsDocument, ...options });
-};
-export const InventoriesDocument = gql`
-    query Inventories($date: String) {
-  inventories(date: $date) {
-    id
-    priceBought
-    qtyBought
-    deleted
-    createdAt
-    userId
-    item {
-      id
-      sku
-      name
-    }
-  }
-}
-    `;
-
-export function useInventoriesQuery(options?: Omit<Urql.UseQueryArgs<InventoriesQueryVariables>, 'query'>) {
-  return Urql.useQuery<InventoriesQuery, InventoriesQueryVariables>({ query: InventoriesDocument, ...options });
-};
-export const NewItemDocument = gql`
-    mutation NewItem($item: NewItemInput!) {
-  newItem(item: $item) {
+export const CreateItemDocument = gql`
+    mutation CreateItem($item: NewItemInput!) {
+  createItem(item: $item) {
     id
     name
     description
@@ -1387,12 +1269,12 @@ export const NewItemDocument = gql`
 }
     `;
 
-export function useNewItemMutation() {
-  return Urql.useMutation<NewItemMutation, NewItemMutationVariables>(NewItemDocument);
+export function useCreateItemMutation() {
+  return Urql.useMutation<CreateItemMutation, CreateItemMutationVariables>(CreateItemDocument);
 };
-export const EItemDocument = gql`
-    mutation EItem($item: ItemInput!) {
-  eItem(item: $item) {
+export const UpdateItemDocument = gql`
+    mutation UpdateItem($item: ItemInput!) {
+  updateItem(item: $item) {
     id
     name
     description
@@ -1406,19 +1288,19 @@ export const EItemDocument = gql`
 }
     `;
 
-export function useEItemMutation() {
-  return Urql.useMutation<EItemMutation, EItemMutationVariables>(EItemDocument);
+export function useUpdateItemMutation() {
+  return Urql.useMutation<UpdateItemMutation, UpdateItemMutationVariables>(UpdateItemDocument);
 };
-export const DItemDocument = gql`
-    mutation DItem($id: ID!) {
-  dItem(id: $id) {
+export const RemoveItemDocument = gql`
+    mutation RemoveItem($id: ID!) {
+  removeItem(id: $id) {
     id
   }
 }
     `;
 
-export function useDItemMutation() {
-  return Urql.useMutation<DItemMutation, DItemMutationVariables>(DItemDocument);
+export function useRemoveItemMutation() {
+  return Urql.useMutation<RemoveItemMutation, RemoveItemMutationVariables>(RemoveItemDocument);
 };
 export const ItemPriceDocument = gql`
     mutation ItemPrice($id: ID!, $price: String) {
@@ -1503,28 +1385,28 @@ export const NewOrderItemsDocument = gql`
 export function useNewOrderItemsMutation() {
   return Urql.useMutation<NewOrderItemsMutation, NewOrderItemsMutationVariables>(NewOrderItemsDocument);
 };
-export const EOrderDocument = gql`
-    mutation EOrder($order: OrderInput!) {
-  eOrder(order: $order) {
+export const UpdateOrderDocument = gql`
+    mutation updateOrder($order: OrderInput!) {
+  updateOrder(order: $order) {
     id
     price
   }
 }
     `;
 
-export function useEOrderMutation() {
-  return Urql.useMutation<EOrderMutation, EOrderMutationVariables>(EOrderDocument);
+export function useUpdateOrderMutation() {
+  return Urql.useMutation<UpdateOrderMutation, UpdateOrderMutationVariables>(UpdateOrderDocument);
 };
-export const DOrderDocument = gql`
-    mutation DOrder($id: ID!) {
-  dOrder(id: $id) {
+export const RemoveOrderDocument = gql`
+    mutation RemoveOrder($id: ID!) {
+  removeOrder(id: $id) {
     id
   }
 }
     `;
 
-export function useDOrderMutation() {
-  return Urql.useMutation<DOrderMutation, DOrderMutationVariables>(DOrderDocument);
+export function useRemoveOrderMutation() {
+  return Urql.useMutation<RemoveOrderMutation, RemoveOrderMutationVariables>(RemoveOrderDocument);
 };
 export const RecoverDocument = gql`
     mutation Recover($recovery: RecoveryInput!) {
@@ -1587,9 +1469,9 @@ export const RemoveRecoveryDocument = gql`
 export function useRemoveRecoveryMutation() {
   return Urql.useMutation<RemoveRecoveryMutation, RemoveRecoveryMutationVariables>(RemoveRecoveryDocument);
 };
-export const ChangeRecoveryDocument = gql`
-    mutation ChangeRecovery($debit: XRecoveryInput!) {
-  changeRecovery(debit: $debit) {
+export const UpdateRecoveryDocument = gql`
+    mutation UpdateRecovery($debit: XRecoveryInput!) {
+  updateRecovery(debit: $debit) {
     id
     surname
     firstname
@@ -1612,8 +1494,8 @@ export const ChangeRecoveryDocument = gql`
 }
     `;
 
-export function useChangeRecoveryMutation() {
-  return Urql.useMutation<ChangeRecoveryMutation, ChangeRecoveryMutationVariables>(ChangeRecoveryDocument);
+export function useUpdateRecoveryMutation() {
+  return Urql.useMutation<UpdateRecoveryMutation, UpdateRecoveryMutationVariables>(UpdateRecoveryDocument);
 };
 export const DebitStaffDocument = gql`
     mutation DebitStaff($debit: XRecoveryInput!) {
@@ -1676,6 +1558,7 @@ export const OrdersDocument = gql`
       debitAmt
       debitAim
       debitedAt
+      deleted
     }
     user {
       id
@@ -1689,6 +1572,7 @@ export const OrdersDocument = gql`
       canceled
       amount
       bookDate
+      price
       room {
         id
         name
@@ -1704,9 +1588,9 @@ export const OrdersDocument = gql`
 export function useOrdersQuery(options?: Omit<Urql.UseQueryArgs<OrdersQueryVariables>, 'query'>) {
   return Urql.useQuery<OrdersQuery, OrdersQueryVariables>({ query: OrdersDocument, ...options });
 };
-export const ChangeOrderRecovDocument = gql`
-    mutation ChangeOrderRecov($recov: RecovInput) {
-  changeOrderRecov(recov: $recov) {
+export const UpdateRecovDocument = gql`
+    mutation UpdateRecov($recov: RecovInput) {
+  updateRecov(recov: $recov) {
     id
     amount
     pos
@@ -1737,6 +1621,7 @@ export const ChangeOrderRecovDocument = gql`
       canceled
       amount
       bookDate
+      price
       room {
         id
         name
@@ -1749,12 +1634,12 @@ export const ChangeOrderRecovDocument = gql`
 }
     `;
 
-export function useChangeOrderRecovMutation() {
-  return Urql.useMutation<ChangeOrderRecovMutation, ChangeOrderRecovMutationVariables>(ChangeOrderRecovDocument);
+export function useUpdateRecovMutation() {
+  return Urql.useMutation<UpdateRecovMutation, UpdateRecovMutationVariables>(UpdateRecovDocument);
 };
-export const RemoveOrderRecovDocument = gql`
-    mutation RemoveOrderRecov($id: ID) {
-  removeOrderRecov(id: $id) {
+export const RemoveRecovDocument = gql`
+    mutation RemoveRecov($id: ID) {
+  removeRecov(id: $id) {
     id
     amount
     pos
@@ -1785,6 +1670,7 @@ export const RemoveOrderRecovDocument = gql`
       canceled
       amount
       bookDate
+      price
       room {
         id
         name
@@ -1797,12 +1683,130 @@ export const RemoveOrderRecovDocument = gql`
 }
     `;
 
-export function useRemoveOrderRecovMutation() {
-  return Urql.useMutation<RemoveOrderRecovMutation, RemoveOrderRecovMutationVariables>(RemoveOrderRecovDocument);
+export function useRemoveRecovMutation() {
+  return Urql.useMutation<RemoveRecovMutation, RemoveRecovMutationVariables>(RemoveRecovDocument);
 };
-export const NewRoomDocument = gql`
-    mutation NewRoom($room: NewRoomInput!) {
-  newRoom(room: $room) {
+export const CreatePurchaseDocument = gql`
+    mutation CreatePurchase($purchase: NewPurchaseInput!) {
+  createPurchase(purchase: $purchase) {
+    id
+    qtyBought
+    priceBought
+    deleted
+    createdAt
+    item {
+      id
+      sku
+      name
+    }
+  }
+}
+    `;
+
+export function useCreatePurchaseMutation() {
+  return Urql.useMutation<CreatePurchaseMutation, CreatePurchaseMutationVariables>(CreatePurchaseDocument);
+};
+export const UpdatePurchaseDocument = gql`
+    mutation UpdatePurchase($purchase: EPurchaseInput!) {
+  updatePurchase(purchase: $purchase) {
+    id
+    qtyBought
+    priceBought
+    deleted
+    createdAt
+  }
+}
+    `;
+
+export function useUpdatePurchaseMutation() {
+  return Urql.useMutation<UpdatePurchaseMutation, UpdatePurchaseMutationVariables>(UpdatePurchaseDocument);
+};
+export const RemovePurchaseDocument = gql`
+    mutation RemovePurchase($id: ID!, $itemId: String) {
+  removePurchase(id: $id, itemId: $itemId) {
+    id
+    qtyBought
+    priceBought
+    deleted
+    createdAt
+    item {
+      id
+      sku
+      name
+    }
+  }
+}
+    `;
+
+export function useRemovePurchaseMutation() {
+  return Urql.useMutation<RemovePurchaseMutation, RemovePurchaseMutationVariables>(RemovePurchaseDocument);
+};
+export const PurchasesItemsDocument = gql`
+    query PurchasesItems($date: String) {
+  purchases(date: $date) {
+    id
+    priceBought
+    qtyBought
+    deleted
+    createdAt
+    userId
+    item {
+      id
+      sku
+      type
+      name
+      price
+      description
+      qtyBought
+      qtySold
+      deleted
+    }
+  }
+  items {
+    id
+    sku
+    type
+    name
+    price
+    description
+    qtyBought
+    qtySold
+    deleted
+  }
+  dates {
+    id
+    createdAt
+  }
+}
+    `;
+
+export function usePurchasesItemsQuery(options?: Omit<Urql.UseQueryArgs<PurchasesItemsQueryVariables>, 'query'>) {
+  return Urql.useQuery<PurchasesItemsQuery, PurchasesItemsQueryVariables>({ query: PurchasesItemsDocument, ...options });
+};
+export const PurchasesDocument = gql`
+    query Purchases($date: String) {
+  purchases(date: $date) {
+    id
+    priceBought
+    qtyBought
+    deleted
+    createdAt
+    userId
+    item {
+      id
+      sku
+      name
+    }
+  }
+}
+    `;
+
+export function usePurchasesQuery(options?: Omit<Urql.UseQueryArgs<PurchasesQueryVariables>, 'query'>) {
+  return Urql.useQuery<PurchasesQuery, PurchasesQueryVariables>({ query: PurchasesDocument, ...options });
+};
+export const CreateRoomDocument = gql`
+    mutation CreateRoom($room: NewRoomInput!) {
+  createRoom(room: $room) {
     id
     name
     description
@@ -1823,12 +1827,12 @@ export const NewRoomDocument = gql`
 }
     `;
 
-export function useNewRoomMutation() {
-  return Urql.useMutation<NewRoomMutation, NewRoomMutationVariables>(NewRoomDocument);
+export function useCreateRoomMutation() {
+  return Urql.useMutation<CreateRoomMutation, CreateRoomMutationVariables>(CreateRoomDocument);
 };
-export const ERoomDocument = gql`
-    mutation ERoom($room: RoomInput!) {
-  eRoom(room: $room) {
+export const UpdateRoomDocument = gql`
+    mutation UpdateRoom($room: RoomInput!) {
+  updateRoom(room: $room) {
     id
     name
     description
@@ -1849,19 +1853,19 @@ export const ERoomDocument = gql`
 }
     `;
 
-export function useERoomMutation() {
-  return Urql.useMutation<ERoomMutation, ERoomMutationVariables>(ERoomDocument);
+export function useUpdateRoomMutation() {
+  return Urql.useMutation<UpdateRoomMutation, UpdateRoomMutationVariables>(UpdateRoomDocument);
 };
-export const DRoomDocument = gql`
-    mutation DRoom($id: ID!) {
-  dRoom(id: $id) {
+export const RemoveRoomDocument = gql`
+    mutation RemoveRoom($id: ID!) {
+  removeRoom(id: $id) {
     id
   }
 }
     `;
 
-export function useDRoomMutation() {
-  return Urql.useMutation<DRoomMutation, DRoomMutationVariables>(DRoomDocument);
+export function useRemoveRoomMutation() {
+  return Urql.useMutation<RemoveRoomMutation, RemoveRoomMutationVariables>(RemoveRoomDocument);
 };
 export const RoomPriceDocument = gql`
     mutation RoomPrice($id: ID!, $price: Int) {
@@ -1949,9 +1953,9 @@ export const RoomDocument = gql`
 export function useRoomQuery(options: Omit<Urql.UseQueryArgs<RoomQueryVariables>, 'query'>) {
   return Urql.useQuery<RoomQuery, RoomQueryVariables>({ query: RoomDocument, ...options });
 };
-export const NewRouteDocument = gql`
-    mutation NewRoute($route: NewRouteInput!) {
-  newRoute(route: $route) {
+export const CreateRouteDocument = gql`
+    mutation CreateRoute($route: NewRouteInput!) {
+  createRoute(route: $route) {
     id
     name
     description
@@ -1965,12 +1969,12 @@ export const NewRouteDocument = gql`
 }
     `;
 
-export function useNewRouteMutation() {
-  return Urql.useMutation<NewRouteMutation, NewRouteMutationVariables>(NewRouteDocument);
+export function useCreateRouteMutation() {
+  return Urql.useMutation<CreateRouteMutation, CreateRouteMutationVariables>(CreateRouteDocument);
 };
-export const EditRouteDocument = gql`
-    mutation EditRoute($route: RouteInput!) {
-  eRoute(route: $route) {
+export const UpdateRouteDocument = gql`
+    mutation UpdateRoute($route: RouteInput!) {
+  updateRoute(route: $route) {
     id
     name
     description
@@ -1984,12 +1988,12 @@ export const EditRouteDocument = gql`
 }
     `;
 
-export function useEditRouteMutation() {
-  return Urql.useMutation<EditRouteMutation, EditRouteMutationVariables>(EditRouteDocument);
+export function useUpdateRouteMutation() {
+  return Urql.useMutation<UpdateRouteMutation, UpdateRouteMutationVariables>(UpdateRouteDocument);
 };
-export const EditOtherSlugDocument = gql`
-    mutation EditOtherSlug($route: RouteSlugInput!) {
-  otherSlugs(route: $route) {
+export const UpdateOtherSlugDocument = gql`
+    mutation UpdateOtherSlug($route: RouteSlugInput!) {
+  updateOtherSlugs(route: $route) {
     id
     name
     description
@@ -2003,8 +2007,8 @@ export const EditOtherSlugDocument = gql`
 }
     `;
 
-export function useEditOtherSlugMutation() {
-  return Urql.useMutation<EditOtherSlugMutation, EditOtherSlugMutationVariables>(EditOtherSlugDocument);
+export function useUpdateOtherSlugMutation() {
+  return Urql.useMutation<UpdateOtherSlugMutation, UpdateOtherSlugMutationVariables>(UpdateOtherSlugDocument);
 };
 export const ParentRouteDocument = gql`
     mutation ParentRoute($route: ParentRouteInput!) {
@@ -2024,16 +2028,16 @@ export const ParentRouteDocument = gql`
 export function useParentRouteMutation() {
   return Urql.useMutation<ParentRouteMutation, ParentRouteMutationVariables>(ParentRouteDocument);
 };
-export const DelRouteDocument = gql`
-    mutation DelRoute($id: ID!) {
-  dRoute(id: $id) {
+export const RemoveRouteDocument = gql`
+    mutation RemoveRoute($id: ID!) {
+  removeRoute(id: $id) {
     id
   }
 }
     `;
 
-export function useDelRouteMutation() {
-  return Urql.useMutation<DelRouteMutation, DelRouteMutationVariables>(DelRouteDocument);
+export function useRemoveRouteMutation() {
+  return Urql.useMutation<RemoveRouteMutation, RemoveRouteMutationVariables>(RemoveRouteDocument);
 };
 export const RoutesDocument = gql`
     query Routes {
@@ -2263,9 +2267,9 @@ export const UserDocument = gql`
 export function useUserQuery(options: Omit<Urql.UseQueryArgs<UserQueryVariables>, 'query'>) {
   return Urql.useQuery<UserQuery, UserQueryVariables>({ query: UserDocument, ...options });
 };
-export const NewUserDocument = gql`
-    mutation NewUser($user: NewUserInput!) {
-  newUser(user: $user) {
+export const CreateUserDocument = gql`
+    mutation CreateUser($user: NewUserInput!) {
+  createUser(user: $user) {
     id
     surname
     token
@@ -2283,8 +2287,8 @@ export const NewUserDocument = gql`
 }
     `;
 
-export function useNewUserMutation() {
-  return Urql.useMutation<NewUserMutation, NewUserMutationVariables>(NewUserDocument);
+export function useCreateUserMutation() {
+  return Urql.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument);
 };
 export const SalaryDocument = gql`
     mutation Salary($id: ID!, $salary: Int) {
@@ -2299,17 +2303,17 @@ export const SalaryDocument = gql`
 export function useSalaryMutation() {
   return Urql.useMutation<SalaryMutation, SalaryMutationVariables>(SalaryDocument);
 };
-export const EditUserSlugsDocument = gql`
-    mutation EditUserSlugs($user: UserSlugInput!) {
-  eUserSlugs(user: $user) {
+export const UpdateUserSlugsDocument = gql`
+    mutation UpdateUserSlugs($user: UserSlugInput!) {
+  updateUserSlugs(user: $user) {
     id
     routeSlugs
   }
 }
     `;
 
-export function useEditUserSlugsMutation() {
-  return Urql.useMutation<EditUserSlugsMutation, EditUserSlugsMutationVariables>(EditUserSlugsDocument);
+export function useUpdateUserSlugsMutation() {
+  return Urql.useMutation<UpdateUserSlugsMutation, UpdateUserSlugsMutationVariables>(UpdateUserSlugsDocument);
 };
 export const LoginDocument = gql`
     mutation Login($user: LoggedUserInput!) {

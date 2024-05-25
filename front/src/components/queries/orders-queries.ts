@@ -1,17 +1,17 @@
 import { gql } from "urql";
 
-export const EDIT_ORDER = gql(`
-  mutation EOrder($order: OrderInput!) {
-    eOrder(order: $order) {
+export const UPDATE_ORDER = gql(`
+  mutation updateOrder($order: OrderInput!) {
+    updateOrder(order: $order) {
       id
       price
     }
   }
 `);
 
-export const DEL_ORDER = gql(`
-  mutation DOrder($id: ID!) {
-    dOrder(id: $id) {
+export const REMOVE_ORDER = gql(`
+  mutation RemoveOrder($id: ID!) {
+    removeOrder(id: $id) {
       id
     }
   }
@@ -71,9 +71,9 @@ export const REMOVE_RECOVERY = gql(`
     }
   }
 `);
-export const CHANGE_RECOVERY = gql(`
-  mutation ChangeRecovery($debit: XRecoveryInput!) {
-    changeRecovery(debit: $debit) {
+export const UPDATE_RECOVERY = gql(`
+  mutation UpdateRecovery($debit: XRecoveryInput!) {
+    updateRecovery(debit: $debit) {
       id
       surname
       firstname
@@ -121,7 +121,7 @@ export const DEBIT_STAFF = gql(`
   }
 `);
 
-export const GET_ORDER = gql(`
+export const ORDER = gql(`
   query Order($id: ID!) {
     order(id: $id) {
       id,
@@ -151,6 +151,7 @@ export const ORDERS = gql(`
         debitAmt
         debitAim
         debitedAt
+        deleted
       }
       user {
         id
@@ -164,6 +165,7 @@ export const ORDERS = gql(`
         canceled
         amount 
         bookDate
+        price
         room {
           id
           name
@@ -176,9 +178,9 @@ export const ORDERS = gql(`
   }
 `);
 
-export const CHANGE_ORDER_RECOV = gql(`
-  mutation ChangeOrderRecov($recov: RecovInput) {
-    changeOrderRecov(recov: $recov) {
+export const UPDATE_RECOV = gql(`
+  mutation UpdateRecov($recov: RecovInput) {
+    updateRecov(recov: $recov) {
       id
       amount,
       pos
@@ -209,6 +211,7 @@ export const CHANGE_ORDER_RECOV = gql(`
         canceled
         amount 
         bookDate
+        price
         room {
           id
           name
@@ -221,9 +224,9 @@ export const CHANGE_ORDER_RECOV = gql(`
   }
 `);
 
-export const REMOVE_ORDER_RECOV = gql(`
-  mutation RemoveOrderRecov($id: ID) {
-    removeOrderRecov(id: $id) {
+export const REMOVE_RECOV = gql(`
+  mutation RemoveRecov($id: ID) {
+    removeRecov(id: $id) {
       id
       amount,
       pos
@@ -254,6 +257,7 @@ export const REMOVE_ORDER_RECOV = gql(`
         canceled
         amount 
         bookDate
+        price
         room {
           id
           name

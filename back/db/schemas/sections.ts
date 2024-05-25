@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { boolean, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { inventories, users } from ".";
+import { purchases, users } from ".";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 
 export const sections = pgTable("sections", {
@@ -19,7 +19,7 @@ export const sections = pgTable("sections", {
 
 export const sectionsRelation = relations(sections, ({ many }) => ({
   user: many(users),
-  inventories: many(inventories),
+  purchases: many(purchases),
 }));
 
 export type SectionsSelect = InferSelectModel<typeof sections>;

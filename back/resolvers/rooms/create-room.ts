@@ -12,7 +12,7 @@ const roomSchema = yup.object({
   status: yup.string().required("value is required"),
 });
 
-export const createNewRoom = async (parent: any, args: any, ctx: Context) => {
+export const createRoom = async (parent: any, args: any, ctx: Context) => {
   // await sleep(8000);
   try {
     await roomSchema.validate({ ...args.room }, { abortEarly: false });

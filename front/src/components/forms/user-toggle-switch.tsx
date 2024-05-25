@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Working from "../../lib/working";
-import { useEditUserSlugsMutation } from "../aio-urql";
+import { useUpdateUserSlugsMutation } from "../aio-urql";
 
 type UserToggleSwitchProps = {
   id: string;
@@ -15,7 +15,7 @@ export const UserToggleSwitch = ({
   status,
 }: UserToggleSwitchProps) => {
   const [isChecked, setIsChecked] = useState(status);
-  const [{ fetching }, mutation] = useEditUserSlugsMutation();
+  const [{ fetching }, mutation] = useUpdateUserSlugsMutation();
 
   const toggleSwitch = () => {
     setIsChecked(!isChecked);

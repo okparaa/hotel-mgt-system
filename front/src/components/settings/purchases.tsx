@@ -8,35 +8,35 @@ import {
 } from "../../lib/utils";
 
 import { useChest } from "../../app-chest";
-import { useInventoriesItemsQuery, useNewInventoryMutation } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { PurchasesCheckout } from "./purchases/purchases-checkout";
 import { RotateCcw, Save } from "lucide-react";
 import { useState } from "react";
 import { options } from "../../config";
+import { useCreatePurchaseMutation, usePurchasesItemsQuery } from "../aio-urql";
 
 const Purchases = () => {
   const today = getDateFromTimestamp(new Date().toDateString());
-  const [inventoriesItemsRes] = useInventoriesItemsQuery({
+  const [purchasesItemsRes] = usePurchasesItemsQuery({
     variables: { date: today },
   });
 
-  if (inventoriesItemsRes.error || !inventoriesItemsRes.data) {
-    return <QueryResult response={inventoriesItemsRes} />;
+  if (purchasesItemsRes.error || !purchasesItemsRes.data) {
+    return <QueryResult response={purchasesItemsRes} />;
   }
 
   const {
-    data: { search, inventory },
+    data: { search, purchase },
     updateChest,
   } = useChest();
 
-  const [newInventoryRes, newInventory] = useNewInventoryMutation();
+  const [newInventoryRes, newInventory] = useCreatePurchaseMutation();
   const [errorMsg, setErrorMsg] = useState("");
   if (newInventoryRes.error) {
     setErrorMsg(() => errorMsgHandler(newInventoryRes.error)?.message);
   }
   const evts = new Map();
-  inventoriesItemsRes.data?.dates?.forEach((date) => {
+  purchasesItemsRes.data?.dates?.forEach((date) => {
     const key: string = date?.createdAt || "j";
     evts.set(key, true);
   });
@@ -54,7 +54,7 @@ const Purchases = () => {
     </tr>
   );
 
-  const searchItems = inventoriesItemsRes.data?.items?.filter((item) => {
+  const searchItems = purchasesItemsRes.data?.items?.filter((item) => {
     const str = Object.values(item!).join(" ").toLowerCase();
     const searche = search || "";
     return str.includes(searche.toLowerCase());
@@ -78,7 +78,7 @@ const Purchases = () => {
             <button
               onClick={() => {
                 updateChest({
-                  type: "inventory",
+                  type: "purchase",
                   data: {
                     items: [],
                     total: 0,
@@ -93,7 +93,7 @@ const Purchases = () => {
             <button
               onClick={() => {
                 try {
-                  const newInventories = inventory.items.map((item) => {
+                  const newInventories = purchase.items.map((item) => {
                     return {
                       priceBought: item.priceBought,
                       qtyBought: item.qtyBought,
@@ -103,7 +103,7 @@ const Purchases = () => {
                     };
                   });
                   newInventory({
-                    inventory: { hash: inventory.hash, items: newInventories },
+                    purchase: { hash: purchase.hash, items: newInventories },
                   });
                 } catch (error) {}
               }}

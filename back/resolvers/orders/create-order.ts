@@ -5,7 +5,7 @@ import * as yup from "yup";
 
 const orderSchema = yup.object({});
 
-export const createNewOrder = async (parent: any, args: any, ctx: Context) => {
+export const createOrder = async (parent: any, args: any, ctx: Context) => {
   try {
     await orderSchema.validate({ ...args.order }, { abortEarly: false });
   } catch ({ inner }: any) {

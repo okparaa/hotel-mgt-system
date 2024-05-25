@@ -12,7 +12,7 @@ const SettingsIndex = lazy(
 );
 const Items = lazy(() => import("./components/settings/items"));
 const Orders = lazy(() => import("./components/orders/order"));
-const Inventory = lazy(() => import("./components/settings/purchases"));
+const Purchases = lazy(() => import("./components/settings/purchases"));
 const Staff = lazy(() => import("./components/settings/staff"));
 const Debits = lazy(() => import("./components/debits/debit"));
 const StatsIndex = lazy(() => import("./components/stats/stats-index"));
@@ -66,8 +66,8 @@ const App = () => {
           <Route path="/aio" element={<Aio />} />
           <Route path="/aio/settings" element={<SettingsIndex />} />
           <Route path="/aio/settings/items" element={<Items />} />
-          <Route path="/aio/settings/inventory" element={<Inventory />} />
-          <Route path="/aio/settings/debits" element={<Debits />} />
+          <Route path="/aio/settings/purchases" element={<Purchases />} />
+          <Route path="/aio/debits/debits" element={<Debits />} />
           <Route path="/aio/settings/staff" element={<Staff />} />
           <Route path="/aio/settings/routes" element={<Ruotes />} />
           <Route
