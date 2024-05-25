@@ -32,6 +32,7 @@ export const typeDef = /* GraphQL */ `
     updatedAt: String
     route: Route
     routeSlugs: String
+    role: String
     syn: Boolean
     recoveries: [Recovery]
   }
@@ -44,6 +45,7 @@ export const typeDef = /* GraphQL */ `
     usr: String
     slg: String
     rut: String
+    rol: String
   }
   type Query {
     users: [User]
@@ -51,7 +53,7 @@ export const typeDef = /* GraphQL */ `
     currentNumber: Int
     logout(id: ID!): Message
     loggedIn: [String]
-    cur_user: CurUser
+    curUser: CurUser
   }
   type Mutation {
     verified(kode: String!): User

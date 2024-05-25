@@ -2,11 +2,11 @@ import { createId } from "@paralleldrive/cuid2";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   boolean,
-  date,
   decimal,
   integer,
   pgTable,
   serial,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -22,6 +22,8 @@ export const rooms = pgTable("rooms", {
   name: varchar("name"),
   description: varchar("description"),
   type: integer("type"),
+  status: varchar("status"),
+  reason: text("reason"),
   price: decimal("price").default("0"),
   sku: serial("sku"),
 });

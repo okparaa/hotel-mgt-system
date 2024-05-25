@@ -3,10 +3,7 @@ import { typeDef as Section, resolvers as sectionResolvers } from "./section";
 import { typeDef as User, resolvers as userResolvers } from "./user";
 import { typeDef as Session, resolvers as sessionResolvers } from "./session";
 import { typeDef as Order, resolvers as orderResolvers } from "./order";
-import {
-  typeDef as Deduction,
-  resolvers as deductionResolvers,
-} from "./deduction";
+
 import { typeDef as Room, resolvers as roomResolvers } from "./room";
 import {
   typeDef as Inventory,
@@ -43,7 +40,6 @@ const schema = makeExecutableSchema({
     Order,
     Inventory,
     OrdersItems,
-    Deduction,
     Room,
     Role,
     Route,
@@ -59,7 +55,6 @@ const schema = makeExecutableSchema({
     inventoryResolvers,
     itemResolvers,
     ordersItemsResolvers,
-    deductionResolvers,
     roomResolvers,
     roleResolver,
     routeResolver,

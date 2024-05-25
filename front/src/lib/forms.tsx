@@ -148,7 +148,9 @@ export function Select({ register, name, options, ...rest }: any) {
       </span>
       <select
         {...register(name, { required: rest.req_msg })}
-        onChange={(e) => rest.onChange(e)}
+        onChange={(e) => {
+          typeof rest.onChange === "function" && rest.onChange(e);
+        }}
         className={
           rest.className
             ? rest.className

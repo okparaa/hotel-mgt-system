@@ -18,8 +18,7 @@ body {
   font-weight: 400;
   font-size: 17px;
   box-sizing: border-box;
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  @apply bg-slate-100;
 }
 .box {
   border-radius: 17% 83% 69% 31% / 65% 79% 21% 35%;
@@ -31,7 +30,7 @@ body {
   border-radius: 27% 47% 21% 61% / 22% 45% 37% 73%;
 }
 .menu a {
-  @apply rounded-lg inline-block ring-1 shadow-gray-300 text-black px-4 pb-[2px] hover:ring-2 ml-8 bg-white;
+  @apply rounded-lg inline-block ring-1 shadow-gray-300 text-black px-4 pb-[2px] hover:ring-2 ml-8 bg-slate-300;
 }
 
 .tilt-in-left {
@@ -106,7 +105,7 @@ form {
   @apply w-28 m-2 leading-3 cursor-pointer flex-grow flex flex-col justify-center items-center font-semibold rounded-sm text-xl hover:ring-4 ring-slate-600 shadow-[0_8px_30px_rgb(10,10,10,0.3)];
 }
 .link-btn-dash {
-  @apply w-full sm:w-1/4 md:w-1/4 lg:w-1/6 h-auto p-3 flex-grow flex flex-col justify-center items-center font-semibold rounded-xl text-xl hover:ring-4 ring-slate-300 shadow-[0_8px_30px_rgb(10,10,10,0.1)] bg-white;
+  @apply w-full sm:w-1/4 md:w-1/4 lg:w-1/6 h-auto p-3 flex-grow flex flex-col justify-center items-center font-semibold rounded-xl text-xl hover:ring-2 ring-slate-400 bg-slate-300 shadow-[0_8px_30px_rgb(10,10,10,0.1)];
 }
 .dash {
   @apply pl-4 flex divide-x-2 rounded-lg relative border ml-[84px] mr-2 bg-white;
@@ -128,7 +127,7 @@ form {
 }
 
 .orderspan {
-  @apply flex-1 cursor-text border-black flex w-12 m-auto justify-center items-center rounded-sm;
+  @apply flex-1 cursor-text border-black flex w-12 justify-center items-center rounded-sm;
 }
 .icon {
   @apply text-sky-900;
@@ -188,14 +187,14 @@ table.btab {
   @apply w-full border-2 table-fixed mr-2;
 }
 table.btab thead {
-  @apply bg-slate-300 border-b-2 border-gray-200 relative;
+  @apply bg-slate-300 relative;
 }
 table.btab thead tr th {
   @apply p-3 uppercase text-[15px] font-semibold tracking-wide text-left;
 }
 
 table.btab tbody tr td {
-  @apply px-3 text-sm text-gray-700 border-b-2 font-bold divide-y-2;
+  @apply pl-2 text-sm text-gray-700 font-bold divide-y-2;
 }
 ul.ulist {
   @apply font-semibold text-[14px] uppercase divide-y-2 divide-gray-200;
@@ -208,7 +207,7 @@ ul.ulist li {
   @apply h-[100vh] bg-gradient-to-b from-white via-fuchsia-50 to-fuchsia-300 bg-no-repeat;
 }
 .icon-span {
-  @apply mt-1 rounded-lg relative hover:border-gray-500 p-4 inline-block border border-gray-300;
+  @apply mt-1 rounded-lg relative hover:border-gray-500 p-4 inline-block border border-gray-300 cursor-pointer;
 }
 
 .icon-span .ikon {
@@ -253,28 +252,4 @@ table tr.checkout td {
 }
 .pagination ul li {
   @apply w-7 h-7 cursor-pointer;
-}
-
-.tooltip {
-  @apply relative inline-block;
-}
-
-.tooltip-text {
-  @apply absolute text-sm bg-gray-500 text-white px-2 py-1 rounded shadow-md;
-}
-
-.tooltip-top {
-  @apply top-0 left-1/2 transform -translate-x-1/2;
-}
-
-.tooltip-bottom {
-  @apply bottom-0 left-1/2 transform -translate-x-1/2;
-}
-
-.tooltip-left {
-  @apply left-0 top-1/2 transform -translate-y-1/2;
-}
-
-.tooltip-right {
-  @apply right-0 top-1/2 transform -translate-y-1/2;
 }

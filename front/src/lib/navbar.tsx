@@ -39,7 +39,7 @@ const Navbar = () => {
     navigate("/");
   };
   return (
-    <nav className="relative pt-2 w-full pb-2 px-5 my-2">
+    <nav className="relative w-full py-4 px-5">
       {session.auth !== "ok" && (
         <span className=" w-12 absolute top-1">
           <Image src={logo} alt="logo" />

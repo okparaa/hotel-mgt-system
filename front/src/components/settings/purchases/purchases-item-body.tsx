@@ -2,11 +2,11 @@ import { CheckCircle } from "lucide-react";
 import { getDateFromTimestamp, getKey, toCommas } from "../../../lib/utils";
 import { Fragment, useRef } from "react";
 import { useChest } from "../../../app-chest";
-type TItemBodyProps = {
+type PurchasesItemBodyProps = {
   searchItems?: any[];
 };
 
-export const TInventoryItemBody = ({ searchItems }: TItemBodyProps) => {
+export const PurchasesItemBody = ({ searchItems }: PurchasesItemBodyProps) => {
   const {
     data: { inventory, user },
     updateChest,

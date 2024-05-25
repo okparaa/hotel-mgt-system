@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import FormModal from "../../lib/form-modal";
 import { Search } from "../../lib/search";
 import { Table } from "../../lib/table";
-import { TItemBody } from "./partials/t-item-body";
+import { ItemBody } from "./items/item-body";
 import {
   Item,
   useDItemMutation,
@@ -72,7 +72,7 @@ const Items = () => {
   });
 
   const tBody = (
-    <TItemBody
+    <ItemBody
       searchItems={searchItems}
       editItem={editItem}
       deleteItem={deleteItem}

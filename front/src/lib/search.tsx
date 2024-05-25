@@ -4,9 +4,10 @@ import { useChest } from "../app-chest";
 type SearchProps = {
   onOpen?: () => void;
   hasBtn?: boolean;
+  Calenda?: JSX.Element;
 };
 
-export const Search = ({ onOpen, hasBtn = true }: SearchProps) => {
+export const Search = ({ onOpen, hasBtn = true, Calenda }: SearchProps) => {
   const {
     data: { search },
     updateChest,
@@ -15,7 +16,7 @@ export const Search = ({ onOpen, hasBtn = true }: SearchProps) => {
   return (
     <div className="w-full mx-auto flex justify-center">
       <div className="w-full border-2 mb-1 p-2 flex justify-between">
-        <div className="relative lg:w-6/12 md:w-8/12 w-8/12">
+        <div className="relative">
           <input
             className="border py-[1px] placeholder:text-gray-400 text-lg pl-8 w-full rounded-full"
             type="text"
@@ -45,6 +46,7 @@ export const Search = ({ onOpen, hasBtn = true }: SearchProps) => {
             New
           </button>
         )}
+        {Calenda}
       </div>
     </div>
   );

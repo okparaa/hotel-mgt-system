@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface TooltipProps {
   text: string;
@@ -6,21 +6,22 @@ interface TooltipProps {
   direction?: "top" | "bottom" | "left" | "right";
 }
 
-const Tooltip: React.FC<TooltipProps> = ({
-  text,
-  children,
-  direction = "top",
-}) => {
+const Tooltip = ({ text, children }: TooltipProps) => {
+  const [open, setOpen] = useState(false);
   return (
-    <div
-      className={`tooltip ${direction === "top" ? "tooltip-top" : ""} ${
-        direction === "bottom" ? "tooltip-bottom" : ""
-      } ${direction === "left" ? "tooltip-left" : ""} ${
-        direction === "right" ? "tooltip-right" : ""
-      }`}
-    >
-      {children}
-      <div className="tooltip-text">{text}</div>
+    <div className={`relative`}>
+      {open && (
+        <div className="absolute border-2 border-t-0 border-slate-400 text-sm translate-y-[27px] z-10 rounded-b-md bg-slate-300 w-full">
+          {children}
+        </div>
+      )}
+      <div
+        className="bg-slate-300 border-2 border-b-0 hover:bg-slate-500 hover:text-white hover:border-slate-400 rounded-md p-[2px] text-base cursor-default"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
+        {text}
+      </div>
     </div>
   );
 };

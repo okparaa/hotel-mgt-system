@@ -268,6 +268,9 @@ export const getDateFromTimestamp = (
     case "d-msh-y":
       ndate = `${day} ${months[+month - 1]}/${year}`;
       break;
+    case "d-sh-y":
+      ndate = `${day}/${months[+month - 1]}/${year}`;
+      break;
     case "d-ms-y":
       ndate = `${day}/${months[+month - 1]}`;
       break;

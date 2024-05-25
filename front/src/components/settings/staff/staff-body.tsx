@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { Fragment } from "react";
 import { AddInput } from "../../../lib/add-input";
-type TItemBodyProps = {
+type StaffBodyProps = {
   currInventories?: any[];
   searchItems?: any[];
   editItem: ({ variables }: any) => void;
 };
-export const TStaffBody = ({ searchItems, editItem }: TItemBodyProps) => {
+export const StaffBody = ({ searchItems, editItem }: StaffBodyProps) => {
   return (
     <Fragment>
       {searchItems?.map((user: any) => (

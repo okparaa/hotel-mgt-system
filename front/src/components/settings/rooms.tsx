@@ -4,7 +4,7 @@ import { errorHandler } from "../../lib/utils";
 import FormModal from "../../lib/form-modal";
 import { Search } from "../../lib/search";
 import { Table } from "../../lib/table";
-import { TRoomBody } from "./partials/t-room-body";
+import { RoomBody } from "./rooms/room-body";
 import RoomsForm from "../forms/rooms-form";
 import { useChest } from "../../app-chest";
 import {
@@ -80,7 +80,7 @@ const Rooms = () => {
   });
 
   const tBody = (
-    <TRoomBody
+    <RoomBody
       searchRooms={searchItems}
       editRoom={editRoom}
       isBusy={roomPriceRes.fetching}

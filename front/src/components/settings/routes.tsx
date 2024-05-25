@@ -3,7 +3,7 @@ import { FormRef } from "../../lib/forms";
 import FormModal from "../../lib/form-modal";
 import { Table } from "../../lib/table";
 
-import { TRouteBody } from "./partials/t-route-body";
+import { RouteBody } from "./routes/route-body";
 import RoutesForm from "../forms/route-form";
 import Pagination from "../../lib/pagination";
 import { Search } from "../../lib/search";
@@ -86,7 +86,7 @@ const Ruotes = () => {
     : searchRoute?.length || 0;
 
   const tBody = (
-    <TRouteBody
+    <RouteBody
       searchRoutes={searchRoutes}
       editRoute={editRoute}
       deleteRoute={deleteRoute}

@@ -1,6 +1,13 @@
 export type HTMLElementEvent<T extends HTMLElement> = Event & {
   target: T;
 };
+export type UserPermissions = {
+  [resource: string]: string[];
+};
+
+export type Permissions = {
+  [role: string]: UserPermissions;
+};
 
 export type GetDaysProps = {
   date?: Date;
@@ -14,8 +21,9 @@ export type ChestUser = {
   las: string;
   pic: string;
   usr: string;
-  slg: string;
+  rol: string;
   rut: string;
+  slg: string;
 };
 
 export type ChestBookItem = {

@@ -9,6 +9,7 @@ type AddInputProps = {
   isCurrency?: boolean;
   isBusy?: boolean;
   id: string;
+  className?: string;
 };
 
 export const AddInput = ({
@@ -16,10 +17,11 @@ export const AddInput = ({
   action,
   isCurrency = true,
   isBusy,
+  className,
   id,
 }: AddInputProps) => {
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(String(initialValue));
+  // const [value, setValue] = useState(String(initialValue));
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -34,38 +36,38 @@ export const AddInput = ({
         <input
           type="text"
           ref={inputRef}
-          className="text-center border-y-2 h-7 border-slate-900 bg-transparent outline-none w-10/12"
-          value={value}
+          className="text-center border-y-2 h-[28px] border-slate-900 bg-transparent outline-none w-11/12"
+          value={initialValue == 0 ? "" : initialValue}
           onChange={(e) => {
-            setValue((e.target as HTMLInputElement).value);
+            initialValue = (e.target as HTMLInputElement).value;
           }}
           onBlur={() => {
             setEditing(false);
-            if (value === "0") setValue("0");
-            action(value);
+            if (initialValue === "0") initialValue = "0";
+            action(initialValue);
           }}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
               setEditing(false);
-              action(value);
+              action(initialValue);
             }
           }}
         />
       ) : (
         <span
-          className={`${
+          className={`${className ? className : " border-slate-300"} ${
             isCurrency ? "naira" : ""
-          } w-11/12 text-center border-y-2 border-slate-300 h-7 flex justify-center`}
-          value={value}
+          } w-11/12 text-center cursor-text border-y-2 h-[28px] flex justify-center items-center`}
+          value={initialValue}
           onClick={() => {
             setEditing(true);
-            if (value === "0") setValue("");
+            if (initialValue === 0) initialValue = "";
           }}
         >
           {isBusy && row.id === id ? (
             <Loader2 className="animate-spin" />
           ) : (
-            toCommas(value)
+            toCommas(initialValue)
           )}
         </span>
       )}

@@ -1,6 +1,5 @@
 import { Table } from "../../lib/table";
-import { TOrderItemBody } from "./partials/t-order-item-body";
-import { TOrderCheckout } from "./partials/t-order-checkout";
+import { OrderCheckout } from "./order/order-checkout";
 import { Item, useItemsQuery, useNewOrderItemsMutation } from "../aio-urql";
 import { useChest } from "../../app-chest";
 import QueryResult from "../../lib/query-result";
@@ -9,13 +8,15 @@ import { errorMsgHandler, toCommas, ucwords } from "../../lib/utils";
 import { Check, RotateCcw, Save, X } from "lucide-react";
 import { useState } from "react";
 import { AddInput } from "../../lib/add-input";
+import { useParams } from "react-router-dom";
+import { OrderItemBody } from "./order/order-item-body";
 
 const Orders = () => {
   const [result] = useItemsQuery();
   const { data: dataItems, error } = result;
   if (error || !dataItems) return <QueryResult response={result} />;
   const {
-    data: { search, orderItems: order },
+    data: { search, orderItems },
     updateChest,
   } = useChest();
 
@@ -23,7 +24,8 @@ const Orders = () => {
     <tr>
       <th>NAME</th>
       <th className="!text-center">SKU</th>
-      <th>PRICE</th>
+      <th className="text-center">DESC</th>
+      <th className="">PRICE</th>
       <th className="!text-center">PICK</th>
     </tr>
   );
@@ -34,43 +36,45 @@ const Orders = () => {
     return str.includes(searche.toLowerCase());
   }) as Item[];
 
-  const tItemBody = <TOrderItemBody searchItems={searchItems} />;
-  const denom = order.cash + order.pos + order.txfa;
+  const denom = orderItems.cash + orderItems.pos + orderItems.txfa;
   const [errorMsg, setErrorMsg] = useState("");
   const [orderItemsRes, newOrderItems] = useNewOrderItemsMutation();
   if (orderItemsRes.error) {
     setErrorMsg(() => errorMsgHandler(orderItemsRes.error)?.message);
   }
+  const { section } = useParams();
+  console.log(section);
 
   return (
     <div className="flex">
       <div className="w-full overflow-x-auto">
         <Table
           tHead={tItemHead}
-          tBody={tItemBody}
+          tBody={<OrderItemBody searchItems={searchItems} />}
           Searche={<Search hasBtn={false} />}
         />
       </div>
       <div className="w-6 mx-1 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200"></div>
       <div className="w-[360px] rounded-md bg-gradient-to-b from-slate-200 to-slate-500">
-        <TOrderCheckout />
-        <div className="flex justify-around border-2 p-1 m-1 rounded-md">
+        <OrderCheckout />
+        <div className="flex justify-around border-2 border-slate-700 p-1 m-2 rounded-md">
           <div className="flex flex-col items-center">
             <span>Cash</span>
-            <span className="border-y border-slate-300 cursor-text flex w-20 h-8 m-auto justify-center items-center rounded-md">
+            <span className="cursor-text flex w-20 h-8 m-auto justify-center items-center rounded-md">
               <AddInput
-                id={order.hash}
-                initialValue={order.cash}
+                id={orderItems.hash}
+                initialValue={orderItems.cash}
+                className="border-slate-400"
                 action={(value) => {
                   updateChest({
                     type: "orderItems",
                     data: {
                       cash: +value,
-                      txfa: order.txfa,
-                      pos: order.pos,
-                      total: order.total,
-                      items: order.items,
-                      hash: order.hash,
+                      txfa: orderItems.txfa,
+                      pos: orderItems.pos,
+                      total: orderItems.total,
+                      items: orderItems.items,
+                      hash: orderItems.hash,
                     },
                   });
                 }}
@@ -81,18 +85,19 @@ const Orders = () => {
             <span>POS</span>
             <span className="border-y border-slate-300 cursor-text flex w-20 h-8 m-auto justify-center items-center rounded-md">
               <AddInput
-                id={order.hash}
-                initialValue={order.pos}
+                id={orderItems.hash}
+                initialValue={orderItems.pos}
+                className="border-slate-400"
                 action={(value) => {
                   updateChest({
                     type: "orderItems",
                     data: {
-                      cash: order.cash,
-                      txfa: order.txfa,
+                      cash: orderItems.cash,
+                      txfa: orderItems.txfa,
                       pos: +value,
-                      total: order.total,
-                      items: order.items,
-                      hash: order.hash,
+                      total: orderItems.total,
+                      items: orderItems.items,
+                      hash: orderItems.hash,
                     },
                   });
                 }}
@@ -103,18 +108,19 @@ const Orders = () => {
             <span>Txfer</span>
             <span className="border-y border-slate-300 cursor-tex flex w-20 h-8 m-auto justify-center items-center rounded-md">
               <AddInput
-                id={order.hash}
-                initialValue={order.txfa}
+                id={orderItems.hash}
+                initialValue={orderItems.txfa}
+                className="border-slate-400"
                 action={(value) => {
                   updateChest({
                     type: "orderItems",
                     data: {
-                      cash: order.cash,
+                      cash: orderItems.cash,
                       txfa: +value,
-                      pos: order.pos,
-                      total: order.total,
-                      items: order.items,
-                      hash: order.hash,
+                      pos: orderItems.pos,
+                      total: orderItems.total,
+                      items: orderItems.items,
+                      hash: orderItems.hash,
                     },
                   });
                 }}
@@ -125,7 +131,7 @@ const Orders = () => {
             <span>Total</span>
             <span className="naira relative bg-slate-600 border-2 text-white flex w-20 h-8 m-auto justify-center items-center rounded-md">
               {toCommas(denom)}
-              {denom !== order.total ? (
+              {denom !== orderItems.total ? (
                 <X className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
               ) : (
                 <Check className="absolute text-white bg-red-500 rounded-full inline-flex h-4 w-4 -right-2 -top-2" />
@@ -156,10 +162,10 @@ const Orders = () => {
             onClick={() => {
               try {
                 newOrderItems({
-                  orderItems: order.items,
-                  pos: order.pos,
-                  txfa: order.txfa,
-                  cash: order.cash,
+                  orderItems: orderItems.items,
+                  pos: orderItems.pos,
+                  txfa: orderItems.txfa,
+                  cash: orderItems.cash,
                 });
               } catch (error) {}
             }}

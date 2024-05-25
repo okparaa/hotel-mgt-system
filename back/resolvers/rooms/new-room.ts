@@ -9,6 +9,7 @@ const roomSchema = yup.object({
   description: yup.string().required("value is required"),
   price: yup.string().required("value is required"),
   type: yup.string().required("value is required"),
+  status: yup.string().required("value is required"),
 });
 
 export const createNewRoom = async (parent: any, args: any, ctx: Context) => {

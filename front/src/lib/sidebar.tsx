@@ -102,7 +102,7 @@ const SidebarItem = ({
         updateChest({ type: "store", data: { open: false } });
         typeof action === "function" && action();
       }}
-      className={`relative flex items-center bg-white ${
+      className={`relative flex items-center bg-slate-300 ${
         open ? "pl-[6px]" : "w-8 justify-center"
       } p-1 my-4 font-bold rounded-md cursor-pointer ring-1
       ${active ? "ring-3" : ""}
@@ -125,7 +125,7 @@ const SidebarItem = ({
       {!open && (
         <Link
           to={href}
-          className={`absolute left-full rounded-md px-2 py-1 ml-3 bg-indigo-100 text-indigo-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
+          className={`absolute left-full rounded-md px-2 py-1 ml-3 bg-slate-300 text-indigo-800 text-sm invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
         >
           {text}
         </Link>

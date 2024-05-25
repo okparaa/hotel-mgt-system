@@ -5,11 +5,11 @@ import { useChest } from "../../../app-chest";
 import { Item } from "../../aio-urql";
 import { ChestOrderItem } from "../../../lib/types";
 
-type TItemBodyProps = {
+type OrderItemBodyProps = {
   searchItems: Item[];
 };
 
-export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
+export const OrderItemBody = ({ searchItems }: OrderItemBodyProps) => {
   const {
     data: { orderItems: order, session },
     updateChest,
@@ -26,6 +26,7 @@ export const TOrderItemBody = ({ searchItems }: TItemBodyProps) => {
         <tr key={item.id} id={item.id} className="bg-tr">
           <td>{item.name}</td>
           <td className="text-center">{item.sku}</td>
+          <td>{item.type}</td>
           <td>
             <span>&#8358;</span>
             {toCommas(item.price || 0)}

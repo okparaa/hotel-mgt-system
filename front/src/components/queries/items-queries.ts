@@ -10,6 +10,7 @@ export const CREATE_ITEM = gql(`
       price
       sku
       createdAt
+      updatedAt
       deleted
     }
   }
@@ -25,6 +26,7 @@ export const EDIT_ITEM = gql(`
       price
       sku
       createdAt
+      updatedAt
       deleted
     }
   }
@@ -53,6 +55,8 @@ export const GET_ITEMS_CHART = gql(`
       name
       deleted
       qtyBought
+      updatedAt
+      createdAt
     }
   }
 `);
@@ -67,6 +71,7 @@ export const GET_ITEMS = gql(`
       price
       sku
       createdAt
+      updatedAt
       deleted
       qtyBought
     }
@@ -82,6 +87,7 @@ export const GET_ITEM = gql(`
       type
       price
       sku
+      updatedAt
       createdAt
       deleted
     }

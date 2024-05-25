@@ -16,6 +16,7 @@ export const typeDef = /* GraphQL */ `
     bookDate: String
     canceled: Boolean
     syn: Boolean
+    price: Float
   }
   type Query {
     order_books: [String]

@@ -3,7 +3,7 @@ import { useChest } from "../../../app-chest";
 import { Trash2 } from "lucide-react";
 import { AddInput } from "../../../lib/add-input";
 
-export const TOrderCheckout = () => {
+export const OrderCheckout = () => {
   const {
     data: { orderItems },
     updateChest,
@@ -36,6 +36,7 @@ export const TOrderCheckout = () => {
                 <AddInput
                   id={item.itemId}
                   initialValue={item.priceSold}
+                  className="border-slate-400"
                   action={(value) => {
                     const orda = {
                       itemId: item.itemId,
@@ -75,6 +76,7 @@ export const TOrderCheckout = () => {
                   id={item.itemId}
                   isCurrency={false}
                   initialValue={item.qtySold}
+                  className="border-slate-400"
                   action={(value) => {
                     const orda = {
                       itemId: item.itemId,
@@ -111,7 +113,7 @@ export const TOrderCheckout = () => {
               </span>
               <span className="p-2 flex items-center">
                 <span
-                  className="cursor-pointer"
+                  className="icon-span"
                   id={item.itemId}
                   onClick={() => {
                     const updatedItems: any = order.items.filter(

@@ -16,7 +16,7 @@ export const recoveries = pgTable("recoveries", {
     .primaryKey(),
   syn: boolean("syn").default(true),
   createdAt: timestamp("created_at").defaultNow(),
-  recoveredAt: timestamp("recovered_at").defaultNow(),
+  updatedAt: timestamp("recovered_at").defaultNow(),
   deleted: boolean("deleted").default(false),
   pos: decimal("pos").default("0"),
   cash: decimal("cash").default("0"),

@@ -1,7 +1,7 @@
 import { decimal, pgTable, primaryKey, varchar } from "drizzle-orm/pg-core";
 import { items, orders, rooms } from ".";
 import { InferSelectModel, InferInsertModel } from "drizzle-orm";
-
+//link table
 export const ordersItems = pgTable(
   "orders_items",
   {

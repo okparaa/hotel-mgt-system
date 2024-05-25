@@ -358,6 +358,34 @@
       "when": 1716046383648,
       "tag": "0050_magical_morlun",
       "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "5",
+      "when": 1716595445024,
+      "tag": "0051_right_squadron_supreme",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "5",
+      "when": 1716605094671,
+      "tag": "0052_same_johnny_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "5",
+      "when": 1716609303463,
+      "tag": "0053_closed_oracle",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "5",
+      "when": 1716720911384,
+      "tag": "0054_mixed_ben_grimm",
+      "breakpoints": true
     }
   ]
 }

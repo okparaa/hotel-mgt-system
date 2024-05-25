@@ -28,6 +28,7 @@ export const bookings = pgTable(
       .notNull()
       .references(() => orders.id),
     days: decimal("days").default("0").$type<number>(),
+    price: decimal("price"),
     amount: decimal("amount").default("0").$type<number>(),
   },
   (tbl) => ({

@@ -16,6 +16,7 @@ export const ACCESS_KODE = gql(`
         createdAt
         message
         routeSlugs
+        role
         route {
             id
             name

@@ -17,6 +17,7 @@ export const typeDef = /* GraphQL */ `
     type: String
     status: String
     booking: Booking
+    reason: String
   }
 
   type Query {
@@ -37,14 +38,18 @@ export const typeDef = /* GraphQL */ `
     description: String
     price: Int
     type: String
+    status: String
+    reason: String
   }
 
   input RoomInput {
     id: String
+    reason: String
     name: String
     price: Int
     description: String
     type: String
+    status: String
   }
 `;
 

@@ -33,9 +33,9 @@ const FormModal = ({ children, isOpen, onClose, className }: ModalProps) => {
     }
   };
 
-  return (
+  return isOpen ? (
     <dialog ref={modalRef} className={className} onKeyDown={handleKeyDown}>
-      <div className="text-xl text-center h-full">{children}</div>
+      <div className="text-xl text-center w-full h-full">{children}</div>
       <button
         className="absolute text-xs top-1 right-1"
         onClick={handleCloseModal}
@@ -43,7 +43,7 @@ const FormModal = ({ children, isOpen, onClose, className }: ModalProps) => {
         <X size={20} />
       </button>
     </dialog>
-  );
+  ) : null;
 };
 
 export default FormModal;

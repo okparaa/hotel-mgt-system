@@ -8,6 +8,7 @@ export const CREATE_ROOM = gql(`
       description
       price
       sku
+      reason
       createdAt
       deleted
       status
@@ -34,6 +35,7 @@ export const EDIT_ROOM = gql(`
       deleted
       status
       type
+      reason
       booking {
         id
         inDate
@@ -69,6 +71,7 @@ export const GET_ROOMS_CHART = gql(`
       deleted
       status
       type
+      reason
       booking {
         id
         inDate
@@ -91,6 +94,7 @@ export const GET_ROOMS = gql(`
       deleted
       status
       type
+      reason
       booking {
         id
         inDate

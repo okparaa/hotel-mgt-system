@@ -5,6 +5,7 @@ import Form, { FormRef, Input } from "../../../lib/forms";
 import { decodeSession, errorHandler } from "../../../lib/utils";
 import { useChest } from "../../../app-chest";
 import { useVerifiedMutation } from "../../aio-urql";
+import { ChestUser } from "../../../lib/types";
 
 const defaultValues = {
   kode: "",
@@ -18,16 +19,18 @@ const A2b = () => {
   if (!error && data) {
     const { verified: user } = data;
 
-    const usr: any = {
-      id: user?.id,
-      sur: user?.surname,
-      fir: user?.firstname,
-      las: user?.lastname,
-      pic: user?.photoUrl,
-      usr: user?.username,
-      slg: user?.routeSlugs,
-      rut: user?.route?.slug,
+    const usr: Partial<ChestUser> = {
+      id: user!.id,
+      sur: user!.surname,
+      fir: user!.firstname,
+      las: user!.lastname,
+      pic: user!.photoUrl,
+      usr: user!.username,
+      slg: user!.routeSlugs,
+      rut: user!.route.slug || "",
+      rol: user!.role,
     };
+
     localStorage.setItem("token", user?.token || ""); //for apollo client
     updateChest({ type: "session", data: decodeSession(user?.token || "") }); //for early update
     localStorage.setItem("user", JSON.stringify(usr));

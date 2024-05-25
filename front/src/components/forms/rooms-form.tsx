@@ -1,9 +1,10 @@
-import { forwardRef } from "react";
+import { TargetedEvent, forwardRef, useState } from "react";
 import Form, { Button, Hidden, Input, Select, Textarea } from "../../lib/forms";
 import { Image } from "../../lib/image";
 import keyboard from "../../images/keyboard.jpg";
 import { useChest } from "../../app-chest";
 import { useRoomQuery } from "../aio-urql";
+import { roomStatusOptions } from "../../config";
 
 type RoomsFormProps = {
   newRoom: ({ variables }: any) => Promise<any>;
@@ -36,7 +37,15 @@ const RoomsForm = forwardRef(
       const [roomRes] = useRoomQuery({ variables: { id: store.id } });
       defaultValues = roomRes.data?.room;
     }
+    const [status, setStatus] = useState("");
     const options = bookable.map((val, ky) => ({ key: ky, value: val }));
+    const statusOptions = Object.entries(roomStatusOptions).map(
+      ([key, value]) => ({
+        key,
+        value,
+      })
+    );
+
     return (
       <div className="flex divide-x">
         <div className="p-4 flex flex-col flex-1 text-left">
@@ -54,6 +63,8 @@ const RoomsForm = forwardRef(
                       price: data.price,
                       type: data.type,
                       description: data.description,
+                      status: data.status,
+                      reason: data.reason,
                     },
                   });
                   onClose();
@@ -64,6 +75,8 @@ const RoomsForm = forwardRef(
                       price: data.price,
                       description: data.description,
                       type: data.type,
+                      status: data.status,
+                      reason: data.reason,
                     },
                   });
                   onClose();
@@ -79,12 +92,30 @@ const RoomsForm = forwardRef(
               placeholder="ID Number"
               size="w-10/12"
             />
-            <Input name="price" placeholder="Price (e.g 2000)" size="w-8/12" />
-            <Textarea
+            <Input
               req_msg="required"
               name="description"
-              placeholder="Describe the room"
+              placeholder="description"
+              size="w-11/12"
             />
+            <Input name="price" placeholder="Price (e.g 2000)" size="w-8/12" />
+            <Select
+              name="status"
+              size="w-8/12"
+              selected="good"
+              options={statusOptions}
+              onChange={(e: TargetedEvent<HTMLSelectElement, Event>) => {
+                setStatus((e.target as HTMLSelectElement).value);
+              }}
+            />
+
+            <Textarea
+              req_msg="required"
+              name="reason"
+              placeholder="Out of Order Reason"
+              style={status === "o-of-o" ? { height: "auto" } : { height: "0" }}
+            />
+
             <div className="btn">
               <Button title="Save" status={fetching} />
             </div>

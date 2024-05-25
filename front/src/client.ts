@@ -2,7 +2,7 @@ import schema from "./urql-schema.json";
 import { Variables, offlineExchange, Cache } from "@urql/exchange-graphcache";
 import { makeDefaultStorage } from "@urql/exchange-graphcache/default-storage";
 import { createClient, fetchExchange } from "urql";
-import { getToken, refreshAuth } from "./lib/auth";
+import { getToken, refreshAuth } from "./auth/auth";
 import { authExchange } from "@urql/exchange-auth";
 
 export const storage = makeDefaultStorage({

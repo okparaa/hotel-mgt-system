@@ -1,4 +1,4 @@
-import { TStaffBody } from "./partials/t-staff-body";
+import { StaffBody } from "./staff/staff-body";
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
 import { useChest } from "../../app-chest";
@@ -34,7 +34,7 @@ const Staff = () => {
     return str.includes(searche.toLowerCase());
   });
 
-  const tBody = <TStaffBody searchItems={searchUsers} editItem={salary} />;
+  const tBody = <StaffBody searchItems={searchUsers} editItem={salary} />;
 
   return (
     <>

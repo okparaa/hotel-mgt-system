@@ -8,11 +8,11 @@ import { GET_INVENTORIES } from "../../queries/inventory-queries";
 import { ChestBookItem, ChestInventory } from "../../../lib/types";
 import { AddInput } from "../../../lib/add-input";
 
-type TInventoryCheckoutProps = {
+type PurchasesCheckoutProps = {
   options: DatePickerOptions;
 };
 
-export const TInventoryCheckout = ({ options }: TInventoryCheckoutProps) => {
+export const PurchasesCheckout = ({ options }: PurchasesCheckoutProps) => {
   const {
     data: { inventory },
     updateChest,

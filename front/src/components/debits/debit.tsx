@@ -14,8 +14,8 @@ import { Loader2, Save, Trash2 } from "lucide-react";
 import { Navigate } from "react-router-dom";
 import autosize from "autosize";
 import DatePicker from "../calendar/date-picker";
-import { TDebitBody } from "./partials/t-debit-body";
 import { options } from "../../config";
+import { DebitBody } from "./debit/debit-body";
 
 const Debits = () => {
   const dateSelect = (date: Date) => {
@@ -181,10 +181,7 @@ const Debits = () => {
           Searche={<Search hasBtn={false} />}
           tHead={tHead}
           tBody={
-            <TDebitBody
-              searchUsers={searchUsers}
-              onOpen={() => setOpen(true)}
-            />
+            <DebitBody searchUsers={searchUsers} onOpen={() => setOpen(true)} />
           }
           fetching={usersRes.fetching}
           Info={Info}

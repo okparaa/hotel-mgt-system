@@ -9,7 +9,7 @@ type TSectionBodyProps = {
   deleteRoute: ({ variables }: any) => void;
 };
 
-export const TRouteBody = ({
+export const RouteBody = ({
   searchRoutes,
   editRoute,
   deleteRoute,

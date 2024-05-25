@@ -10,7 +10,10 @@ const Home = () => {
         <div className="flex mt-10 justify-center p-3">
           <div className="flex flex-1 flex-col justify-center tilt-in-left">
             <p className="text-4xl mb-8 font-extrabold text-fuchsia-900">
-              WESTBROOK HOTELS LTD
+              VERDE VISTA MANAGER
+              <small className="block text-xs ml-1">
+                hotel management system...
+              </small>
             </p>
             <p className="leading-7 text-black text-2xl">
               Unpack once and experience multiple exquisite places prepared just
@@ -26,7 +29,7 @@ const Home = () => {
             </div>
             <div className="mt-8 flex text-black">
               <PhoneIcon className="w-5 h-5 text-black m-1" /> 0809-0000-000,
-              <MailIcon className="ml-8 w-6 h-6 mr-1" /> info@westbrook.ng
+              <MailIcon className="ml-8 w-6 h-6 mr-1" /> info@verdevista.ng
             </div>
           </div>
           <div className="flex-1">

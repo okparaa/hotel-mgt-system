@@ -1,6 +1,6 @@
 import { Table } from "../../lib/table";
 import { Search } from "../../lib/search";
-import { TInventoryItemBody } from "./partials/t-inventory-item-body";
+import { PurchasesItemBody } from "./purchases/purchases-item-body";
 import {
   errorMsgHandler,
   getDateFromTimestamp,
@@ -10,12 +10,12 @@ import {
 import { useChest } from "../../app-chest";
 import { useInventoriesItemsQuery, useNewInventoryMutation } from "../aio-urql";
 import QueryResult from "../../lib/query-result";
-import { TInventoryCheckout } from "./partials/t-inventory-checkout";
+import { PurchasesCheckout } from "./purchases/purchases-checkout";
 import { RotateCcw, Save } from "lucide-react";
 import { useState } from "react";
 import { options } from "../../config";
 
-const Inventory = () => {
+const Purchases = () => {
   const today = getDateFromTimestamp(new Date().toDateString());
   const [inventoriesItemsRes] = useInventoriesItemsQuery({
     variables: { date: today },
@@ -60,21 +60,19 @@ const Inventory = () => {
     return str.includes(searche.toLowerCase());
   });
 
-  const tBody = <TInventoryItemBody searchItems={searchItems} />;
-
   return (
     <>
       <div className="flex">
         <div className="basis-7/12 overflow-x-auto">
           <Table
             tHead={tItemHead}
-            tBody={tBody}
+            tBody={<PurchasesItemBody searchItems={searchItems} />}
             Searche={<Search hasBtn={false} />}
           />
         </div>
         <div className="w-6 mx-1 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200"></div>
         <div className="w-5/12 rounded-md bg-gradient-to-b from-slate-400 via-slate-200 to-slate-200">
-          <TInventoryCheckout options={options} />
+          <PurchasesCheckout options={options} />
 
           <div className="p-1 text-[16px] gap-10 flex justify-center mt-3">
             <button
@@ -126,4 +124,4 @@ const Inventory = () => {
   );
 };
 
-export default Inventory;
+export default Purchases;

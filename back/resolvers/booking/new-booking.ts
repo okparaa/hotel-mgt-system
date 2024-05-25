@@ -79,6 +79,7 @@ export const newBooking = async (parent: any, args: any, ctx: Context) => {
           outDate: room.outDate,
           amount: days * room.price,
           canceled: false,
+          price: room.price,
         };
       });
 

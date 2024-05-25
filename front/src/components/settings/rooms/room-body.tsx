@@ -1,9 +1,9 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { Fragment } from "react";
 import { useChest } from "../../../app-chest";
 import { AddInput } from "../../../lib/add-input";
+import { roomStatusOptions } from "../../../config";
 
-type TRoomBodyProps = {
+type RoomBodyProps = {
   searchRooms?: any[];
   editRoom: ({ variables }: any) => void;
   deleteRoom: ({ variables }: any) => void;
@@ -12,17 +12,17 @@ type TRoomBodyProps = {
   isBusy?: boolean;
 };
 
-export const TRoomBody = ({
+export const RoomBody = ({
   searchRooms,
   editRoom,
   deleteRoom,
   roomPrice,
   bookable,
   isBusy = false,
-}: TRoomBodyProps) => {
+}: RoomBodyProps) => {
   const { updateChest } = useChest();
   return (
-    <Fragment>
+    <>
       {searchRooms?.map((room: any) => (
         <tr key={room.id} className="bg-tr">
           <td>
@@ -30,9 +30,25 @@ export const TRoomBody = ({
           </td>
           <td>{room.description}</td>
           <td>{room.sku}</td>
-          <td className="!text-center">{room.status}</td>
           <td>
-            <span className="cursor-text flex h-8 m-auto justify-center items-center rounded-md">
+            <div className="flex text-center justify-center">
+              {room.status ? (
+                room.status == "o-of-o" ? (
+                  <span className="bg-red-400 w-16 h-8 py-1 rounded-md cursor-pointer">
+                    {roomStatusOptions[room.status]}
+                  </span>
+                ) : (
+                  <span className="bg-green-300 w-16 py-1 rounded-md">
+                    {roomStatusOptions[room.status]}
+                  </span>
+                )
+              ) : (
+                <span className="bg-green-300 w-16 py-1 rounded-md">Good</span>
+              )}
+            </div>
+          </td>
+          <td>
+            <span className="cursor-text flex w-28 h-8 m-auto justify-center items-center rounded-md">
               <AddInput
                 id={room.id}
                 initialValue={room.price}
@@ -70,6 +86,6 @@ export const TRoomBody = ({
           </td>
         </tr>
       ))}
-    </Fragment>
+    </>
   );
 };

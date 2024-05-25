@@ -8,7 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { userStatusEnum } from "./enums";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
-import { deductions, orders, routes, sections, sessions } from ".";
+import { orders, routes, sections } from ".";
 
 export const users = pgTable("users", {
   id: varchar("id", { length: 128 })
@@ -35,7 +35,6 @@ export const users = pgTable("users", {
 
 export const userRelation = relations(users, ({ many, one }) => ({
   session: many(routes),
-  deduction: many(deductions),
   route: one(routes, {
     fields: [users.routeId],
     references: [routes.id],

@@ -1,7 +1,8 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { addInput, getDateFromTimestamp, toCommas } from "../../../lib/utils";
+import { getDateFromTimestamp } from "../../../lib/utils";
 import { Fragment } from "react";
 import { useChest } from "../../../app-chest";
+import { AddInput } from "../../../lib/add-input";
 
 type TItemBodyProps = {
   currInventories?: any[];
@@ -11,7 +12,7 @@ type TItemBodyProps = {
   itemPrice: ({ variables }: any) => void;
 };
 
-export const TItemBody = ({
+export const ItemBody = ({
   searchItems,
   editItem,
   deleteItem,
@@ -30,18 +31,17 @@ export const TItemBody = ({
             {getDateFromTimestamp(+item.createdAt, "d/m/y")}
           </td>
           <td>
-            <span
-              className="naira cursor-text border-gray-400 flex w-9 h-8 m-auto justify-center items-center rounded-md"
-              onClick={(e) =>
-                addInput(e, (value) => {
+            <span className="cursor-text border-gray-400 flex w-full h-8 m-auto justify-center items-center rounded-md">
+              <AddInput
+                id={item.id}
+                initialValue={item.price}
+                action={(value) => {
                   itemPrice({
                     id: item.id,
                     price: value,
                   });
-                })
-              }
-            >
-              {toCommas(item.price)}
+                }}
+              />
             </span>
           </td>
           <td className="text-right !px-0">
