@@ -19,16 +19,16 @@ const A2b = () => {
   if (!error && data) {
     const { verified: user } = data;
 
-    const usr: Partial<ChestUser> = {
-      id: user!.id,
-      sur: user!.surname,
-      fir: user!.firstname,
-      las: user!.lastname,
-      pic: user!.photoUrl,
-      usr: user!.username,
-      slg: user!.routeSlugs,
-      rut: user!.route.slug || "",
-      rol: user!.role,
+    const usr: ChestUser = {
+      id: user?.id as string,
+      sur: user?.surname as string,
+      fir: user?.firstname as string,
+      las: user?.lastname as string,
+      pic: user?.photoUrl as string,
+      usr: user?.username as string,
+      slg: user?.routeSlugs as string,
+      rut: user?.route?.slug as string,
+      rol: user?.role as string,
     };
 
     localStorage.setItem("token", user?.token || ""); //for apollo client

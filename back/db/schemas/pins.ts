@@ -1,16 +1,15 @@
-import { createId } from "@paralleldrive/cuid2";
 import { boolean, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
-import { pinStatusEnum } from ".";
-import { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { InferSelectModel, InferInsertModel, sql } from "drizzle-orm";
+import { createId } from "./create-id";
 
 export const pins = pgTable("pins", {
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId())
+    .$defaultFn(() => createId("pins"))
     .primaryKey(),
   syn: boolean("syn").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
-  status: pinStatusEnum("pin_status").default("valid"),
+  status: boolean("status"),
   pin: varchar("pin"),
 });
 

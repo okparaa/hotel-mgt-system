@@ -4,6 +4,7 @@ import { eq, desc, sql } from "drizzle-orm";
 import { updateItem } from "../resolvers/items/update-item";
 import { itemColumns } from "../helpers";
 import { createItem } from "../resolvers/items/create-item";
+import { createFakeItems } from "../faker";
 
 export const typeDef = /* GraphQL */ `
   type Item {
@@ -79,6 +80,10 @@ export const resolvers = {
       return await updateItem(parent, args, ctx);
     },
     createItem: async (parent: any, args: any, ctx: Context) => {
+      for (let i = 1; i < 27; i++) {
+        const item = createFakeItems();
+        await createItem(parent, { item }, ctx);
+      }
       return await createItem(parent, args, ctx);
     },
     removeItem: async (parent: any, args: any, ctx: Context) => {

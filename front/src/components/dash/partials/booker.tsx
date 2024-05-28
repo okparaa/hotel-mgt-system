@@ -5,9 +5,9 @@ import {
   getDateFromTimestamp,
   getDays,
   toCommas,
+  ucwords,
 } from "../../../lib/utils";
 import DatePicker, { DatePickerOptions } from "../../calendar/date-picker";
-import { bookable } from "../../../config";
 import { ChestBook } from "../../../lib/types";
 type TOrderBodyProps = {};
 
@@ -30,10 +30,10 @@ export const Booker = ({}: TOrderBodyProps) => {
     booker.bookables?.forEach((buk) => {
       const { days } = getDays({ inDate: buk.inDate, outDate: buk.outDate });
       if (buk.roomId === book.roomId) {
-        total += book.price * days;
+        total += book.curPrice * days;
         books.push({ ...buk, ...book });
       } else {
-        total += buk.price * days;
+        total += buk.curPrice * days;
         books.push(buk);
       }
     });
@@ -54,7 +54,7 @@ export const Booker = ({}: TOrderBodyProps) => {
       outDate: book.outDate,
     });
     book.outDate = getDateFromTimestamp(outDate as string);
-    booker.total = book.price * days + booker.total;
+    booker.total = book.curPrice * days + booker.total;
     updateChest({
       type: "booker",
       data: {
@@ -87,8 +87,8 @@ export const Booker = ({}: TOrderBodyProps) => {
         return (
           <div className="booker rounded-md border-slate-600">
             <span className="flex flex-col">
-              {bookable[book.type]} {book.name}{" "}
-              <strong>@{toCommas(book.price)}</strong>
+              {ucwords(book.type)} {book.name}
+              <strong>@{toCommas(book.curPrice)}</strong>
             </span>
             <span className="flex items-center flex-col">
               <span className="flex">
@@ -131,7 +131,7 @@ export const Booker = ({}: TOrderBodyProps) => {
                       inDate: book.inDate,
                       outDate: book.outDate,
                     });
-                    return acc + Number(book.price) * days;
+                    return acc + Number(book.curPrice) * days;
                   },
                   0
                 );

@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   boolean,
@@ -10,10 +9,11 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createId } from "./create-id";
 
 export const rooms = pgTable("rooms", {
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId())
+    .$defaultFn(() => createId("rooms"))
     .primaryKey(),
   syn: boolean("syn").default(true),
   createdAt: timestamp("created_at").defaultNow(),
@@ -21,8 +21,8 @@ export const rooms = pgTable("rooms", {
   deleted: boolean("deleted").default(false),
   name: varchar("name"),
   description: varchar("description"),
-  type: integer("type"),
-  status: varchar("status"),
+  type: varchar("type"),
+  status: varchar("status").default("room"),
   reason: text("reason"),
   price: decimal("price").default("0"),
   sku: serial("sku"),

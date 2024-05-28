@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { typeDef as Section, resolvers as sectionResolvers } from "./section";
 import { typeDef as User, resolvers as userResolvers } from "./user";
 import { typeDef as Session, resolvers as sessionResolvers } from "./session";
 import { typeDef as Order, resolvers as orderResolvers } from "./order";
@@ -34,7 +33,6 @@ import merge from "lodash/merge";
 const schema = makeExecutableSchema({
   typeDefs: [
     //authDirectiveTypeDefs,
-    Section,
     User,
     Session,
     Item,
@@ -49,7 +47,6 @@ const schema = makeExecutableSchema({
     Recovery,
   ],
   resolvers: merge(
-    sectionResolvers,
     userResolvers,
     sessionResolvers,
     ordersBookingResolver,

@@ -17,7 +17,7 @@ const newOrderRoomSchema = yup.object({
   books: yup.array(
     yup.object().shape({
       roomId: yup.string().required("value is required"),
-      price: yup.number().required("value is required"),
+      curPrice: yup.number().required("value is required"),
       inDate: yup.string().required("value is required"),
       outDate: yup.string().required("value is required"),
     })
@@ -51,7 +51,7 @@ export const createBooking = async (parent: any, args: any, ctx: Context) => {
     return await ctx.db.transaction(async (tx) => {
       const amountSold = args.books.reduce((acc: any, room: any) => {
         const days = getDays({ inDate: room.inDate, outDate: room.outDate });
-        return acc + Number(room.price) * days;
+        return acc + Number(room.curPrice) * days;
       }, 0);
 
       const [order] = await tx
@@ -77,9 +77,9 @@ export const createBooking = async (parent: any, args: any, ctx: Context) => {
           days: days,
           inDate: room.inDate,
           outDate: room.outDate,
-          amount: days * room.price,
+          amount: days * room.curPrice,
           canceled: false,
-          price: room.price,
+          curPrice: room.curPrice,
         };
       });
 

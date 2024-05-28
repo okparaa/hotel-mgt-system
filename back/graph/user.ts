@@ -11,6 +11,7 @@ import { updateRouteSlugs, assignRoute } from "../resolvers/users/update-user";
 import { debitStaff } from "../resolvers/orders/debit-staff";
 import { removeDebit } from "../resolvers/orders/remove-debit";
 import { updateDebit } from "../resolvers/orders/update-debit";
+import { createFakeUsers } from "../faker";
 
 let currentNumber = 0;
 
@@ -159,6 +160,10 @@ export const resolvers = {
       return await signedUser(parent, args, ctx);
     },
     createUser: async (parent: any, args: any, ctx: Context) => {
+      // for (let i = 1; i < 30; i++) {
+      //   const user = createFakeUsers();
+      //   await createUser(parent, { user }, ctx);
+      // }
       return await createUser(parent, args, ctx);
     },
     debitStaff: async (parent: any, args: any, ctx: Context) => {

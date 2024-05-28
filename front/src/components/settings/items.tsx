@@ -20,10 +20,11 @@ const Items = () => {
   const [open, setOpen] = useState(false); //for edit and new modal
   const [openDel, setOpenDel] = useState(false); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [result, newItem] = useCreateItemMutation();
-  const { error, fetching: creatingItem } = result;
+  const [createItemRes, createItem] = useCreateItemMutation();
 
-  if (error || creatingItem) return <QueryResult response={result} />;
+  if (createItemRes.error || createItemRes.fetching) {
+    return <QueryResult response={createItemRes} />;
+  }
 
   const [{}, itemPrice] = useItemPriceMutation();
 
@@ -67,8 +68,7 @@ const Items = () => {
 
   const searchItems = dataItems?.items?.filter((item) => {
     const str = (item && Object.values(item).join(" ").toLowerCase()) || "";
-    const searche = search || "";
-    return str.includes(searche.toLowerCase());
+    return str.includes(search.toLowerCase());
   });
 
   const tBody = (
@@ -80,9 +80,9 @@ const Items = () => {
     />
   );
 
-  const [{ fetching: updatingItem }, eItem] = useUpdateItemMutation();
+  const [updateItemRes, updateItem] = useUpdateItemMutation();
 
-  const [{ fetching: deleting }, dItem] = useRemoveItemMutation();
+  const [{ fetching: deleting }, removeItem] = useRemoveItemMutation();
 
   const defaultValues = {
     name: "",
@@ -99,9 +99,9 @@ const Items = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <ItemsForm
-          fetching={creatingItem || updatingItem}
-          newItem={newItem}
-          eItem={eItem}
+          fetching={createItemRes.fetching || updateItemRes.fetching}
+          createItem={createItem}
+          updateItem={updateItem}
           ref={formRef}
           closeModal={() => setOpen(false)}
           defaultValues={defaultValues}
@@ -110,12 +110,12 @@ const Items = () => {
       {dataItems?.items && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
-            Searche={<Search onOpen={() => setOpen(true)} />}
+            Search={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
             fetching={fetchingItems}
             deleting={deleting}
-            remove={dItem}
+            remove={removeItem}
             open={openDel}
             onClose={() => setOpenDel(false)}
           />

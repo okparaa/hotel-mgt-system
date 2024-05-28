@@ -1,1 +1,0 @@
-ALTER TABLE "rooms" ADD COLUMN "reason" text;

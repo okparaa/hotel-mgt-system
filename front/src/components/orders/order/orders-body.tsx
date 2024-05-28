@@ -29,6 +29,8 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
     updateChest,
   } = useChest();
 
+  console.log(searchOrders);
+
   // const [changeOrderRecovRes, changeOrderRecov] = useChangeOrderRecovMutation();
   // const [removeOrderRecovRes, removeOrderRecov] = useRemoveOrderRecovMutation();
   if (booker.hash === "") {
@@ -50,7 +52,11 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
       />
       {searchOrders?.map((order: Order) => {
         const total = order.bookings?.reduce((total, booking) => {
-          if (booking?.room?.price) return total + booking?.room?.price;
+          const { days } = getDays({
+            inDate: booking?.inDate!,
+            outDate: booking?.outDate!,
+          });
+          if (booking?.curPrice) return total + booking?.curPrice * days;
           return total;
         }, 0) as number;
 
@@ -77,7 +83,10 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
           return (
             <span
               id={recov?.id}
-              className="bg-green-600 rounded-md p-1 cursor-pointer naira text-gray-100"
+              className="badge naira"
+              onClick={(e) => {
+                console.log((e.target as HTMLSpanElement).id);
+              }}
             >
               {toCommas(total)}
             </span>
@@ -106,7 +115,11 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
             </td>
             <td>
               <div className="flex flex-wrap gap-1 justify-center text-sm">
-                {TotalRecov}
+                {recovd ? (
+                  TotalRecov
+                ) : (
+                  <span className="badge w-[55px] text-center p-0">0</span>
+                )}
               </div>
             </td>
             <td className="text-center">
@@ -130,7 +143,7 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
                           roomId: booking?.room?.id!,
                           inDate: booking?.inDate!,
                           outDate: booking?.outDate!,
-                          price: booking?.room?.price!,
+                          curPrice: booking?.room?.price,
                           name: booking?.room?.name!,
                           type: +booking?.room?.type!,
                         };
@@ -164,14 +177,14 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
             </td>
 
             <td className="text-center">
-              <div className="flex justify-center flex-wrap">
+              <div className="flex justify-center flex-wrap w-full">
                 {order.bookings?.map((booking) => {
                   const { days } = getDays({
                     inDate: booking?.inDate!,
                     outDate: booking?.outDate!,
                   });
                   return (
-                    <div className="w-32">
+                    <div className=" w-32">
                       <Tooltip
                         text={
                           bookable[Number(booking?.room?.type)] +
@@ -192,11 +205,8 @@ export const OrdersBody = ({ searchOrders }: OrdersBodyProps) => {
                               {getDateFromTimestamp(booking?.outDate, "d-ms-y")}
                             </span>
                           </span>
-                          <span>
-                            Price:
-                            <span className="naira ml-1">
-                              {toCommas(booking?.price! * days)}
-                            </span>
+                          <span className="naira ml-1">
+                            {toCommas(booking?.curPrice! * days)}
                           </span>
                         </div>
                       </Tooltip>

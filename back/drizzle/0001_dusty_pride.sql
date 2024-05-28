@@ -1,1 +1,0 @@
-ALTER TABLE "deductions" RENAME COLUMN "month" TO "ddate";

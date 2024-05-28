@@ -1,1 +1,0 @@
-ALTER TABLE "bookings" ADD COLUMN "price" numeric;

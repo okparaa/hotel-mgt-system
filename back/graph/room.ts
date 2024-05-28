@@ -4,6 +4,7 @@ import { createRoom } from "../resolvers/rooms/create-room";
 import { Context } from "../types/context";
 import { updateRoom, roomPrice } from "../resolvers/rooms/update-room";
 import { roomColumns, sleep } from "../helpers";
+import { createFakeRooms } from "../faker";
 export const typeDef = /* GraphQL */ `
   type Room {
     id: ID!
@@ -11,7 +12,7 @@ export const typeDef = /* GraphQL */ `
     description: String
     createdAt: String
     deleted: String
-    price: Int
+    price: Float
     sku: String
     syn: Boolean
     type: String
@@ -28,15 +29,15 @@ export const typeDef = /* GraphQL */ `
 
   type Mutation {
     updateRoom(room: RoomInput): Room
-    createRoom(room: NewRoomInput): Room
+    createRoom(room: CreateRoomInput): Room
     removeRoom(id: ID!): Room
     roomPrice(id: ID!, price: Int): Room
   }
 
-  input NewRoomInput {
+  input CreateRoomInput {
     name: String
     description: String
-    price: Int
+    price: Float
     type: String
     status: String
     reason: String
@@ -46,7 +47,7 @@ export const typeDef = /* GraphQL */ `
     id: String
     reason: String
     name: String
-    price: Int
+    price: Float
     description: String
     type: String
     status: String
@@ -69,6 +70,11 @@ export const resolvers = {
 
   Mutation: {
     createRoom: async (parent: any, args: any, ctx: Context) => {
+      // let room = null;
+      // for (let i = 1; i < 28; i++) {
+      //   room = createFakeRooms();
+      //   await createRoom(parent, { room }, ctx);
+      // }
       return await createRoom(parent, args, ctx);
     },
     updateRoom: async (parent: any, args: any, ctx: Context) => {
@@ -81,7 +87,6 @@ export const resolvers = {
 
   Room: {
     booking: async (parent: any, args: any, ctx: Context) => {
-      console.log(parent, args);
       const [book] = await ctx.db
         .select()
         .from(bookings)

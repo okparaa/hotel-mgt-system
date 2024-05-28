@@ -1,1 +1,0 @@
-ALTER TABLE "routes" ADD CONSTRAINT "routes_name_unique" UNIQUE("name");

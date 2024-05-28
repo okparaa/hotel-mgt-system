@@ -12,6 +12,7 @@ export const CREATE_ITEM = gql(`
       createdAt
       updatedAt
       deleted
+      qtyBought
     }
   }
 `);

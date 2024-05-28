@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import {
   boolean,
   decimal,
@@ -6,13 +5,19 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { users, orderStatusEnum, ordersItems, routes } from ".";
-import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
+import { users, ordersItems, routes } from ".";
+import {
+  InferInsertModel,
+  InferSelectModel,
+  relations,
+  sql,
+} from "drizzle-orm";
 import { recoveries } from "./recoveries";
+import { createId } from "./create-id";
 
 export const orders = pgTable("orders", {
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId())
+    .$defaultFn(() => createId("orders"))
     .primaryKey(),
   syn: boolean("syn").default(true),
   createdAt: timestamp("created_at").defaultNow(),
@@ -25,7 +30,7 @@ export const orders = pgTable("orders", {
   pos: decimal("pos").default("0"),
   cash: decimal("cash").default("0"),
   txfa: decimal("txfa").default("0"),
-  status: orderStatusEnum("order_status").default("pending"),
+  status: boolean("status"),
   amount: decimal("amount").default("0").$type<number>(),
   userId: varchar("user_id", { length: 128 }).references(() => users.id),
   routeId: varchar("dept_id", { length: 128 }).references(() => routes.id),

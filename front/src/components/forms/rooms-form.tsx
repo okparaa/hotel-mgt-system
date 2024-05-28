@@ -4,25 +4,23 @@ import { Image } from "../../lib/image";
 import keyboard from "../../images/keyboard.jpg";
 import { useChest } from "../../app-chest";
 import { useRoomQuery } from "../aio-urql";
-import { roomStatusOptions } from "../../config";
+import { bookable, roomStatusOptions } from "../../config";
 
 type RoomsFormProps = {
-  newRoom: ({ variables }: any) => Promise<any>;
+  createRoom: ({ variables }: any) => Promise<any>;
   fetching: boolean;
   defaultValues: any;
-  eRoom: ({ variables }: any) => Promise<any>;
-  bookable: string[];
+  updateRoom: ({ variables }: any) => Promise<any>;
   onClose: () => void;
 };
 
 const RoomsForm = forwardRef(
   (
     {
-      newRoom,
+      createRoom,
       fetching,
       defaultValues,
-      eRoom,
-      bookable,
+      updateRoom,
       onClose,
     }: RoomsFormProps,
     ref: any
@@ -31,14 +29,12 @@ const RoomsForm = forwardRef(
       data: { store },
     } = useChest();
 
-    const neu = store.neu;
-
-    if (store.id && store.__typename === "Room") {
+    if (store.id && store.__typename === "Room" && !store.neu) {
       const [roomRes] = useRoomQuery({ variables: { id: store.id } });
       defaultValues = roomRes.data?.room;
     }
     const [status, setStatus] = useState("");
-    const options = bookable.map((val, ky) => ({ key: ky, value: val }));
+
     const statusOptions = Object.entries(roomStatusOptions).map(
       ([key, value]) => ({
         key,
@@ -49,18 +45,20 @@ const RoomsForm = forwardRef(
     return (
       <div className="flex divide-x">
         <div className="p-4 flex flex-col flex-1 text-left">
-          <p className="font-bold text-xl pb-4">Create Room</p>
+          <p className="font-bold text-xl pb-4">
+            {store.neu ? "Create Room" : "Update Room"}
+          </p>
           <Form
             ref={ref}
             defaultValues={defaultValues}
             onSubmit={async (data: any) => {
               try {
-                if (store.id && store.__typename === "Room") {
-                  await eRoom({
+                if (store.id && store.__typename === "Room" && !store.neu) {
+                  await updateRoom({
                     room: {
                       id: data.id,
                       name: data.name,
-                      price: data.price,
+                      price: +data.price,
                       type: data.type,
                       description: data.description,
                       status: data.status,
@@ -69,10 +67,10 @@ const RoomsForm = forwardRef(
                   });
                   onClose();
                 } else {
-                  await newRoom({
+                  await createRoom({
                     room: {
                       name: data.name,
-                      price: data.price,
+                      price: +data.price,
                       description: data.description,
                       type: data.type,
                       status: data.status,
@@ -84,8 +82,8 @@ const RoomsForm = forwardRef(
               } catch (error) {}
             }}
           >
-            {!neu ? <Hidden name="id" /> : <></>}
-            <Select req_msg="required" name="type" options={options} />
+            {!store.neu ? <Hidden name="id" /> : <></>}
+            <Select req_msg="required" name="type" options={bookable} />
             <Input
               req_msg="required"
               name="name"
@@ -101,8 +99,8 @@ const RoomsForm = forwardRef(
             <Input name="price" placeholder="Price (e.g 2000)" size="w-8/12" />
             <Select
               name="status"
+              req_msg="required"
               size="w-8/12"
-              selected="good"
               options={statusOptions}
               onChange={(e: TargetedEvent<HTMLSelectElement, Event>) => {
                 setStatus((e.target as HTMLSelectElement).value);
@@ -110,10 +108,16 @@ const RoomsForm = forwardRef(
             />
 
             <Textarea
-              req_msg="required"
               name="reason"
-              placeholder="Out of Order Reason"
-              style={status === "o-of-o" ? { height: "auto" } : { height: "0" }}
+              disabled={status == "o-of-o" ? false : true}
+              placeholder={
+                status == "o-of-o"
+                  ? "Give reasons..."
+                  : "The room is good for guests"
+              }
+              className={`${
+                status == "o-of-o" ? "border-2 border-slate-800" : "opacity-40"
+              }`}
             />
 
             <div className="btn">
@@ -124,7 +128,7 @@ const RoomsForm = forwardRef(
         <div className="flex flex-1 flex-col p-4 justify-center gap-8">
           <p className="text-xl font-semibold text-left">
             The core advantage of data is that it tells you something about the
-            business that you didn’t already know.
+            business that you didn't already know.
           </p>
           <div className="flex justify-center items-center">
             <Image

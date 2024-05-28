@@ -158,7 +158,7 @@ export const BookingCheckout = ({}: BookingCheckoutProps) => {
               await bookerMutate({
                 books: booker.bookables.map((book: ChestBook) => ({
                   roomId: book.roomId,
-                  price: book.price,
+                  curPrice: book.curPrice,
                   inDate: book.inDate,
                   outDate: book.outDate,
                 })),

@@ -54,7 +54,7 @@ export const updateCache = (
 
 const client = createClient({
   url: "http://localhost:5100/api",
-  requestPolicy: "network-only",
+  requestPolicy: "cache-and-network",
   exchanges: [
     cache,
     authExchange(async (utils) => {

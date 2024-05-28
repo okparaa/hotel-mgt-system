@@ -30,10 +30,10 @@ const Purchases = () => {
     updateChest,
   } = useChest();
 
-  const [newInventoryRes, newInventory] = useCreatePurchaseMutation();
+  const [createPurchaseRes, createPurchase] = useCreatePurchaseMutation();
   const [errorMsg, setErrorMsg] = useState("");
-  if (newInventoryRes.error) {
-    setErrorMsg(() => errorMsgHandler(newInventoryRes.error)?.message);
+  if (createPurchaseRes.error) {
+    setErrorMsg(() => errorMsgHandler(createPurchaseRes.error)?.message);
   }
   const evts = new Map();
   purchasesItemsRes.data?.dates?.forEach((date) => {
@@ -102,7 +102,7 @@ const Purchases = () => {
                       userId: item.userId,
                     };
                   });
-                  newInventory({
+                  createPurchase({
                     purchase: { hash: purchase.hash, items: newInventories },
                   });
                 } catch (error) {}

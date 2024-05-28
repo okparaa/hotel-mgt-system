@@ -16,7 +16,7 @@ export const typeDef = /* GraphQL */ `
     bookDate: String
     canceled: Boolean
     syn: Boolean
-    price: Float
+    curPrice: Float
   }
   type Query {
     order_books: [String]
@@ -28,7 +28,7 @@ export const typeDef = /* GraphQL */ `
   }
   input BookingInput {
     roomId: String
-    price: Float
+    curPrice: Float
     inDate: String
     outDate: String
     days: Int

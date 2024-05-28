@@ -1,11 +1,10 @@
 import { eq, getTableColumns, sql } from "drizzle-orm";
 import { Context } from "../types/context";
-import { items, rooms, sections, users } from "../db/schemas";
+import { items, rooms, users } from "../db/schemas";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import throwError, { ErrorTypes } from "./errors";
 import { get20Words, lt20Words } from "../db/constants";
-import { log } from "console";
 dotenv.config();
 
 export const usernameExists = async (username: string, ctx: Context) => {
@@ -13,7 +12,6 @@ export const usernameExists = async (username: string, ctx: Context) => {
     .select()
     .from(users)
     .where(eq(users.username, username));
-
   return user;
 };
 
@@ -22,23 +20,14 @@ export const phoneExists = async (phone: string, ctx: Context) => {
     .select()
     .from(users)
     .where(eq(users.phone, phone));
-
   return user;
 };
-export const slugExists = async (slug: string, ctx: Context) => {
-  const [section] = await ctx.db
-    .select()
-    .from(sections)
-    .where(eq(sections.slug, slug));
 
-  return section;
-};
 export const skuExists = async (sku: string, ctx: Context) => {
   const [item] = await ctx.db
     .select()
     .from(items)
     .where(eq(items.sku, Number(sku)));
-
   return item;
 };
 
@@ -48,7 +37,6 @@ export const xExists = async (meta: MetaProps, ctx: Context) => {
     .select()
     .from(meta.table)
     .where(eq(meta.column, meta.value));
-
   return xdata;
 };
 

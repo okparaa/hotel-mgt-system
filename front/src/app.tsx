@@ -24,6 +24,7 @@ const StaffMgr = lazy(() => import("./components/settings/staff-mgr"));
 const RouteMgr = lazy(() => import("./components/settings/route-mgr"));
 const Ruotes = lazy(() => import("./components/settings/routes"));
 const DashRooms = lazy(() => import("./components/dash/dash-rooms"));
+const StoreReq = lazy(() => import("./components/stores/store-req"));
 import { SwInit } from "./sw-init";
 import Footer from "./lib/footer";
 import Fallback from "./lib/fallback";
@@ -82,9 +83,10 @@ const App = () => {
           <Route path="/aio/dash/bookings" element={<DashRooms />} />
           <Route path="/aio/orders" element={<OrdersPort />} />
           <Route path="/aio/orders/bookings" element={<OrdersBookings />} />
-          <Route path="/aio/orders/:section" element={<Orders />} />
+          <Route path="/aio/orders/:route" element={<Orders />} />
           <Route path="/aio/stats" element={<StatsIndex />} />
           <Route path="/aio/stats/items" element={<ItemsStats />} />
+          <Route path="/aio/stores/:route" element={<StoreReq />} />
         </Route>
         <Route
           path="*"

@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import {
   boolean,
   decimal,
@@ -7,32 +6,27 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { users } from "./users";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
 import { items } from "./items";
+import { routes } from "./routes";
+import { createId } from "./create-id";
 
 export const stores = pgTable("stores", {
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId())
+    .$defaultFn(() => createId("stores"))
     .primaryKey(),
   syn: boolean("syn").default(true),
-  itemId: varchar("purchase_id").notNull(),
-  qtyReq: numeric("qty").default("0"),
+  itemId: varchar("item_id").references(() => items.id),
   qty: numeric("qty").default("0"),
-  price: decimal("price"),
-  routeId: varchar("route_id"),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  routeId: varchar("route_id").references(() => routes.id),
   deleted: boolean("deleted").default(false),
-  userId: varchar("user_id").references(() => users.id),
 });
 
-export const storeRelation = relations(stores, ({ one, many }) => ({
-  user: one(users, {
-    fields: [stores.userId],
-    references: [users.id],
+export const storeRelation = relations(stores, ({ one }) => ({
+  item: one(items, {
+    fields: [stores.itemId],
+    references: [items.id],
   }),
-  item: many(items),
 }));
 
 export type StoresSelect = InferSelectModel<typeof stores>;

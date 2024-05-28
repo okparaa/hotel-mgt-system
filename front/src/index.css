@@ -29,7 +29,8 @@ body {
 .logo {
   border-radius: 27% 47% 21% 61% / 22% 45% 37% 73%;
 }
-.menu a {
+.menu > a,
+.menu > span {
   @apply rounded-lg inline-block ring-1 shadow-gray-300 text-black px-4 pb-[2px] hover:ring-2 ml-8 bg-slate-300;
 }
 
@@ -72,7 +73,7 @@ form div.btn button {
 }
 
 .link {
-  @apply no-underline border text-base rounded-full px-3 py-1 outline-1 hover:text-black hover:bg-slate-400;
+  @apply no-underline border text-base rounded-full px-3 pb-[2px] outline-1 hover:text-black hover:bg-slate-400;
 }
 
 .lnk {
@@ -84,11 +85,11 @@ form div.form-input input {
 }
 
 form div.form-input {
-  @apply h-[60px] relative;
+  @apply h-[55px] relative;
 }
 
 form div.form-input small {
-  @apply bottom-[0.1rem] pl-2 absolute mb-[8px];
+  @apply -bottom-[2px] pl-2 absolute mb-[8px];
 }
 
 form {
@@ -116,6 +117,9 @@ form {
 }
 .accordion-duo {
   @apply w-full md:w-5/12 flex-grow mx-1;
+}
+.badge {
+  @apply bg-green-600 rounded-md p-1 cursor-pointer naira text-gray-100;
 }
 .booker {
   @apply flex justify-around border-2 mt-1 divide-x-2 divide-slate-600;
@@ -253,4 +257,13 @@ table tr.checkout td {
 }
 .pagination ul li {
   @apply w-7 h-7 cursor-pointer;
+}
+
+.animate-h-0 {
+  @apply transition duration-1000 ease-in-out;
+  @apply h-0;
+}
+
+.animated-h-full {
+  @apply h-full;
 }

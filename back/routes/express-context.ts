@@ -1,6 +1,6 @@
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { NextFunction, Response } from "express";
-import * as schema from "../db/schemas/enums";
+import * as schema from "../db/schemas";
 
 /** Middleware that creates a new empty object on the Request and Response object */
 const expressContext =

@@ -80,10 +80,10 @@ export type ChestOrderItems = {
 
 export type ChestBook = {
   roomId: string;
-  price: number;
+  curPrice: number;
   inDate: string;
   outDate: string;
-  type: number;
+  type: string;
   name: string;
 };
 

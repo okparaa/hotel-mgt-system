@@ -6,16 +6,22 @@ import { useChest } from "../../app-chest";
 import { useItemQuery } from "../aio-urql";
 
 type ItemsFormProps = {
-  newItem: ({ variables }: any) => Promise<any>;
+  createItem: ({ variables }: any) => Promise<any>;
   fetching: boolean;
   defaultValues: any;
-  eItem: ({ variables }: any) => Promise<any>;
+  updateItem: ({ variables }: any) => Promise<any>;
   closeModal: () => void;
 };
 
 const ItemsForm = forwardRef(
   (
-    { newItem, fetching, defaultValues, eItem, closeModal }: ItemsFormProps,
+    {
+      createItem,
+      fetching,
+      defaultValues,
+      updateItem,
+      closeModal,
+    }: ItemsFormProps,
     ref: any
   ) => {
     const {
@@ -39,23 +45,23 @@ const ItemsForm = forwardRef(
             onSubmit={async (data: any) => {
               try {
                 if (store.id && store.__typename === "Item") {
-                  await eItem({
+                  await updateItem({
                     item: {
                       id: data.id,
                       name: data.name,
                       type: data.type,
-                      price: data.price,
+                      price: Number(data.price),
                       sku: data.sku,
                       description: data.description,
                     },
                   });
                   closeModal();
                 } else {
-                  await newItem({
+                  await createItem({
                     item: {
                       name: data.name,
                       type: data.type,
-                      price: data.price,
+                      price: Number(data.price),
                       description: data.description,
                     },
                   });

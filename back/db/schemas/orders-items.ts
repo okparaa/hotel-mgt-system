@@ -11,6 +11,7 @@ export const ordersItems = pgTable(
     orderId: varchar("order_id")
       .notNull()
       .references(() => orders.id),
+    curPrice: decimal("cur_price"),
     qtySold: decimal("qty_sold").default("0").$type<number>(),
     priceSold: decimal("price_sold").default("0").$type<number>(),
   },

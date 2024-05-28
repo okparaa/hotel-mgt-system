@@ -11,7 +11,7 @@ export const typeDef = /* GraphQL */ `
     id: ID!
     priceBought: Float
     qtyBought: Float
-    section: Section
+    route: Route
     user: User
     item: Item
     createdAt: String

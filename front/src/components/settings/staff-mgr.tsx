@@ -38,12 +38,16 @@ const StaffMgr = () => {
   };
 
   const route_options = routesRes.data?.routes
-    ?.map((route) => ({
-      key: route?.id,
-      value: route?.section,
-      slug: route?.slug,
-    }))
-    .filter((route: { value: any; slug: any }) => route.value && route.slug);
+    ?.map((route) => {
+      if (route?.isSxn) {
+        return {
+          key: route?.id,
+          value: route?.section,
+          slug: route?.slug,
+        };
+      }
+    })
+    .filter((route) => route);
 
   const fullname = `${userRes.data?.user?.surname} ${userRes.data?.user?.firstname} ${userRes.data?.user?.lastname}`;
   return (
@@ -117,6 +121,7 @@ const StaffMgr = () => {
             </div>
             <div className="flex justify-evenly flex-wrap">
               {routesRes.data?.routes?.map((route) => {
+                if (!route?.isSxn) return null;
                 return (
                   <Accordion
                     active={userRes.data?.user?.routeSlugs?.includes(

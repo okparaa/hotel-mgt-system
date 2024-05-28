@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import {
   boolean,
   date,
@@ -9,10 +8,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { users, orders } from ".";
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
+import { createId } from "./create-id";
 
 export const recoveries = pgTable("recoveries", {
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId())
+    .$defaultFn(() => createId("recoveries"))
     .primaryKey(),
   syn: boolean("syn").default(true),
   createdAt: timestamp("created_at").defaultNow(),

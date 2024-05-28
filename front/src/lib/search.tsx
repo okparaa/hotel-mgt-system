@@ -37,7 +37,7 @@ export const Search = ({ onOpen, hasBtn = true, Calenda }: SearchProps) => {
             onClick={() => {
               updateChest({
                 type: "store",
-                data: { neu: true, __typename: "" },
+                data: { neu: true },
               });
               typeof onOpen === "function" && onOpen();
             }}

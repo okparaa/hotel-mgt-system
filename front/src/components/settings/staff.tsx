@@ -40,7 +40,7 @@ const Staff = () => {
     <>
       <div className="my-2 mr-2 overflow-x-auto">
         <Table
-          Searche={<Search hasBtn={false} />}
+          Search={<Search hasBtn={false} />}
           tHead={tHead}
           tBody={tBody}
           fetching={usersRes.fetching}

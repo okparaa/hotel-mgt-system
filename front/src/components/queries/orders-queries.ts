@@ -4,7 +4,7 @@ export const UPDATE_ORDER = gql(`
   mutation updateOrder($order: OrderInput!) {
     updateOrder(order: $order) {
       id
-      price
+      amount
     }
   }
 `);
@@ -124,9 +124,8 @@ export const DEBIT_STAFF = gql(`
 export const ORDER = gql(`
   query Order($id: ID!) {
     order(id: $id) {
-      id,
-      price
-      
+      id
+      amount
     }
   }
 `);
@@ -165,7 +164,7 @@ export const ORDERS = gql(`
         canceled
         amount 
         bookDate
-        price
+        curPrice
         room {
           id
           name
@@ -211,7 +210,7 @@ export const UPDATE_RECOV = gql(`
         canceled
         amount 
         bookDate
-        price
+        curPrice
         room {
           id
           name
@@ -257,7 +256,7 @@ export const REMOVE_RECOV = gql(`
         canceled
         amount 
         bookDate
-        price
+        curPrice
         room {
           id
           name

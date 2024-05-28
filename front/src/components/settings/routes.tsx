@@ -27,7 +27,7 @@ const Ruotes = () => {
     return <QueryResult response={routesRes} />;
   }
 
-  const [routeNewRes, newRoute] = useCreateRouteMutation();
+  const [createRouteRes, createRoute] = useCreateRouteMutation();
 
   const {
     data: { search },
@@ -72,16 +72,17 @@ const Ruotes = () => {
     const end = start + itemsPerPage;
     setEndIndex(end);
   };
-  const searche = search || "";
+
   const pageRoutes = routesRes.data?.routes?.slice(startIndex, endIndex);
-  const searchRoute = routesRes.data?.routes?.filter((route: any) => {
-    const str = Object.values(route).join(" ").toLowerCase();
-    return str.includes(searche.toLowerCase());
+
+  const searchRoute = routesRes.data?.routes?.filter((route) => {
+    const str = route && Object.values(route).join(" ").toLowerCase();
+    return str && str.includes(search.toLowerCase());
   });
 
-  const searchRoutes = !!searche ? searchRoute : pageRoutes;
+  const searchRoutes = !!search ? searchRoute : pageRoutes;
 
-  const totalItems = !searche
+  const totalItems = !search
     ? routesRes.data?.routes?.length || 0
     : searchRoute?.length || 0;
 
@@ -93,9 +94,9 @@ const Ruotes = () => {
     />
   );
 
-  const [routeERes, eRoute] = useUpdateRouteMutation();
+  const [updateRouteRes, updateRoute] = useUpdateRouteMutation();
 
-  const [routeDRes, dRoute] = useRemoveRouteMutation();
+  const [removeRouteRes, removeRoute] = useRemoveRouteMutation();
 
   const defaultValues = {
     name: "",
@@ -113,9 +114,9 @@ const Ruotes = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <RoutesForm
-          fetching={routeNewRes.fetching || routeERes.fetching}
-          newRoute={newRoute}
-          eRoute={eRoute}
+          fetching={createRouteRes.fetching || updateRouteRes.fetching}
+          createRoute={createRoute}
+          updateRoute={updateRoute}
           closeModal={() => setOpen(false)}
           ref={formRef}
           defaultValues={defaultValues}
@@ -124,12 +125,12 @@ const Ruotes = () => {
       {routesRes.data?.routes && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
-            Searche={<Search onOpen={() => setOpen(true)} />}
+            Search={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
             fetching={routesRes.fetching}
-            deleting={routeDRes.fetching}
-            remove={dRoute}
+            deleting={removeRouteRes.fetching}
+            remove={removeRoute}
             open={openDel}
             onClose={() => setOpenDel(false)}
           />

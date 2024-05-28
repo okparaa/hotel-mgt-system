@@ -52,4 +52,9 @@ export const months = [
   "Dec",
 ];
 
-export const bookable = ["Room", "Hall", "Pool", "Other"];
+export const bookable = [
+  { key: "room", value: "Room" },
+  { key: "hall", value: "Hall" },
+  { key: "pool", value: "Pool" },
+  { key: "other", value: "Other" },
+];

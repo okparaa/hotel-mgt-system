@@ -41,6 +41,7 @@ export const BOOKER = gql(`
         inDate
         outDate
         canceled
+        curPrice
       }
     }
   }

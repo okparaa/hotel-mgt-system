@@ -1,1 +1,0 @@
-ALTER TABLE "rooms" ALTER COLUMN "room_status" SET DEFAULT 'nb';

@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { FormRef } from "../../lib/forms";
-import { errorHandler } from "../../lib/utils";
 import FormModal from "../../lib/form-modal";
 import { Search } from "../../lib/search";
 import { Table } from "../../lib/table";
@@ -15,28 +14,19 @@ import {
   useRoomsQuery,
   useUpdateRoomMutation,
 } from "../aio-urql";
-import { bookable } from "../../config";
 import QueryResult from "../../lib/query-result";
 
 const Rooms = () => {
-  const [open, setOpen] = useState(false); //for edit and new modal
-  const [openDel, setOpenDel] = useState(false); //for delete modal
+  const [open, setOpen] = useState<boolean>(); //for edit and new modal
+  const [openDel, setOpenDel] = useState<boolean>(); //for delete modal
   const formRef = useRef<FormRef>(null);
-  const [newRoomRes, newRoom] = useCreateRoomMutation();
-
-  // { fetching: creating, error: newError, data: newData }
-  if (!newRoomRes.error && newRoomRes.data) {
-    formRef.current?.reset();
-    setOpen(false);
-  } else if (newRoomRes.error) {
-    setOpen(false);
-    errorHandler(newRoomRes.error, formRef.current);
-  }
+  const [createRoomRes, createRoom] = useCreateRoomMutation();
 
   const {
     data: { search },
     updateChest,
   } = useChest();
+
   const [roomPriceRes, roomPrice] = useRoomPriceMutation();
 
   const [roomsRes] = useRoomsQuery();
@@ -52,10 +42,14 @@ const Rooms = () => {
     });
     setOpenDel(true);
   };
-  const editRoom = (room: Room) => {
+
+  const editRoom = async (room: Room) => {
     updateChest({
+      data: {
+        id: room.id,
+        __typename: "Room",
+      },
       type: "store",
-      data: { __typename: "Room", id: room.id },
     });
     setOpen(true);
   };
@@ -73,32 +67,31 @@ const Rooms = () => {
     </tr>
   );
 
-  const searchItems = roomsRes.data?.rooms?.filter((item: any) => {
-    const str = Object.values(item).join(" ").toLowerCase();
-    const searche = search || "";
-    return str.includes(searche.toLowerCase());
+  const searchRooms = roomsRes.data?.rooms?.filter((item) => {
+    const str = item && Object.values(item).join(" ").toLowerCase();
+    return str && str.includes(search.toLowerCase());
   });
 
   const tBody = (
     <RoomBody
-      searchRooms={searchItems}
+      searchRooms={searchRooms}
       editRoom={editRoom}
       isBusy={roomPriceRes.fetching}
       deleteRoom={deleteRoom}
       roomPrice={roomPrice}
-      bookable={bookable}
     />
   );
 
-  const [eRoomRes, eRoom] = useUpdateRoomMutation();
+  const [updateRoomRes, updateRoom] = useUpdateRoomMutation();
 
-  const [dRoomRes, dRoom] = useRemoveRoomMutation();
+  const [removeRoomRes, removeRoom] = useRemoveRoomMutation();
 
   const defaultValues = {
     name: "",
     price: "",
     description: "",
-    type: "0",
+    type: "room",
+    status: "good",
   };
 
   return (
@@ -109,11 +102,10 @@ const Rooms = () => {
         className="w-8/12 p-4 rounded-xl shadow-xl backdrop:bg-gray-800 backdrop:bg-opacity-45"
       >
         <RoomsForm
-          fetching={eRoomRes.fetching || newRoomRes.fetching}
-          newRoom={newRoom}
-          eRoom={eRoom}
+          fetching={updateRoomRes.fetching || createRoomRes.fetching}
+          createRoom={createRoom}
+          updateRoom={updateRoom}
           ref={formRef}
-          bookable={bookable}
           onClose={() => setOpen(false)}
           defaultValues={defaultValues}
         />
@@ -121,12 +113,12 @@ const Rooms = () => {
       {roomsRes.data?.rooms && (
         <div className="my-2 mr-2 overflow-x-auto">
           <Table
-            Searche={<Search onOpen={() => setOpen(true)} />}
+            Search={<Search onOpen={() => setOpen(true)} />}
             tHead={tHead}
             tBody={tBody}
             fetching={roomsRes.fetching}
-            deleting={dRoomRes.fetching}
-            remove={dRoom}
+            deleting={removeRoomRes.fetching}
+            remove={removeRoom}
             open={openDel}
             onClose={() => setOpenDel(false)}
           />

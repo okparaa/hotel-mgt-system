@@ -1,11 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import {
-  HomeIcon,
-  LogInIcon,
-  Menu,
-  PencilRulerIcon,
-  Power,
-} from "lucide-react";
+import { HomeIcon, LogInIcon, Menu, Power, Store } from "lucide-react";
 import { Image } from "./image";
 import logo from "../images/logo.png";
 import { useChest } from "../app-chest";
@@ -50,9 +44,11 @@ const Navbar = () => {
           <Link to={session.auth === "ok" ? "/aio" : "/"}>
             <HomeIcon className="w-5 inline-block" /> Home
           </Link>
-          <Link to="/services">
-            <PencilRulerIcon className="w-5 inline-block" /> Services
+
+          <Link to={`/aio/services`}>
+            <Store className="w-5 inline-block" /> Services
           </Link>
+
           {session.auth !== "" ? (
             <Link onClick={signOut} to="/" className="w-28 inline-block">
               <Power className="w-5 inline-block mb-0 p-0" /> Logout

@@ -2,13 +2,14 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useChest } from "../../../app-chest";
 import { AddInput } from "../../../lib/add-input";
 import { roomStatusOptions } from "../../../config";
+import { RoomsQuery } from "../../aio-urql";
+import { ucwords } from "../../../lib/utils";
 
 type RoomBodyProps = {
-  searchRooms?: any[];
+  searchRooms?: RoomsQuery["rooms"];
   editRoom: ({ variables }: any) => void;
   deleteRoom: ({ variables }: any) => void;
   roomPrice: ({ variables }: any) => void;
-  bookable: string[];
   isBusy?: boolean;
 };
 
@@ -17,23 +18,22 @@ export const RoomBody = ({
   editRoom,
   deleteRoom,
   roomPrice,
-  bookable,
   isBusy = false,
 }: RoomBodyProps) => {
   const { updateChest } = useChest();
   return (
     <>
-      {searchRooms?.map((room: any) => (
-        <tr key={room.id} className="bg-tr">
+      {searchRooms?.map((room) => (
+        <tr key={room?.id} className="bg-tr">
           <td>
-            {bookable && bookable[room.type]} {room.name}
+            {ucwords(room?.type)} {room?.name}
           </td>
-          <td>{room.description}</td>
-          <td>{room.sku}</td>
+          <td>{room?.description}</td>
+          <td>{room?.sku}</td>
           <td>
             <div className="flex text-center justify-center">
-              {room.status ? (
-                room.status == "o-of-o" ? (
+              {room?.status ? (
+                room?.status == "o-of-o" ? (
                   <span className="bg-red-400 w-16 h-8 py-1 rounded-md cursor-pointer">
                     {roomStatusOptions[room.status]}
                   </span>
@@ -50,14 +50,14 @@ export const RoomBody = ({
           <td>
             <span className="cursor-text flex w-28 h-8 m-auto justify-center items-center rounded-md">
               <AddInput
-                id={room.id}
-                initialValue={room.price}
+                id={room!.id}
+                initialValue={room?.price!}
                 isBusy={isBusy}
                 action={(value) => {
-                  if (+value === +room.price) return;
-                  updateChest({ data: { id: room.id }, type: "row" });
+                  if (+value === room?.price) return;
+                  updateChest({ data: { id: room?.id }, type: "row" });
                   roomPrice({
-                    id: room.id,
+                    id: room?.id,
                     price: Number(value),
                   });
                 }}
@@ -66,6 +66,7 @@ export const RoomBody = ({
           </td>
           <td className="text-right !px-0">
             <span
+              id={room?.id}
               className="icon-span"
               onClick={() => {
                 updateChest({ type: "store", data: { neu: false } });
@@ -77,7 +78,7 @@ export const RoomBody = ({
           </td>
           <td className="text-center !px-0">
             <span
-              id={room.id}
+              id={room?.id}
               className="icon-span"
               onClick={() => deleteRoom(room)}
             >

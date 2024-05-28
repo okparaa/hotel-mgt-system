@@ -154,16 +154,12 @@ export function Select({ register, name, options, ...rest }: any) {
         className={
           rest.className
             ? rest.className
-            : `block bg-white text-[17px] px-3 py-1 w-auto rounded-md border border-gray-300 focus:outline-none mb-6`
+            : `block bg-white text-[17px] px-3 py-1 w-auto rounded-md border border-gray-300 focus:outline-none mb-4`
         }
       >
         <option value="">--select--</option>
         {options?.map((option: { key: string; value: string }) => (
-          <option
-            key={option.key}
-            defaultChecked={option.key == rest.selected}
-            value={option.key}
-          >
+          <option key={option.key} value={option.key}>
             {option.value}
           </option>
         ))}
@@ -227,18 +223,18 @@ export function Textarea({ register, name, errors, ...rst }: any) {
   return (
     <div className={`mb-4 relative`}>
       <textarea
-        rows={2}
+        rows={1}
         {...rst}
         {...rest}
         ref={taRef}
-        className="block !m-0 text-[17px] px-3 w-full rounded-md border border-gray-300 focus:outline-none mb-6"
+        className="block !m-0 text-[17px] px-3 w-full rounded-md border border-gray-300 focus:outline-none mb-4"
         onChange={(e) => {
           setTaValue((e.target as HTMLTextAreaElement)?.value);
           onChange(e);
         }}
       />
       {errors[name]?.message && (
-        <small className="-bottom-[0.9rem] pl-2 absolute font-bold text-red-600 text-xs">
+        <small className="-bottom-[14px] pl-2 absolute font-bold text-red-600 text-xs">
           {errors[name].message}
         </small>
       )}

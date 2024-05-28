@@ -37,7 +37,7 @@ const Login = () => {
         {session.auth == "" && (
           <div>
             <span>Don't have account? </span>
-            <Link to="/users/signup" className="link">
+            <Link to="/users/signup" className="link ml-2 bg-slate-200">
               Sign Up
             </Link>
           </div>

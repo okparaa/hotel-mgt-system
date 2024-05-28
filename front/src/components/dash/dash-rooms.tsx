@@ -1,5 +1,9 @@
 import { Sofa } from "lucide-react";
-import { Room, useCancelBookingMutation, useRoomsQuery } from "../aio-urql";
+import {
+  RoomsQuery,
+  useCancelBookingMutation,
+  useRoomsQuery,
+} from "../aio-urql";
 import QueryResult from "../../lib/query-result";
 import { Search } from "../../lib/search";
 import { useChest } from "../../app-chest";
@@ -9,12 +13,12 @@ import {
   getDateFromTimestamp,
   getDays,
   getKey,
+  ucwords,
 } from "../../lib/utils";
 import { useState } from "react";
 import Modal from "../../lib/modal";
 import { ChestBook } from "../../lib/types";
 import { BookingCheckout } from "./partials/booking-checkout";
-import { bookable } from "../../config";
 
 const DashRooms = () => {
   const [roomsRes] = useRoomsQuery();
@@ -34,11 +38,12 @@ const DashRooms = () => {
     });
   }
 
-  const roomSearch = roomsRes.data?.rooms?.filter((room: any) => {
-    const str = "room " + room.name + " room" + room.name;
-    const searche = search || "";
-    return str.includes(searche.toLowerCase());
-  }) as Room[];
+  const roomSearch: RoomsQuery["rooms"] = roomsRes.data?.rooms?.filter(
+    (room: any) => {
+      const str = "room " + room.name + " room" + room.name;
+      return str.includes(search.toLowerCase());
+    }
+  );
 
   const [openDel, setOpenDel] = useState(false); //for delete modal
 
@@ -65,20 +70,19 @@ const DashRooms = () => {
                 <Search hasBtn={false} />
               </span>
             </div>
-            {roomSearch?.map((room: Room) => {
+            {roomSearch?.map((room) => {
               const today = new Date(new Date().setHours(14)).getTime();
-              const inDate = new Date(room.booking?.inDate || "").getTime();
+              const inDate = new Date(room?.booking?.inDate || "").getTime();
               const outDate = new Date(
-                new Date(room.booking?.outDate || "").setHours(14)
+                new Date(room?.booking?.outDate || "").setHours(14)
               ).getTime();
 
               const isBooked =
                 outDate >= today &&
                 today >= inDate &&
-                room.booking?.canceled !== true;
+                room?.booking?.canceled !== true;
 
               if (!room) return <></>;
-              const type = room.type as any;
               return (
                 <span
                   className={`${
@@ -90,7 +94,9 @@ const DashRooms = () => {
                     if (isBooked) {
                       updateChest({
                         data: {
-                          delMsg: `Cancel [Room ${room.name}] booking?`,
+                          delMsg: `Cancel [${ucwords(room.type)} ${
+                            room.name
+                          }] booking?`,
                           id: room.booking?.id,
                         },
                         type: "store",
@@ -106,15 +112,16 @@ const DashRooms = () => {
                       return;
                     }
                     const ruum = {
-                      type: Number(room.type),
+                      type: room.type,
                       roomId: room.id,
-                      price: room.price,
+                      curPrice: room.price,
                       inDate: getDateFromTimestamp(new Date().toDateString()),
                       outDate: getDateFromTimestamp(
                         addDaysToDate(new Date(), 1).toDateString()
                       ),
                       name: room.name,
                     } as ChestBook;
+                    console.log(ruum);
 
                     booker.bookables.push(ruum);
                     const newBooking = booker.bookables;
@@ -125,7 +132,7 @@ const DashRooms = () => {
                           inDate: book.inDate,
                           outDate: book.outDate,
                         });
-                        return acc + Number(book.price) * days;
+                        return acc + Number(book.curPrice) * days;
                       },
                       0
                     );
@@ -143,7 +150,7 @@ const DashRooms = () => {
                     <Sofa className="w-5 h-5" />{" "}
                     <div className="flex flex-col justify-center pb-1">
                       <span className="text-center">
-                        {bookable[type]} {room?.name}{" "}
+                        {ucwords(room.type)} {room?.name}{" "}
                       </span>
                       <span className="text-sm pt-0 text-center opacity-55">
                         {isBooked

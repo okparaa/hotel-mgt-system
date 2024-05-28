@@ -1,23 +1,24 @@
 import { gql } from "@urql/preact";
 
 export const CREATE_ROOM = gql(`
-  mutation CreateRoom($room: NewRoomInput!) {
+  mutation CreateRoom($room: CreateRoomInput!) {
     createRoom(room: $room) {
       id
       name
       description
       price
       sku
-      reason
       createdAt
       deleted
       status
       type
+      reason
       booking {
         id
         inDate
         outDate
         canceled
+        curPrice
       }
     }
   }
@@ -41,6 +42,7 @@ export const UPDATE_ROOM = gql(`
         inDate
         outDate
         canceled
+        curPrice
       }
     }
   }
@@ -62,12 +64,15 @@ export const ROOM_PRICE = gql(`
     }
   }
 `);
-export const GET_ROOMS_CHART = gql(`
+export const ROOMS_CHART = gql(`
   query RoomsChart {
     roomsChart {
       id
       name
+      description
       price
+      sku
+      createdAt
       deleted
       status
       type
@@ -77,6 +82,7 @@ export const GET_ROOMS_CHART = gql(`
         inDate
         outDate
         canceled
+        curPrice
       }
     }
   }
@@ -100,6 +106,7 @@ export const ROOMS = gql(`
         inDate
         outDate
         canceled
+        curPrice
       }
     }
   }
@@ -122,6 +129,7 @@ export const ROOM = gql(`
         inDate
         outDate
         canceled
+        curPrice
       }
     }
   }

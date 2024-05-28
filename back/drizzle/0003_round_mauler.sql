@@ -1,0 +1,1 @@
+ALTER TABLE "rooms" ALTER COLUMN "type" SET DATA TYPE varchar;

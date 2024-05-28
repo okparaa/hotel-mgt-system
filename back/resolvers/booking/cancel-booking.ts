@@ -34,8 +34,6 @@ export const cancelBooking = async (parent: any, args: any, ctx: Context) => {
           .innerJoin(bookings, eq(bookings.orderId, orders.id))
           .where(eq(orders.id, book.orderId));
 
-        console.log(order);
-
         await tx
           .update(orders)
           .set({

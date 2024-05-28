@@ -20,7 +20,7 @@ export const updateItem = async (parent: any, args: any, ctx: Context) => {
     throwError("Some fields are omited", ErrorTypes.BAD_USER_INPUT, itemErrors);
   }
   const skuItem = await skuExists(args.item.sku, ctx);
-  if (skuItem.id) {
+  if (!skuItem || !skuItem.id) {
     throwError("sku exists", ErrorTypes.ALREADY_EXISTS, [
       ["sku", `item does not exist`],
     ]);

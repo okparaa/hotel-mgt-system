@@ -51,7 +51,7 @@ const Orders = () => {
         <Table
           tHead={tItemHead}
           tBody={<OrderItemBody searchItems={searchItems} />}
-          Searche={<Search hasBtn={false} />}
+          Search={<Search hasBtn={false} />}
         />
       </div>
       <div className="w-6 mx-1 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200"></div>

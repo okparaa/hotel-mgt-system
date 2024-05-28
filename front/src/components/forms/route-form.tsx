@@ -12,25 +12,29 @@ import { useChest } from "../../app-chest";
 import { useRouteQuery } from "../aio-urql";
 
 type RoutesFormProps = {
-  newRoute: ({ variables }: any) => Promise<any>;
+  createRoute: ({ variables }: any) => Promise<any>;
   fetching: boolean;
   defaultValues: any;
-  eRoute: ({ variables }: any) => Promise<any>;
+  updateRoute: ({ variables }: any) => Promise<any>;
   closeModal: () => void;
 };
 
 const RoutesForm = forwardRef(
   (
-    { newRoute, fetching, defaultValues, eRoute, closeModal }: RoutesFormProps,
+    {
+      createRoute,
+      fetching,
+      defaultValues,
+      updateRoute,
+      closeModal,
+    }: RoutesFormProps,
     ref: any
   ) => {
     const {
       data: { store },
     } = useChest();
 
-    const neu = store.neu;
-
-    if (store.id && store.__typename === "Route") {
+    if (store.id && store.__typename === "Route" && !store.neu) {
       const [routeRes] = useRouteQuery({ variables: { id: store.id } });
       defaultValues = routeRes?.data?.route;
     }
@@ -58,8 +62,8 @@ const RoutesForm = forwardRef(
             defaultValues={defaultValues}
             onSubmit={async (data: any) => {
               try {
-                if (store.id && store.__typename === "Route") {
-                  await eRoute({
+                if (store.id && store.__typename === "Route" && !store.neu) {
+                  await updateRoute({
                     route: {
                       id: data.id,
                       name: data.name,
@@ -71,7 +75,7 @@ const RoutesForm = forwardRef(
                   });
                   closeModal();
                 } else {
-                  await newRoute({
+                  await createRoute({
                     route: {
                       name: data.name,
                       description: data.description,
@@ -85,7 +89,7 @@ const RoutesForm = forwardRef(
               } catch (error) {}
             }}
           >
-            {!neu ? <Hidden name="id" /> : <></>}
+            {!store.neu ? <Hidden name="id" /> : <></>}
             <Input
               req_msg="required"
               name="name"
@@ -101,7 +105,7 @@ const RoutesForm = forwardRef(
             <Input
               req_msg="required"
               name="slug"
-              placeholder="3 letter name"
+              placeholder="3 letter word"
               size="w-6/12"
               regx_msg="use 3 letters"
               regx="^\w{3}$"

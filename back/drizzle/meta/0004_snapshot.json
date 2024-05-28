@@ -1,59 +1,11 @@
 {
-  "id": "4befe4ff-70ed-4048-9c48-fd6531af6e1f",
-  "prevId": "8159f8e5-88f7-4c59-806b-0bfc2d232bb8",
+  "id": "92601f7f-94b3-47d3-8e98-b3495a6ca70c",
+  "prevId": "494cf9a1-e86e-4793-ae9a-133500e3a948",
   "version": "5",
   "dialect": "pg",
   "tables": {
-    "deductions": {
-      "name": "deductions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ddate": {
-          "name": "ddate",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deleted": {
-          "name": "deleted",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "amount": {
-          "name": "amount",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'0'"
-        },
-        "reason": {
-          "name": "reason",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "departments": {
-      "name": "departments",
+    "users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
@@ -61,6 +13,49 @@
           "type": "varchar(128)",
           "primaryKey": true,
           "notNull": true
+        },
+        "surname": {
+          "name": "surname",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "firstname": {
+          "name": "firstname",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastname": {
+          "name": "lastname",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone": {
+          "name": "phone",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "photo_url": {
+          "name": "photo_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -83,8 +78,47 @@
           "notNull": false,
           "default": false
         },
-        "name": {
-          "name": "name",
+        "status": {
+          "name": "status",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "salary": {
+          "name": "salary",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0.00'"
+        },
+        "address": {
+          "name": "address",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password": {
+          "name": "password",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verified": {
+          "name": "verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "route_slugs": {
+          "name": "route_slugs",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "route_id": {
+          "name": "route_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -93,10 +127,25 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_username_unique": {
+          "name": "users_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
+        "users_phone_unique": {
+          "name": "users_phone_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "phone"
+          ]
+        }
+      }
     },
-    "inventories": {
-      "name": "inventories",
+    "purchases": {
+      "name": "purchases",
       "schema": "",
       "columns": {
         "id": {
@@ -104,6 +153,13 @@
           "type": "varchar(128)",
           "primaryKey": true,
           "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -151,19 +207,13 @@
           "type": "varchar(128)",
           "primaryKey": false,
           "notNull": false
-        },
-        "dept_id": {
-          "name": "dept_id",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "inventories_user_id_users_id_fk": {
-          "name": "inventories_user_id_users_id_fk",
-          "tableFrom": "inventories",
+        "purchases_user_id_users_id_fk": {
+          "name": "purchases_user_id_users_id_fk",
+          "tableFrom": "purchases",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -174,25 +224,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "inventories_item_id_items_id_fk": {
-          "name": "inventories_item_id_items_id_fk",
-          "tableFrom": "inventories",
+        "purchases_item_id_items_id_fk": {
+          "name": "purchases_item_id_items_id_fk",
+          "tableFrom": "purchases",
           "tableTo": "items",
           "columnsFrom": [
             "item_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "inventories_dept_id_departments_id_fk": {
-          "name": "inventories_dept_id_departments_id_fk",
-          "tableFrom": "inventories",
-          "tableTo": "departments",
-          "columnsFrom": [
-            "dept_id"
           ],
           "columnsTo": [
             "id"
@@ -203,8 +240,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "inventories_created_at_item_id_unique": {
-          "name": "inventories_created_at_item_id_unique",
+        "purchases_created_at_item_id_unique": {
+          "name": "purchases_created_at_item_id_unique",
           "nullsNotDistinct": false,
           "columns": [
             "created_at",
@@ -212,88 +249,6 @@
           ]
         }
       }
-    },
-    "items": {
-      "name": "items",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(128)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "type": {
-          "name": "type",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sku": {
-          "name": "sku",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "price": {
-          "name": "price",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'0'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "qty_bought": {
-          "name": "qty_bought",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'0'"
-        },
-        "qty_sold": {
-          "name": "qty_sold",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'0'"
-        },
-        "deleted": {
-          "name": "deleted",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
     },
     "orders": {
       "name": "orders",
@@ -305,6 +260,13 @@
           "primaryKey": true,
           "notNull": true
         },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -326,8 +288,8 @@
           "notNull": false,
           "default": false
         },
-        "customer_name": {
-          "name": "customer_name",
+        "guest_name": {
+          "name": "guest_name",
           "type": "varchar(60)",
           "primaryKey": false,
           "notNull": false,
@@ -339,29 +301,49 @@
           "primaryKey": false,
           "notNull": false
         },
-        "customer_email": {
-          "name": "customer_email",
+        "guest_email": {
+          "name": "guest_email",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'n/a'"
         },
-        "customer_phone": {
-          "name": "customer_phone",
+        "guest_phone": {
+          "name": "guest_phone",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "default": "'n/a'"
         },
-        "order_status": {
-          "name": "order_status",
-          "type": "order_status",
+        "pos": {
+          "name": "pos",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false,
-          "default": "'pending'"
+          "default": "'0'"
         },
-        "amount_sold": {
-          "name": "amount_sold",
+        "cash": {
+          "name": "cash",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "txfa": {
+          "name": "txfa",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "status": {
+          "name": "status",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amount": {
+          "name": "amount",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false,
@@ -395,10 +377,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "orders_dept_id_departments_id_fk": {
-          "name": "orders_dept_id_departments_id_fk",
+        "orders_dept_id_routes_id_fk": {
+          "name": "orders_dept_id_routes_id_fk",
           "tableFrom": "orders",
-          "tableTo": "departments",
+          "tableTo": "routes",
           "columnsFrom": [
             "dept_id"
           ],
@@ -411,6 +393,397 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "payments": {
+      "name": "payments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "status": {
+          "name": "status",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "reference": {
+          "name": "reference",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "authorization_url": {
+          "name": "authorization_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_code": {
+          "name": "access_code",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "message": {
+          "name": "message",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "pins": {
+      "name": "pins",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "status": {
+          "name": "status",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pin": {
+          "name": "pin",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "roles": {
+      "name": "roles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "rooms": {
+      "name": "rooms",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'room'"
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "sku": {
+          "name": "sku",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "routes": {
+      "name": "routes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "other_slugs": {
+          "name": "other_slugs",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "section": {
+          "name": "section",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "section_name": {
+          "name": "section_name",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "route_id": {
+          "name": "route_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "routes_route_id_routes_id_fk": {
+          "name": "routes_route_id_routes_id_fk",
+          "tableFrom": "routes",
+          "tableTo": "routes",
+          "columnsFrom": [
+            "route_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "routes_name_unique": {
+          "name": "routes_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
     },
     "orders_items": {
       "name": "orders_items",
@@ -427,6 +800,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "cur_price": {
+          "name": "cur_price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
         },
         "qty_sold": {
           "name": "qty_sold",
@@ -483,8 +862,8 @@
       },
       "uniqueConstraints": {}
     },
-    "pins": {
-      "name": "pins",
+    "stores_items": {
+      "name": "stores_items",
       "schema": "",
       "columns": {
         "id": {
@@ -493,62 +872,62 @@
           "primaryKey": true,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": false,
-          "default": "now()"
+          "default": true
         },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "pin_status": {
-          "name": "pin_status",
-          "type": "pin_status",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'valid'"
-        },
-        "pin": {
-          "name": "pin",
+        "item_id": {
+          "name": "item_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "rooms": {
-      "name": "rooms",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "varchar(128)",
-          "primaryKey": true,
-          "notNull": true
+        },
+        "store_id": {
+          "name": "store_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "qty_req": {
+          "name": "qty_req",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "qty": {
+          "name": "qty",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "cur_price": {
+          "name": "cur_price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "route_id": {
+          "name": "route_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
+          "notNull": false
         },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
+          "notNull": false
         },
         "deleted": {
           "name": "deleted",
@@ -557,91 +936,68 @@
           "notNull": false,
           "default": false
         },
-        "name": {
-          "name": "name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "guest_phone": {
-          "name": "guest_phone",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "guest_email": {
-          "name": "guest_email",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "guest_name": {
-          "name": "guest_name",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "in_date": {
-          "name": "in_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "out_date": {
-          "name": "out_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
-        },
-        "type": {
-          "name": "type",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "price": {
-          "name": "price",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'0'"
-        },
-        "sku": {
-          "name": "sku",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "book_date": {
-          "name": "book_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "room_status": {
-          "name": "room_status",
-          "type": "room_status",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "stores_items_item_id_items_id_fk": {
+          "name": "stores_items_item_id_items_id_fk",
+          "tableFrom": "stores_items",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "stores_items_store_id_stores_id_fk": {
+          "name": "stores_items_store_id_stores_id_fk",
+          "tableFrom": "stores_items",
+          "tableTo": "stores",
+          "columnsFrom": [
+            "store_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "stores_items_route_id_routes_id_fk": {
+          "name": "stores_items_route_id_routes_id_fk",
+          "tableFrom": "stores_items",
+          "tableTo": "routes",
+          "columnsFrom": [
+            "route_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "stores_items_user_id_users_id_fk": {
+          "name": "stores_items_user_id_users_id_fk",
+          "tableFrom": "stores_items",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -679,6 +1035,13 @@
           "type": "varchar(12)",
           "primaryKey": false,
           "notNull": false
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -725,18 +1088,10 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "sessions_refresh_token_unique": {
-          "name": "sessions_refresh_token_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "refresh_token"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
-    "users": {
-      "name": "users",
+    "items": {
+      "name": "items",
       "schema": "",
       "columns": {
         "id": {
@@ -745,41 +1100,43 @@
           "primaryKey": true,
           "notNull": true
         },
-        "surname": {
-          "name": "surname",
-          "type": "varchar(60)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "username": {
-          "name": "username",
-          "type": "varchar(60)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "firstname": {
-          "name": "firstname",
-          "type": "varchar(60)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "lastname": {
-          "name": "lastname",
-          "type": "varchar(60)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(30)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "photo_url": {
-          "name": "photo_url",
+        "name": {
+          "name": "name",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sku": {
+          "name": "sku",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
         },
         "created_at": {
           "name": "created_at",
@@ -795,67 +1152,123 @@
           "notNull": false,
           "default": "now()"
         },
+        "qty_bought": {
+          "name": "qty_bought",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "qty_sold": {
+          "name": "qty_sold",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
         "deleted": {
           "name": "deleted",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
           "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "bookings": {
+      "name": "bookings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
         },
-        "user_status": {
-          "name": "user_status",
-          "type": "user_status",
+        "room_id": {
+          "name": "room_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "book_date": {
+          "name": "book_date",
+          "type": "date",
           "primaryKey": false,
           "notNull": false,
-          "default": "'active'"
+          "default": "now()"
         },
-        "salary": {
-          "name": "salary",
+        "canceled": {
+          "name": "canceled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "in_date": {
+          "name": "in_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "out_date": {
+          "name": "out_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "days": {
+          "name": "days",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false,
-          "default": "'0.00'"
+          "default": "'0'"
         },
-        "address": {
-          "name": "address",
-          "type": "varchar(300)",
+        "cur_price": {
+          "name": "cur_price",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "password": {
-          "name": "password",
-          "type": "varchar(60)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "verified": {
-          "name": "verified",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "roles": {
-          "name": "roles",
-          "type": "roles",
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false,
-          "default": "'guest'"
-        },
-        "dept_id": {
-          "name": "dept_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
+          "default": "'0'"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "users_dept_id_departments_id_fk": {
-          "name": "users_dept_id_departments_id_fk",
-          "tableFrom": "users",
-          "tableTo": "departments",
+        "bookings_room_id_rooms_id_fk": {
+          "name": "bookings_room_id_rooms_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "rooms",
           "columnsFrom": [
-            "dept_id"
+            "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bookings_order_id_orders_id_fk": {
+          "name": "bookings_order_id_orders_id_fk",
+          "tableFrom": "bookings",
+          "tableTo": "orders",
+          "columnsFrom": [
+            "order_id"
           ],
           "columnsTo": [
             "id"
@@ -866,78 +1279,242 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
+        "bookings_in_date_room_id_unique": {
+          "name": "bookings_in_date_room_id_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "username"
-          ]
-        },
-        "users_phone_unique": {
-          "name": "users_phone_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "phone"
+            "in_date",
+            "room_id"
           ]
         }
       }
+    },
+    "stores": {
+      "name": "stores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "qty": {
+          "name": "qty",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "route_id": {
+          "name": "route_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "stores_item_id_items_id_fk": {
+          "name": "stores_item_id_items_id_fk",
+          "tableFrom": "stores",
+          "tableTo": "items",
+          "columnsFrom": [
+            "item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "stores_route_id_routes_id_fk": {
+          "name": "stores_route_id_routes_id_fk",
+          "tableFrom": "stores",
+          "tableTo": "routes",
+          "columnsFrom": [
+            "route_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "recoveries": {
+      "name": "recoveries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(128)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "syn": {
+          "name": "syn",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "recovered_at": {
+          "name": "recovered_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deleted": {
+          "name": "deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "pos": {
+          "name": "pos",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "cash": {
+          "name": "cash",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "hash": {
+          "name": "hash",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "staff_id": {
+          "name": "staff_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "debit_amt": {
+          "name": "debit_amt",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "debited_at": {
+          "name": "debited_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "debit_aim": {
+          "name": "debit_aim",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "txfa": {
+          "name": "txfa",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "recoveries_staff_id_users_id_fk": {
+          "name": "recoveries_staff_id_users_id_fk",
+          "tableFrom": "recoveries",
+          "tableTo": "users",
+          "columnsFrom": [
+            "staff_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "recoveries_order_id_orders_id_fk": {
+          "name": "recoveries_order_id_orders_id_fk",
+          "tableFrom": "recoveries",
+          "tableTo": "orders",
+          "columnsFrom": [
+            "order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "recoveries_user_id_users_id_fk": {
+          "name": "recoveries_user_id_users_id_fk",
+          "tableFrom": "recoveries",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "order_status": {
-      "name": "order_status",
-      "values": {
-        "pending": "pending",
-        "canceled": "canceled",
-        "completed": "completed"
-      }
-    },
-    "pin_status": {
-      "name": "pin_status",
-      "values": {
-        "valid": "valid",
-        "invalid": "invalid",
-        "used": "used"
-      }
-    },
-    "roles": {
-      "name": "roles",
-      "values": {
-        "guest": "guest",
-        "cheff": "cheff",
-        "waiter": "waiter",
-        "barman": "barman",
-        "owner": "owner",
-        "auditor": "auditor",
-        "accountant": "accountant",
-        "cashier": "cashier",
-        "manager": "manager",
-        "owner_rep": "owner_rep",
-        "cleaner": "cleaner",
-        "security": "security",
-        "root": "root",
-        "store_keeper": "store_keeper",
-        "maintenance": "maintenance",
-        "pool_boy": "pool_boy"
-      }
-    },
-    "room_status": {
-      "name": "room_status",
-      "values": {
-        "b": "b",
-        "nb": "nb",
-        "ooo": "ooo"
-      }
-    },
-    "user_status": {
-      "name": "user_status",
-      "values": {
-        "active": "active",
-        "suspended": "suspended",
-        "sacked": "sacked"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "columns": {},

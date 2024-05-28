@@ -1,1 +1,0 @@
-ALTER TABLE "rooms" DROP COLUMN IF EXISTS "book_date";

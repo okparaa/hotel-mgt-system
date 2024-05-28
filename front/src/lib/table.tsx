@@ -11,7 +11,7 @@ type TableProps = {
   open?: boolean;
   onClose?: () => void;
   className?: string;
-  Searche?: JSX.Element;
+  Search?: JSX.Element;
   Info?: JSX.Element;
 };
 
@@ -23,7 +23,7 @@ export const Table = ({
   open = false,
   onClose = () => null,
   deleting = false,
-  Searche,
+  Search,
   className,
   Info,
 }: TableProps) => {
@@ -32,7 +32,7 @@ export const Table = ({
     <>
       <table className={`btab ${className}`}>
         <caption className="uppercase">
-          {Searche ? Searche : <></>}
+          {Search ? Search : <></>}
           {Info ? Info : <></>}
         </caption>
         <thead>{tHead}</thead>

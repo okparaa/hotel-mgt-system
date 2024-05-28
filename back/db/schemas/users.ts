@@ -1,4 +1,3 @@
-import { createId } from "@paralleldrive/cuid2";
 import {
   boolean,
   decimal,
@@ -6,13 +5,18 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { userStatusEnum } from "./enums";
-import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm";
-import { orders, routes, sections } from ".";
+import {
+  InferInsertModel,
+  InferSelectModel,
+  relations,
+  sql,
+} from "drizzle-orm";
+import { orders, routes } from ".";
+import { createId } from "./create-id";
 
 export const users = pgTable("users", {
   id: varchar("id", { length: 128 })
-    .$defaultFn(() => createId())
+    .$defaultFn(() => createId("users"))
     .primaryKey(),
   surname: varchar("surname", { length: 60 }),
   username: varchar("username", { length: 60 }).unique(),
@@ -24,13 +28,13 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
   deleted: boolean("deleted").default(false),
-  status: userStatusEnum("user_status").default("active"),
+  status: boolean("status").default(true),
   salary: decimal("salary").default("0.00"),
   address: varchar("address", { length: 300 }),
   password: varchar("password", { length: 60 }),
   verified: boolean("verified"),
   routeSlugs: varchar("route_slugs").default("").notNull(),
-  routeId: varchar("route_id").references(() => sections.id),
+  routeId: varchar("route_id"), //references(()=>routes.id)
 });
 
 export const userRelation = relations(users, ({ many, one }) => ({

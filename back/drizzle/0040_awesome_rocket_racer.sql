@@ -1,1 +1,0 @@
-ALTER TABLE "orders" RENAME COLUMN "amount_sold" TO "amount";

@@ -9,7 +9,6 @@ import { removeRecov } from "../resolvers/orders/remove-recov";
 export const typeDef = /* GraphQL */ `
   type Order {
     id: ID!
-    price: Float
     guestEmail: String
     name: String!
     guestPhone: String
@@ -92,7 +91,6 @@ export const resolvers = {
   },
   Mutation: {
     createOrder: async (parent: any, args: any, ctx: Context) => {
-      console.log(args);
       return await createOrder(parent, args, ctx);
     },
     recover: async (parent: any, args: any, ctx: Context) => {

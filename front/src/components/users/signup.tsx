@@ -3,12 +3,12 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Avatar from "../../lib/avatar";
 import Form, { Button, FormRef, Input } from "../../lib/forms";
 import { errorHandler, image64ToBlob, uploadImage } from "../../lib/utils";
-import { useNewUserMutation } from "../aio-urql";
+import { useCreateUserMutation } from "../aio-urql";
 
 const SignUp = () => {
   const formRef = useRef<FormRef>(null);
   const navigate = useNavigate();
-  const [{ data, fetching, error }, createUser] = useNewUserMutation();
+  const [{ data, fetching, error }, createUser] = useCreateUserMutation();
 
   if (!error && data) {
     return <Navigate to={`/users/login`} />;
@@ -49,10 +49,10 @@ const SignUp = () => {
               const resp = await createUser({
                 user: data,
               });
-              if (resp.data && resp.data.newUser && avatarUrl.current) {
+              if (resp.data && resp.data.createUser && avatarUrl.current) {
                 const formData = new FormData();
                 formData.append("model", "users");
-                formData.append("id", resp.data?.newUser?.id);
+                formData.append("id", resp.data?.createUser.id);
                 formData.append("field", "photo_url");
                 const file = image64ToBlob(avatarUrl.current);
                 formData.append("file", file);
@@ -130,7 +130,7 @@ const SignUp = () => {
         </Form>
         <div className="w-10/12">
           <span>Already have an account? </span>
-          <Link to="/users/login" className="link bg-slate-100">
+          <Link to="/users/login" className="link bg-slate-200 ml-2">
             Login
           </Link>
         </div>

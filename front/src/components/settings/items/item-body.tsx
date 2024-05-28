@@ -3,10 +3,10 @@ import { getDateFromTimestamp } from "../../../lib/utils";
 import { Fragment } from "react";
 import { useChest } from "../../../app-chest";
 import { AddInput } from "../../../lib/add-input";
+import { ItemsQuery } from "../../aio-urql";
 
 type TItemBodyProps = {
-  currInventories?: any[];
-  searchItems?: any[];
+  searchItems?: ItemsQuery["items"];
   editItem: ({ variables }: any) => void;
   deleteItem: ({ variables }: any) => void;
   itemPrice: ({ variables }: any) => void;
@@ -21,23 +21,23 @@ export const ItemBody = ({
   const { updateChest } = useChest();
   return (
     <Fragment>
-      {searchItems?.map((item: any) => (
-        <tr key={item.id} className="bg-tr">
-          <td>{item.name}</td>
-          <td className="hidden lg:table-cell">{item.description}</td>
-          <td className="hidden lg:table-cell">{item.sku}</td>
-          <td>{item.type}</td>
+      {searchItems?.map((item) => (
+        <tr key={item?.id} className="bg-tr">
+          <td>{item?.name}</td>
+          <td className="hidden lg:table-cell truncate">{item?.description}</td>
+          <td className="hidden lg:table-cell">{item?.sku}</td>
+          <td>{item?.type}</td>
           <td className="!text-center !w-auto hidden md:table-cell">
-            {getDateFromTimestamp(+item.createdAt, "d/m/y")}
+            {getDateFromTimestamp(+item?.createdAt!, "d/m/y")}
           </td>
           <td>
             <span className="cursor-text border-gray-400 flex w-full h-8 m-auto justify-center items-center rounded-md">
               <AddInput
-                id={item.id}
-                initialValue={item.price}
+                id={item?.id!}
+                initialValue={item?.price!}
                 action={(value) => {
                   itemPrice({
-                    id: item.id,
+                    id: item?.id,
                     price: value,
                   });
                 }}
@@ -57,7 +57,7 @@ export const ItemBody = ({
           </td>
           <td className="text-center !px-0">
             <span
-              id={item.id}
+              id={item?.id}
               className="icon-span"
               onClick={() => deleteItem(item)}
             >

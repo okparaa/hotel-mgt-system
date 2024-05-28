@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
-import { routes, sections } from "../db/schemas";
+import { routes } from "../db/schemas";
 import { Context } from "../types/context";
-import { createRoute } from "../resolvers/routes/new-route";
+import { createRoute } from "../resolvers/routes/create-route";
 import {
   updateRoute,
   updateOtherSlugs,
   parentRoute,
-} from "../resolvers/routes/edit-route";
+} from "../resolvers/routes/update-route";
 
 export const typeDef = /* GraphQL */ `
   type Route {

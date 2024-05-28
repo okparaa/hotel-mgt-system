@@ -1,1 +1,0 @@
-ALTER TABLE "recovs" DROP COLUMN IF EXISTS "amount_recovd";

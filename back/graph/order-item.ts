@@ -11,6 +11,7 @@ export const typeDef = /* GraphQL */ `
     order: Order
     items: [Item]
     syn: Boolean
+    curPrice: Float
   }
   type Query {
     orderItems: [String]
@@ -28,6 +29,7 @@ export const typeDef = /* GraphQL */ `
     userId: String
     itemId: String
     qtySold: Int
+    curPrice: Float
     priceSold: Float
     name: String
     sku: String

@@ -1,1 +1,0 @@
-ALTER TABLE "recoveries" ADD COLUMN "hash" varchar;

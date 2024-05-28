@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 
 type ModalProps = {
   children?: React.ReactNode;
-  isOpen: boolean;
+  isOpen?: boolean;
   onClose: () => void;
   className: string;
 };

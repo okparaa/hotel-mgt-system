@@ -1,1 +1,0 @@
-ALTER TABLE "sections" RENAME COLUMN "has_sales" TO "is_sxn";

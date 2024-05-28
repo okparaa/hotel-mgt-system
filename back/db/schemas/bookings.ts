@@ -8,14 +8,14 @@ import {
 } from "drizzle-orm/pg-core";
 import { rooms } from "./rooms";
 import { orders } from "./orders";
-import { createId } from "@paralleldrive/cuid2";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { createId } from "./create-id";
 
 export const bookings = pgTable(
   "bookings",
   {
     id: varchar("id", { length: 128 })
-      .$defaultFn(() => createId())
+      .$defaultFn(() => createId("bookings"))
       .primaryKey(),
     roomId: varchar("room_id")
       .notNull()
@@ -28,7 +28,7 @@ export const bookings = pgTable(
       .notNull()
       .references(() => orders.id),
     days: decimal("days").default("0").$type<number>(),
-    price: decimal("price"),
+    curPrice: decimal("cur_price"),
     amount: decimal("amount").default("0").$type<number>(),
   },
   (tbl) => ({
